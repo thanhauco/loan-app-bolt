@@ -67,56 +67,56 @@ const ChatBot: React.FC = () => {
     if (lowerMessage.includes('document') || lowerMessage.includes('7(a)')) {
       response = `For an SBA 7(a) loan, you'll need these key documents:
 
-• **Business Documents**: Business license, articles of incorporation, operating agreement
-• **Financial Statements**: 3 years of tax returns, profit & loss statements, balance sheets
-• **Personal Information**: Personal tax returns, personal financial statement, resume
-• **Loan Details**: Business plan, use of funds statement, debt schedule
-• **Additional**: Lease agreements, contracts, franchise agreements (if applicable)
+• Business Documents: Business license, articles of incorporation, operating agreement
+• Financial Statements: 3 years of tax returns, profit & loss statements, balance sheets
+• Personal Information: Personal tax returns, personal financial statement, resume
+• Loan Details: Business plan, use of funds statement, debt schedule
+• Additional: Lease agreements, contracts, franchise agreements (if applicable)
 
 All documents must be current and comply with SBA SOP 50 10 7.1 guidelines.`;
       suggestions = ['What are the eligibility requirements?', 'How much can I borrow?', 'Processing timeline?'];
     } else if (lowerMessage.includes('eligibility') || lowerMessage.includes('qualify')) {
       response = `SBA loan eligibility requirements include:
 
-• **Business Size**: Must meet SBA size standards for your industry
-• **Business Type**: For-profit businesses operating in the US
-• **Owner Requirements**: Owner must invest own resources and have good credit
-• **Use of Funds**: Must be for legitimate business purposes
-• **Collateral**: May be required for loans over $25,000
-• **Industry Restrictions**: Some industries are ineligible
+• Business Size: Must meet SBA size standards for your industry
+• Business Type: For-profit businesses operating in the US
+• Owner Requirements: Owner must invest own resources and have good credit
+• Use of Funds: Must be for legitimate business purposes
+• Collateral: May be required for loans over $25,000
+• Industry Restrictions: Some industries are ineligible
 
 Your business must demonstrate ability to repay the loan.`;
       suggestions = ['Required documents checklist', 'Loan amount limits', 'Interest rates'];
     } else if (lowerMessage.includes('time') || lowerMessage.includes('process') || lowerMessage.includes('long')) {
       response = `SBA loan processing timeline:
 
-• **Pre-Application**: 1-2 weeks (document preparation)
-• **Application Review**: 30-60 days (lender review)
-• **SBA Review**: 5-10 business days (SBA approval)
-• **Closing**: 2-3 weeks (final documentation)
+• Pre-Application: 1-2 weeks (document preparation)
+• Application Review: 30-60 days (lender review)
+• SBA Review: 5-10 business days (SBA approval)
+• Closing: 2-3 weeks (final documentation)
 
-**Total Timeline**: 60-90 days on average
+Total Timeline: 60-90 days on average
 
 Factors affecting timeline: completeness of application, loan amount, business complexity, and lender efficiency.`;
       suggestions = ['Speed up my application', 'What causes delays?', 'Required documents'];
     } else if (lowerMessage.includes('amount') || lowerMessage.includes('much') || lowerMessage.includes('size')) {
       response = `SBA 7(a) loan amounts and limits:
 
-• **Maximum Loan**: $5 million
-• **SBA Guarantee**: Up to 85% for loans ≤$150K, 75% for loans >$150K
-• **Use of Funds**: Working capital, equipment, real estate, refinancing
-• **Down Payment**: Typically 10-15% required
+• Maximum Loan: $5 million
+• SBA Guarantee: Up to 85% for loans ≤$150K, 75% for loans >$150K
+• Use of Funds: Working capital, equipment, real estate, refinancing
+• Down Payment: Typically 10-15% required
 
-**Size Standards** vary by industry (measured by employees or annual receipts). Most businesses qualify if they have fewer than 500 employees.`;
+Size Standards vary by industry (measured by employees or annual receipts). Most businesses qualify if they have fewer than 500 employees.`;
       suggestions = ['Calculate loan payments', 'Industry size standards', 'Guarantee percentages'];
     } else {
       response = `I can help you with:
 
-• **Document Requirements**: What papers you need to submit
-• **Eligibility Criteria**: If your business qualifies
-• **Application Process**: Step-by-step guidance
-• **Compliance Issues**: SBA SOP requirements
-• **Timeline Expectations**: How long approval takes
+• Document Requirements: What papers you need to submit
+• Eligibility Criteria: If your business qualifies
+• Application Process: Step-by-step guidance
+• Compliance Issues: SBA SOP requirements
+• Timeline Expectations: How long approval takes
 
 What specific aspect would you like to know more about?`;
       suggestions = ['Document checklist', 'Am I eligible?', 'Processing time', 'Loan amounts'];
