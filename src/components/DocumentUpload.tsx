@@ -138,7 +138,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
 
   const validateDocument = (doc: Document) => {
     // Mock demo: For first 3 files uploaded, show 2 verified and 1 failed
-    const currentDocCount = uploadedDocuments.length;
+    const currentDocCount = uploadedDocuments.filter(d => d.id !== doc.id).length;
     
     if (currentDocCount === 0) {
       // First file - verified
