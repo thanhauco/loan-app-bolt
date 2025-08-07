@@ -52,7 +52,7 @@ function App() {
                   <DollarSign className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">SBA Loan Vetting System</h1>
+                  <h1 className="text-xl font-bold text-gray-900">AI-Powered SBA Loan Agent</h1>
                   <p className="text-sm text-gray-600">Compliant with SBA SOPs June 2025</p>
                 </div>
               </div>
