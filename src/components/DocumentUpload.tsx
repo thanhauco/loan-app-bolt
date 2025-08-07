@@ -107,10 +107,19 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         requirements: getDocumentRequirements(file.name),
       };
 
+      // Add document immediately with pending status
+      setUploadedDocuments(prev => [...prev, newDoc]);
+
       // Simulate document validation
       setTimeout(() => {
         const validationResult = validateDocument(newDoc);
-        setUploadedDocuments([...uploadedDocuments, { ...newDoc, ...validationResult }]);
+        setUploadedDocuments(prev => 
+          prev.map(doc => 
+            doc.id === newDoc.id 
+              ? { ...doc, ...validationResult }
+              : doc
+          )
+        );
       }, 2000);
     });
   };
@@ -128,9 +137,35 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
   };
 
   const validateDocument = (doc: Document) => {
-    // Simulate validation logic
-    const isValid = Math.random() > 0.3; // 70% success rate for demo
+    // Mock demo: For first 3 files uploaded, show 2 verified and 1 failed
+    const allDocs = uploadedDocuments.length;
     
+    if (allDocs === 0) {
+      // First file - verified
+      return {
+        status: 'valid' as const,
+        issues: []
+      };
+    } else if (allDocs === 1) {
+      // Second file - verified
+      return {
+        status: 'valid' as const,
+        issues: []
+      };
+    } else if (allDocs === 2) {
+      // Third file - failed
+      return {
+        status: 'invalid' as const,
+        issues: [
+          'Document quality is poor - please provide a clearer copy',
+          'Missing required signatures',
+          'Document appears to be incomplete'
+        ]
+      };
+    }
+    
+    // For subsequent files, use random validation
+    const isValid = Math.random() > 0.3;
     if (isValid) {
       return {
         status: 'valid' as const,
