@@ -185,7 +185,6 @@ const SignIn: React.FC<SignInProps> = ({ onSignIn }) => {
         </div>
       )}
     </>
-    </div>
   );
 };
 
