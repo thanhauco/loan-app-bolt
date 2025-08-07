@@ -115,15 +115,6 @@ const SignIn: React.FC<SignInProps> = ({ onSignIn }) => {
           </div>
         </div>
 
-        {/* Additional Info */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            Need help? Contact our support team at{' '}
-            <a href="mailto:support@sbaloan.com" className="text-blue-600 hover:text-blue-700 underline">
-              support@sbaloan.com
-            </a>
-          </p>
-        </div>
       </div>
       </div>
       
