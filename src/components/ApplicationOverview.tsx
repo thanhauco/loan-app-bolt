@@ -21,7 +21,7 @@ interface ApplicationOverviewProps {
 const ApplicationOverview: React.FC<ApplicationOverviewProps> = ({ uploadedDocuments, complianceStatus }) => {
   const applicationData = {
     applicationId: 'SBA-2025-001234',
-    businessName: 'TechStart Solutions LLC',
+    businessName: 'Thanh\'s Business Solutions LLC',
     loanAmount: 250000,
     loanType: 'SBA 7(a)',
     submissionDate: new Date('2025-01-15'),

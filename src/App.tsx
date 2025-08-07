@@ -1,17 +1,35 @@
 import React, { useState } from 'react';
 import { MessageCircle, Upload, CheckCircle, AlertCircle, FileText, DollarSign, Building, Users, Calendar, ChevronRight } from 'lucide-react';
+import SignIn from './components/SignIn';
 import ChatBot from './components/ChatBot';
 import DocumentUpload from './components/DocumentUpload';
 import ComplianceChecker from './components/ComplianceChecker';
 import ApplicationOverview from './components/ApplicationOverview';
 
 function App() {
+  const [user, setUser] = useState<{ name: string; email: string; type: 'gmail' | 'guest' } | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [uploadedDocuments, setUploadedDocuments] = useState<any[]>([]);
   const [complianceStatus, setComplianceStatus] = useState({
     overall: 'pending',
     checks: []
   });
+
+  const handleSignIn = (userData: { name: string; email: string; type: 'gmail' | 'guest' }) => {
+    setUser(userData);
+  };
+
+  const handleSignOut = () => {
+    setUser(null);
+    setActiveTab('overview');
+    setUploadedDocuments([]);
+    setComplianceStatus({ overall: 'pending', checks: [] });
+  };
+
+  // Show sign in page if user is not authenticated
+  if (!user) {
+    return <SignIn onSignIn={handleSignIn} />;
+  }
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Building },
@@ -35,6 +53,20 @@ function App() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3">
+                <div className="text-right">
+                  <div className="text-sm font-medium text-gray-900">Welcome {user.name}</div>
+                  <div className="text-xs text-gray-600">
+                    {user.type === 'gmail' ? user.email : 'Guest User'}
+                  </div>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  Sign Out
+                </button>
+              </div>
               <div className="bg-emerald-50 px-3 py-1 rounded-full">
                 <span className="text-sm font-medium text-emerald-700">Active Application</span>
               </div>
