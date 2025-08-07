@@ -125,6 +125,7 @@ const SignIn: React.FC<SignInProps> = ({ onSignIn }) => {
           </p>
         </div>
       </div>
+      </div>
       
       {/* Gmail Login Popup */}
       {showGmailPopup && (
