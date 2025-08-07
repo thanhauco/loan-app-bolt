@@ -124,7 +124,6 @@ Document Breakdown by Category:`;
         suggestions = ['What documents are missing?', 'Why did documents fail?', 'Next steps for my application'];
       }
     } else if (lowerMessage.includes('document') || lowerMessage.includes('7(a)')) {
-    if (lowerMessage.includes('document') || lowerMessage.includes('7(a)')) {
       response = `For an SBA 7(a) loan, you'll need these key documents:
 
 • Business Documents: Business license, articles of incorporation, operating agreement
