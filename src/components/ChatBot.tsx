@@ -18,9 +18,10 @@ interface Document {
 
 interface ChatBotProps {
   uploadedDocuments?: Document[];
+  triggerUpdate?: number;
 }
 
-const ChatBot: React.FC<ChatBotProps> = ({ uploadedDocuments = [] }) => {
+const ChatBot: React.FC<ChatBotProps> = ({ uploadedDocuments = [], triggerUpdate = 0 }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -47,6 +48,67 @@ const ChatBot: React.FC<ChatBotProps> = ({ uploadedDocuments = [] }) => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    // Auto-generate document summary when documents are uploaded
+    if (triggerUpdate > 0 && uploadedDocuments.length > 0) {
+      const botResponse = generateDocumentSummary();
+      setMessages(prev => [...prev, botResponse]);
+    }
+  }, [triggerUpdate, uploadedDocuments]);
+
+  const generateDocumentSummary = (): Message => {
+    const totalDocs = uploadedDocuments.length;
+    const validDocs = uploadedDocuments.filter(doc => doc.status === 'valid').length;
+    const invalidDocs = uploadedDocuments.filter(doc => doc.status === 'invalid').length;
+    const pendingDocs = uploadedDocuments.filter(doc => doc.status === 'pending').length;
+    
+    let response = `Document Upload Update:
+
+Total Documents: ${totalDocs}
+• Verified: ${validDocs} documents
+• Failed Validation: ${invalidDocs} documents
+• Processing: ${pendingDocs} documents`;
+    
+    const categories = ['business', 'financial', 'personal', 'loan'];
+    const categoryBreakdown = categories
+      .map(category => {
+        const categoryDocs = uploadedDocuments.filter(doc => doc.category === category);
+        if (categoryDocs.length > 0) {
+          const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+          return `• ${categoryName}: ${categoryDocs.length} files`;
+        }
+        return null;
+      })
+      .filter(Boolean);
+    
+    if (categoryBreakdown.length > 0) {
+      response += `\n\nDocument Breakdown:\n${categoryBreakdown.join('\n')}`;
+    }
+    
+    if (invalidDocs > 0) {
+      response += `\n\nAction Required: ${invalidDocs} document(s) failed validation and need to be re-uploaded with corrections.`;
+    }
+    
+    if (pendingDocs > 0) {
+      response += `\n\nProcessing: ${pendingDocs} document(s) are currently being validated.`;
+    }
+    
+    if (validDocs >= 8) {
+      response += `\n\nExcellent progress! You have most required documents uploaded and verified.`;
+    } else if (totalDocs >= 5) {
+      response += `\n\nGood progress! Continue uploading the remaining required documents.`;
+    } else {
+      response += `\n\nKeep going! Upload more documents to complete your application.`;
+    }
+
+    return {
+      id: Date.now().toString(),
+      type: 'bot',
+      content: response,
+      timestamp: new Date(),
+      suggestions: ['What documents are missing?', 'Why did documents fail?', 'Next steps for my application']
+    };
+  };
   const handleSendMessage = (message: string) => {
     if (!message.trim()) return;
 

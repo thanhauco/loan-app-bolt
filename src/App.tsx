@@ -16,6 +16,8 @@ function App() {
     overall: 'pending',
     checks: []
   });
+  const [chatMessages, setChatMessages] = useState<any[]>([]);
+  const [triggerChatUpdate, setTriggerChatUpdate] = useState(0);
 
   const handleSignIn = (userData: { name: string; email: string; type: 'gmail' | 'guest' }) => {
     setUser(userData);
@@ -27,9 +29,16 @@ function App() {
     setActiveTab('overview');
     setUploadedDocuments([]);
     setComplianceStatus({ overall: 'pending', checks: [] });
+    setChatMessages([]);
+    setTriggerChatUpdate(0);
     navigate('/signin');
   };
 
+  const handleDocumentUpload = (docs: any[]) => {
+    setUploadedDocuments(docs);
+    // Trigger chatbot to show upload summary
+    setTriggerChatUpdate(prev => prev + 1);
+  };
   const MainApp = () => {
     if (!user) {
       return <Navigate to="/signin" replace />;
@@ -93,7 +102,10 @@ function App() {
               </div>
               <p className="text-sm text-gray-600 mt-1">Get guidance on SBA loan requirements</p>
             </div>
-            <ChatBot uploadedDocuments={uploadedDocuments} />
+            <ChatBot 
+              uploadedDocuments={uploadedDocuments} 
+              triggerUpdate={triggerChatUpdate}
+            />
           </div>
 
           {/* Main Content */}
@@ -129,7 +141,7 @@ function App() {
               {activeTab === 'documents' && (
                 <DocumentUpload 
                   uploadedDocuments={uploadedDocuments}
-                  setUploadedDocuments={setUploadedDocuments}
+                  setUploadedDocuments={handleDocumentUpload}
                 />
               )}
               {activeTab === 'compliance' && (
