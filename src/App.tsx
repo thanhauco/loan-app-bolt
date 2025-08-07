@@ -93,7 +93,7 @@ function App() {
               </div>
               <p className="text-sm text-gray-600 mt-1">Get guidance on SBA loan requirements</p>
             </div>
-            <ChatBot />
+            <ChatBot uploadedDocuments={uploadedDocuments} />
           </div>
 
           {/* Main Content */}

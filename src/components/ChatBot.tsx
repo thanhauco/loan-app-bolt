@@ -9,7 +9,18 @@ interface Message {
   suggestions?: string[];
 }
 
-const ChatBot: React.FC = () => {
+interface Document {
+  id: string;
+  name: string;
+  category: string;
+  status: 'pending' | 'valid' | 'invalid' | 'missing';
+}
+
+interface ChatBotProps {
+  uploadedDocuments?: Document[];
+}
+
+const ChatBot: React.FC<ChatBotProps> = ({ uploadedDocuments = [] }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -64,6 +75,55 @@ const ChatBot: React.FC = () => {
     let response = '';
     let suggestions: string[] = [];
 
+    if (lowerMessage.includes('upload') || lowerMessage.includes('document') || lowerMessage.includes('file') || lowerMessage.includes('status')) {
+      const totalDocs = uploadedDocuments.length;
+      const validDocs = uploadedDocuments.filter(doc => doc.status === 'valid').length;
+      const invalidDocs = uploadedDocuments.filter(doc => doc.status === 'invalid').length;
+      const pendingDocs = uploadedDocuments.filter(doc => doc.status === 'pending').length;
+      
+      if (totalDocs === 0) {
+        response = `You haven't uploaded any documents yet. Here's what you need to get started:
+
+Required Documents for SBA 7(a) Loan:
+• Business Documents: Business license, articles of incorporation
+• Financial Statements: 3 years tax returns, P&L, balance sheets
+• Personal Information: Personal tax returns, financial statement
+• Loan Documentation: Business plan, use of funds statement
+
+Upload your documents using the Documents tab to get started with your application.`;
+        suggestions = ['What documents do I need?', 'How to upload files?', 'Document requirements'];
+      } else {
+        response = `Document Upload Summary:
+
+Total Documents: ${totalDocs}
+• Verified: ${validDocs} documents
+• Failed Validation: ${invalidDocs} documents
+• Processing: ${pendingDocs} documents
+
+Document Breakdown by Category:`;
+        
+        const categories = ['business', 'financial', 'personal', 'loan'];
+        categories.forEach(category => {
+          const categoryDocs = uploadedDocuments.filter(doc => doc.category === category);
+          if (categoryDocs.length > 0) {
+            const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+            response += `\n• ${categoryName}: ${categoryDocs.length} files`;
+          }
+        });
+        
+        if (invalidDocs > 0) {
+          response += `\n\nAction Required: ${invalidDocs} document(s) failed validation and need to be re-uploaded with corrections.`;
+        }
+        
+        if (validDocs >= 8) {
+          response += `\n\nGreat progress! You have most required documents uploaded. Your application is moving forward well.`;
+        } else {
+          response += `\n\nYou're making good progress. Continue uploading the remaining required documents to complete your application.`;
+        }
+        
+        suggestions = ['What documents are missing?', 'Why did documents fail?', 'Next steps for my application'];
+      }
+    } else if (lowerMessage.includes('document') || lowerMessage.includes('7(a)')) {
     if (lowerMessage.includes('document') || lowerMessage.includes('7(a)')) {
       response = `For an SBA 7(a) loan, you'll need these key documents:
 
