@@ -121,65 +121,65 @@ const ApplicationOverview: React.FC<ApplicationOverviewProps> = ({ uploadedDocum
 
       {/* Key Metrics */}
       <div className="grid grid-cols-4 gap-6">
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-gray-900">{documentStats.uploaded}/{documentStats.total}</div>
-              <div className="text-sm text-gray-600">Documents Uploaded</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{documentStats.uploaded}/{documentStats.total}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">Documents Uploaded</div>
             </div>
-            <FileText className="h-8 w-8 text-blue-600" />
+            <FileText className="h-8 w-8 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="mt-4">
-            <div className="flex justify-between text-xs text-gray-600">
+            <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
               <span>Validated: {documentStats.validated}</span>
               <span>Issues: {documentStats.issues}</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-gray-900">{complianceStats.passed}/{complianceStats.total}</div>
-              <div className="text-sm text-gray-600">Compliance Checks</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{complianceStats.passed}/{complianceStats.total}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">Compliance Checks</div>
             </div>
-            <CheckCircle className="h-8 w-8 text-emerald-600" />
+            <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div className="mt-4">
-            <div className="flex justify-between text-xs text-gray-600">
+            <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
               <span>Warnings: {complianceStats.warnings}</span>
               <span>Failed: {complianceStats.failed}</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {Math.ceil((applicationData.expectedDecision.getTime() - Date.now()) / (1000 * 60 * 60 * 24))}
               </div>
-              <div className="text-sm text-gray-600">Days to Decision</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">Days to Decision</div>
             </div>
-            <Calendar className="h-8 w-8 text-purple-600" />
+            <Calendar className="h-8 w-8 text-purple-600 dark:text-purple-400" />
           </div>
           <div className="mt-4">
-            <div className="text-xs text-gray-600">
+            <div className="text-xs text-gray-600 dark:text-gray-400">
               Expected: {applicationData.expectedDecision.toLocaleDateString()}
             </div>
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-gray-900">85%</div>
-              <div className="text-sm text-gray-600">SBA Guarantee</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">85%</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">SBA Guarantee</div>
             </div>
-            <DollarSign className="h-8 w-8 text-orange-600" />
+            <DollarSign className="h-8 w-8 text-orange-600 dark:text-orange-400" />
           </div>
           <div className="mt-4">
-            <div className="text-xs text-gray-600">
+            <div className="text-xs text-gray-600 dark:text-gray-400">
               Amount: ${(applicationData.loanAmount * 0.85).toLocaleString()}
             </div>
           </div>
@@ -189,8 +189,8 @@ const ApplicationOverview: React.FC<ApplicationOverviewProps> = ({ uploadedDocum
       {/* Application Timeline & Next Steps */}
       <div className="grid grid-cols-2 gap-6">
         {/* Next Steps */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Next Steps</h3>
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Next Steps</h3>
           <div className="space-y-4">
             {nextSteps.map((step, index) => (
               <div key={index} className="flex items-start space-x-3">
@@ -198,9 +198,9 @@ const ApplicationOverview: React.FC<ApplicationOverviewProps> = ({ uploadedDocum
                   {getStatusIcon(step.status)}
                 </div>
                 <div className="flex-1">
-                  <div className="font-medium text-gray-900">{step.title}</div>
-                  <div className="text-sm text-gray-600">{step.description}</div>
-                  <div className="text-xs text-gray-500 mt-1">Due: {step.dueDate}</div>
+                  <div className="font-medium text-gray-900 dark:text-white">{step.title}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">{step.description}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Due: {step.dueDate}</div>
                 </div>
               </div>
             ))}
@@ -208,35 +208,35 @@ const ApplicationOverview: React.FC<ApplicationOverviewProps> = ({ uploadedDocum
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h3>
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 rounded-full bg-emerald-500 mt-2"></div>
               <div>
-                <div className="text-sm font-medium text-gray-900">Financial statements validated</div>
-                <div className="text-xs text-gray-500">2 hours ago</div>
+                <div className="text-sm font-medium text-gray-900 dark:text-white">Financial statements validated</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">2 hours ago</div>
               </div>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 rounded-full bg-blue-500 mt-2"></div>
               <div>
-                <div className="text-sm font-medium text-gray-900">Tax returns uploaded</div>
-                <div className="text-xs text-gray-500">1 day ago</div>
+                <div className="text-sm font-medium text-gray-900 dark:text-white">Tax returns uploaded</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">1 day ago</div>
               </div>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 rounded-full bg-yellow-500 mt-2"></div>
               <div>
-                <div className="text-sm font-medium text-gray-900">Business license validation pending</div>
-                <div className="text-xs text-gray-500">2 days ago</div>
+                <div className="text-sm font-medium text-gray-900 dark:text-white">Business license validation pending</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">2 days ago</div>
               </div>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 rounded-full bg-gray-400 mt-2"></div>
               <div>
-                <div className="text-sm font-medium text-gray-900">Application started</div>
-                <div className="text-xs text-gray-500">5 days ago</div>
+                <div className="text-sm font-medium text-gray-900 dark:text-white">Application started</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">5 days ago</div>
               </div>
             </div>
           </div>
@@ -245,30 +245,30 @@ const ApplicationOverview: React.FC<ApplicationOverviewProps> = ({ uploadedDocum
 
       {/* Action Items */}
       {(documentStats.issues > 0 || complianceStats.failed > 0 || complianceStats.warnings > 0) && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-yellow-800 mb-4 flex items-center">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-6 transition-colors">
+          <h3 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-4 flex items-center">
             <AlertCircle className="h-5 w-5 mr-2" />
             Attention Required
           </h3>
           <div className="grid grid-cols-2 gap-4">
             {documentStats.issues > 0 && (
-              <div className="bg-white rounded-lg p-4">
-                <div className="font-medium text-gray-900 mb-2">Document Issues</div>
-                <div className="text-sm text-gray-700">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 transition-colors">
+                <div className="font-medium text-gray-900 dark:text-white mb-2">Document Issues</div>
+                <div className="text-sm text-gray-700 dark:text-gray-300">
                   {documentStats.issues} document(s) have validation issues that need to be resolved.
                 </div>
-                <button className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
+                <button className="mt-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">
                   Review Documents →
                 </button>
               </div>
             )}
             {(complianceStats.failed > 0 || complianceStats.warnings > 0) && (
-              <div className="bg-white rounded-lg p-4">
-                <div className="font-medium text-gray-900 mb-2">Compliance Issues</div>
-                <div className="text-sm text-gray-700">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 transition-colors">
+                <div className="font-medium text-gray-900 dark:text-white mb-2">Compliance Issues</div>
+                <div className="text-sm text-gray-700 dark:text-gray-300">
                   {complianceStats.failed + complianceStats.warnings} compliance check(s) need attention.
                 </div>
-                <button className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
+                <button className="mt-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">
                   View Compliance →
                 </button>
               </div>
