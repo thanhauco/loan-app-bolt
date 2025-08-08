@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { MessageCircle, Upload, CheckCircle, AlertCircle, FileText, DollarSign, Building, Users, Calendar, ChevronRight } from 'lucide-react';
+import { MessageCircle, Upload, CheckCircle, AlertCircle, FileText, DollarSign, Building, Users, Calendar, ChevronRight, Moon, Sun } from 'lucide-react';
+import { useTheme } from './contexts/ThemeContext';
 import SignIn from './components/SignIn';
 import ChatBot from './components/ChatBot';
 import DocumentUpload from './components/DocumentUpload';
@@ -8,6 +9,7 @@ import ComplianceChecker from './components/ComplianceChecker';
 import ApplicationOverview from './components/ApplicationOverview';
 
 function App() {
+  const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [user, setUser] = useState<{ name: string; email: string; type: 'gmail' | 'guest' } | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
@@ -51,39 +53,51 @@ function App() {
     ];
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b border-gray-200">
+        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors">
           <div className="max-w-full px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="bg-blue-600 p-2 rounded-lg">
+                <div className="bg-blue-600 dark:bg-blue-500 p-2 rounded-lg">
                   <DollarSign className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">AI-Powered SBA Loan Agent</h1>
-                  <p className="text-sm text-gray-600">Compliant with SBA SOPs June 2025</p>
+                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">AI-Powered SBA Loan Agent</h1>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Compliant with SBA SOPs June 2025</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
+                {/* Theme Toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {isDarkMode ? (
+                    <Sun className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                  ) : (
+                    <Moon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                  )}
+                </button>
                 <div className="flex items-center space-x-3">
                   <div className="text-right">
-                    <div className="text-sm font-medium text-gray-900">Welcome {user.name}</div>
-                    <div className="text-xs text-gray-600">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">Welcome {user.name}</div>
+                    <div className="text-xs text-gray-600 dark:text-gray-300">
                       {user.type === 'gmail' ? user.email : 'Guest User'}
                     </div>
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
                     Sign Out
                   </button>
                 </div>
-                <div className="bg-emerald-50 px-3 py-1 rounded-full">
-                  <span className="text-sm font-medium text-emerald-700">Active Application</span>
+                <div className="bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 rounded-full">
+                  <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">Active Application</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
                   <Calendar className="h-4 w-4" />
                   <span>Last updated: Today</span>
                 </div>
@@ -94,13 +108,13 @@ function App() {
 
         <div className="flex h-[calc(100vh-80px)]">
           {/* Chatbot Sidebar */}
-          <div className="w-96 bg-white border-r border-gray-200 flex flex-col">
-            <div className="p-4 border-b border-gray-200">
+          <div className="w-96 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-colors">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center space-x-2">
-                <MessageCircle className="h-5 w-5 text-blue-600" />
-                <h2 className="font-semibold text-gray-900">SBA Loan Assistant</h2>
+                <MessageCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <h2 className="font-semibold text-gray-900 dark:text-white">SBA Loan Assistant</h2>
               </div>
-              <p className="text-sm text-gray-600 mt-1">Get guidance on SBA loan requirements</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Get guidance on SBA loan requirements</p>
             </div>
             <ChatBot 
               uploadedDocuments={uploadedDocuments} 
@@ -111,7 +125,7 @@ function App() {
           {/* Main Content */}
           <div className="flex-1 flex flex-col">
             {/* Tab Navigation */}
-            <div className="bg-white border-b border-gray-200">
+            <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors">
               <nav className="flex space-x-8 px-6">
                 {tabs.map((tab) => (
                   <button
@@ -119,8 +133,8 @@ function App() {
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                       activeTab === tab.id
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                        : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
                   >
                     <tab.icon className="h-4 w-4" />
