@@ -275,11 +275,11 @@ What specific aspect would you like to know more about?`;
               <div className={`rounded-lg px-3 py-2 ${
                 message.type === 'user' 
                   ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-100 text-gray-900'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
               }`}>
                 <div className="text-sm whitespace-pre-wrap">{message.content}</div>
                 <div className={`text-xs mt-1 ${
-                  message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
+                  message.type === 'user' ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
                 }`}>
                   {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
@@ -294,7 +294,7 @@ What specific aspect would you like to know more about?`;
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
                 <Bot className="h-4 w-4 text-gray-600" />
               </div>
-              <div className="bg-gray-100 rounded-lg px-3 py-2">
+              <div className="bg-gray-100 dark:bg-gray-700 rounded-lg px-3 py-2">
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -312,7 +312,7 @@ What specific aspect would you like to know more about?`;
               <button
                 key={index}
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="text-xs px-3 py-1 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors border border-blue-200"
+                className="text-xs px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors border border-blue-200 dark:border-blue-800"
               >
                 {suggestion}
               </button>
@@ -332,7 +332,7 @@ What specific aspect would you like to know more about?`;
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputValue)}
             placeholder="Ask about SBA loan requirements..."
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           />
           <button
             onClick={() => handleSendMessage(inputValue)}
