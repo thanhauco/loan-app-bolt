@@ -134,11 +134,19 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
         overall = 'compliant';
       }
 
-      setComplianceStatus({ overall, checks });
+      const newStatus = { overall, checks };
+      
+      // Only update if the status has actually changed
+      setComplianceStatus(prevStatus => {
+        if (JSON.stringify(prevStatus) !== JSON.stringify(newStatus)) {
+          return newStatus;
+        }
+        return prevStatus;
+      });
     };
 
     runComplianceChecks();
-  }, [uploadedDocuments, setComplianceStatus]);
+  }, [uploadedDocuments]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
