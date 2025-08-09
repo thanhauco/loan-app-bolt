@@ -124,20 +124,32 @@ function App() {
                     <Moon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                   )}
                 </button>
-                <div className="flex items-center space-x-3">
-                  <div className="text-right">
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">Welcome {user.name}</div>
-                    <div className="text-xs text-gray-600 dark:text-gray-300">
+                
+                {/* User Avatar with Hover Tooltip */}
+                <div className="relative group">
+                  <div className="w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
+                    <span className="text-white font-medium text-sm">
+                      {user.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  
+                  {/* Hover Tooltip */}
+                  <div className="absolute right-0 top-12 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                      {user.name}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-300 mb-3">
                       {user.type === 'gmail' ? user.email : 'Guest User'}
                     </div>
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full text-left text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    >
+                      Sign Out
+                    </button>
                   </div>
-                  <button
-                    onClick={handleSignOut}
-                    className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    Sign Out
-                  </button>
                 </div>
+                
                 <div className="bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 rounded-full">
                   <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">Active Application</span>
                 </div>
