@@ -63,6 +63,9 @@ function App() {
   const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging) return;
     
+    // Prevent interference with other elements
+    e.stopPropagation();
+    
     const newWidth = e.clientX;
     const maxWidth = window.innerWidth * 0.4; // 40% of screen width
     const minWidth = 280; // Minimum width for usability
@@ -74,15 +77,18 @@ function App() {
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    console.log('Mouse up - dragging stopped');
   };
 
   React.useEffect(() => {
     if (isDragging) {
+      console.log('Dragging started - adding global listeners');
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
       document.body.style.cursor = 'col-resize';
       document.body.style.userSelect = 'none';
     } else {
+      console.log('Dragging stopped - removing global listeners');
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
       document.body.style.cursor = '';
@@ -90,6 +96,7 @@ function App() {
     }
 
     return () => {
+      console.log('Cleanup - removing all listeners');
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
       document.body.style.cursor = '';
@@ -198,6 +205,7 @@ function App() {
               isDragging ? 'bg-blue-500 dark:bg-blue-400' : ''
             }`}
             onMouseDown={handleMouseDown}
+            style={{ zIndex: 5 }}
           />
 
           {/* Main Content */}
@@ -211,20 +219,28 @@ function App() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      console.log('Tab clicked:', tab.id);
+                      console.log('Tab clicked:', tab.id, 'Current tab:', activeTab);
                       handleTabChange(tab.id);
+                    }}
+                    onMouseDown={(e) => {
+                      console.log('Tab mousedown:', tab.id);
+                      e.stopPropagation();
+                    }}
+                    onMouseUp={(e) => {
+                      console.log('Tab mouseup:', tab.id);
+                      e.stopPropagation();
                     }}
                     className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                       activeTab === tab.id
                         ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                         : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
-                    } relative z-50`}
+                    } relative`}
                     type="button"
                     style={{ 
                       pointerEvents: 'auto', 
                       cursor: 'pointer',
-                      position: 'relative',
-                      zIndex: 100
+                      zIndex: 9999,
+                      position: 'relative'
                     }}
                   >
                     <tab.icon className="h-4 w-4" />
