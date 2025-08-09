@@ -319,142 +319,142 @@ Size Standards vary by industry (measured by employees or annual receipts). Most
       suggestions = ['Calculate loan payments', 'Industry size standards', 'Guarantee percentages'];
     } else if (lowerMessage.includes('interest') || lowerMessage.includes('rate')) {
       const rateResponses = [
-        `🎯 **Current SBA 7(a) Rates** (January 2025):
+        `Current SBA 7(a) rates (January 2025):
 
-**Standard 7(a) Loans:**
+Standard 7(a) loans:
 • ≤$50K: Prime + 4.75% (~12.25% today)
 • >$50K: Prime + 2.75% (~10.25% today)
 
-**SBA Express:** Prime + 6.5% (~14%) - *36-hour approval!*
+SBA Express: Prime + 6.5% (~14%) - 36-hour approval!
 
-**Real Estate:** 10-25 year terms, better rates for owner-occupied
+Real Estate: 10-25 year terms, better rates for owner-occupied
 
-💡 **Pro Tip:** These rates are 1-3% lower than conventional business loans. Your credit score and loan amount will fine-tune the exact rate.
+Pro tip: These rates are 1-3% lower than conventional business loans. Your credit score and loan amount will fine-tune the exact rate.
 
-What loan amount are you considering? I can give you a more precise estimate! 🎯`,
+What loan amount are you considering? I can give you a more precise estimate!`,
         
-        `📊 **Interest Rate Reality Check** (January 2025):
+        `Interest rate reality check (January 2025):
 
 The good news: SBA rates are government-subsidized, so you're getting a deal!
 
-**Current Landscape:**
+Current landscape:
 • Prime Rate: 7.5% (thanks, Federal Reserve! 📈)
 • SBA 7(a): 10.25%-12.25% depending on loan size
 • Conventional Business Loans: 13%-18% (ouch!)
 
-**Rate Factors That Matter:**
-✅ Your credit score (720+ gets the best rates)
-✅ Loan amount (bigger loans = better rates)
-✅ Collateral strength
-✅ Industry risk level
+Rate factors that matter:
+• Your credit score (720+ gets the best rates)
+• Loan amount (bigger loans = better rates)
+• Collateral strength
+• Industry risk level
 
-**Reality Check:** Rates change monthly with Fed decisions, but SBA loans consistently beat conventional financing.
+Reality check: Rates change monthly with Fed decisions, but SBA loans consistently beat conventional financing.
 
-What's your target loan amount? Let's see what rate bracket you'd fall into! 💰`
+What's your target loan amount? Let's see what rate bracket you'd fall into!`
       ];
       response = rateResponses[Math.floor(Math.random() * rateResponses.length)];
       suggestions = ['Loan terms and payments', 'Fixed vs variable rates', 'How to qualify for best rates'];
     } else if (lowerMessage.includes('tax') || lowerMessage.includes('irs') || lowerMessage.includes('return')) {
       const taxResponses = [
-        `📋 **Tax Return Requirements** (The *Fun* Stuff):
+        `Tax return requirements (the fun stuff):
 
-**What You Need:**
+What you need:
 • Business returns: 3 complete years + current YTD
 • Personal returns: 3 years for all owners ≥20%
-• **MUST BE SIGNED & DATED** ← This trips up 40% of applicants!
+• MUST BE SIGNED & DATED ← This trips up 40% of applicants!
 
-**What We're Really Looking For:**
+What we're really looking for:
 • Consistent income trends
 • Can you actually pay this loan back?
 • No scary IRS liens lurking around
 • Owner salary that makes sense (not $1M on $50K revenue!)
 
-**Common Mistakes:**
-❌ Unsigned returns = instant rejection
-❌ Missing K-1s or depreciation schedules
-❌ Amended returns with no explanation
-❌ Massive losses with no business reason
+Common mistakes:
+• Unsigned returns = instant rejection
+• Missing K-1s or depreciation schedules
+• Amended returns with no explanation
+• Massive losses with no business reason
 
-**Pro Tip:** CPA-prepared returns get bonus points. Shows you take compliance seriously!
+Pro tip: CPA-prepared returns get bonus points. Shows you take compliance seriously!
 
-What's your business structure? I can tell you exactly which forms you need! 🎯`,
+What's your business structure? I can tell you exactly which forms you need!`,
         
-        `🎭 **Tax Returns: The SBA's Favorite Bedtime Reading**
+        `Tax returns: The SBA's favorite bedtime reading
 
 Here's what makes the SBA's heart flutter when reviewing your taxes:
 
-**The Golden Rules:**
-1. **Signatures Required** - Unsigned = automatic "nope"
-2. **Complete Packages** - All schedules, all attachments
-3. **3-Year Story** - They want to see your business journey
-4. **Consistency** - Wild swings need explanations
+The golden rules:
+1. Signatures required - Unsigned = automatic "nope"
+2. Complete packages - All schedules, all attachments
+3. 3-year story - They want to see your business journey
+4. Consistency - Wild swings need explanations
 
-**Business Structure Breakdown:**
-• **Sole Prop:** Schedule C + personal 1040s
-• **S-Corp:** 1120S + K-1s + personal returns
-• **Partnership:** 1065 + K-1s + everyone's personal returns
-• **C-Corp:** 1120 + personal returns for owners
+Business structure breakdown:
+• Sole Prop: Schedule C + personal 1040s
+• S-Corp: 1120S + K-1s + personal returns
+• Partnership: 1065 + K-1s + everyone's personal returns
+• C-Corp: 1120 + personal returns for owners
 
-**Red Flags That Make Underwriters Nervous:**
-🚩 Losses without clear business reasons
-🚩 Owner salary of $200K when business made $50K
-🚩 Amended returns with mysterious explanations
-🚩 Missing depreciation schedules
+Red flags that make underwriters nervous:
+• Losses without clear business reasons
+• Owner salary of $200K when business made $50K
+• Amended returns with mysterious explanations
+• Missing depreciation schedules
 
-**Green Flags That Make Them Happy:**
-✅ CPA preparation
-✅ Consistent profitability
-✅ Reasonable owner compensation
-✅ Clean IRS compliance history
+Green flags that make them happy:
+• CPA preparation
+• Consistent profitability
+• Reasonable owner compensation
+• Clean IRS compliance history
 
-Got your returns ready, or do we need to discuss what's missing? 📊`
+Got your returns ready, or do we need to discuss what's missing?`
       ];
       response = taxResponses[Math.floor(Math.random() * taxResponses.length)];
       suggestions = ['Tax return red flags', 'Amended return issues', 'Business vs personal tax questions'];
     } else {
       const generalResponses = [
-        `🎯 **I'm Your SBA Loan Specialist** — Think of me as your compliance-focused financial advisor with a sense of humor!
+        `I'm your SBA loan specialist — think of me as your compliance-focused financial advisor with a sense of humor!
 
-**My Superpowers:**
+My superpowers:
 • SBA loan requirements & eligibility (SOP 50 10 7.1)
 • Document prep that actually gets approved
 • Spotting red flags before they become problems
 • Translating SBA-speak into human language
 • Making compliance... dare I say... interesting?
 
-**Questions I Love Answering:**
+Questions I love answering:
 • "What documents do I *actually* need?" (not the generic list)
 • "Why do applications get denied?" (spoiler: usually documentation)
 • "How do I improve my approval odds?" (I have strategies!)
 • "What's realistic for my situation?" (honest assessments only)
 
-**My Promise:** No generic answers, no false hope, just practical guidance that actually works.
+My promise: No generic answers, no false hope, just practical guidance that actually works.
 
-What's your biggest SBA loan question or concern right now? 🚀`,
+What's your biggest SBA loan question or concern right now?`,
         
-        `💼 **Welcome to SBA Loan Mastery 101!**
+        `Welcome to SBA loan mastery 101!
 
 I'm like a GPS for navigating SBA loan requirements — I'll get you there, avoid the traffic jams, and maybe crack a joke along the way.
 
-**What Makes Me Different:**
-✨ I actually read the SBA SOPs (all 700+ pages!)
-✨ I've seen every mistake in the book (and some creative new ones)
-✨ I give you the real timeline, not the marketing timeline
-✨ I explain *why* things matter, not just *what* you need
+What makes me different:
+• I actually read the SBA SOPs (all 700+ pages!)
+• I've seen every mistake in the book (and some creative new ones)
+• I give you the real timeline, not the marketing timeline
+• I explain why things matter, not just what you need
 
-**My Favorite Topics:**
-🎯 Eligibility requirements (are you actually qualified?)
-📋 Document strategies (what order, what format, what matters)
-💰 Interest rates & terms (current market reality)
-⚡ Timeline expectations (spoiler: longer than you think)
-🚩 Red flags & how to avoid them
+My favorite topics:
+• Eligibility requirements (are you actually qualified?)
+• Document strategies (what order, what format, what matters)
+• Interest rates & terms (current market reality)
+• Timeline expectations (spoiler: longer than you think)
+• Red flags & how to avoid them
 
-**Current Market Reality Check:**
+Current market reality check:
 • Approval rates: ~60% (but 90%+ with proper prep)
 • Average timeline: 60-90 days (if everything goes smoothly)
 • Most common rejection reason: Incomplete documentation
 
-What's your starting point? New to SBA loans, or already in the process? 🎯`
+What's your starting point? New to SBA loans, or already in the process?`
       ];
       response = generalResponses[Math.floor(Math.random() * generalResponses.length)];
       suggestions = ['Check my eligibility', 'Required documents for my business', 'Why do applications get denied?', 'Current interest rates'];
