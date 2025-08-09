@@ -152,6 +152,9 @@ Total Documents: ${totalDocs}
       if (lowerMessage.includes('messi') && lowerMessage.includes('ronaldo')) {
         // Both mentioned
         const responses = [
+          "Both are great at scoring goals. I'm better at scoring you a compliant loan application.",
+          "Messi's balance sheet? Untouchable. Ronaldo's interest rates? Couldn't tell you.",
+          "If they ever apply for SBA loans, I'll give you the compliance breakdown.",
           "I could talk about Messi's loan applications… but I don't think he needs one. Let's get back to SBA loans.",
           "I'm more of a fan of interest rates than football scores — but I can help you score a compliant loan application.",
           "Both are great at goals. I'm better at goal sheets. What's your business goal?",
@@ -201,6 +204,8 @@ Total Documents: ${totalDocs}
       response = "I stay out of politics, but I'm very political about proper loan documentation. Let's focus on what we can control.";
     } else if (lowerMessage.includes('weather')) {
       response = "The only forecast I'm good at is loan approval odds. Speaking of which, what documents do you need help with?";
+    } else if (lowerMessage.includes('joke') && lowerMessage.includes('cat')) {
+      response = "I specialize in business loans, but here's one: Why did the cat start a company? To avoid working for peanuts — or should I say, tuna?";
     } else {
       response = "That's outside my wheelhouse — I'm laser-focused on SBA loans, business finance, and compliance. What can I help you with regarding your business financing needs?";
     }
