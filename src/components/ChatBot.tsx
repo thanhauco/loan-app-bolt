@@ -149,80 +149,42 @@ Total Documents: ${totalDocs}
     let suggestions: string[] = ['SBA loan requirements', 'Document checklist', 'Eligibility criteria', 'Interest rates'];
 
     if (lowerMessage.includes('messi') || lowerMessage.includes('ronaldo')) {
-      const responses = [
-        "Both are legends at scoring goals. I'm a legend at scoring you SBA loan approvals. ⚽→💰\n\nNow, shall we discuss your *actual* game plan for financing?",
-        "Messi's dribbling skills? Incredible. My skills at navigating SBA compliance? Also incredible. 🏆\n\nLet's put those skills to work on your loan application!",
-        "Ronaldo's work ethic is impressive, but have you seen my dedication to getting your loan approved? 💪\n\nSpeaking of work ethic, let's tackle your business financing!",
-        "If Messi needed an SBA loan for his next venture, I'd still ask for 3 years of tax returns. Rules are rules! 📋\n\nWhat's YOUR next business venture?",
-        "Both have amazing footwork. I have amazing *paperwork* skills. Guess which one gets you a loan? 📄✨"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
+      if (lowerMessage.includes('messi') && lowerMessage.includes('ronaldo')) {
+        // Both mentioned
+        const responses = [
+          "I could talk about Messi's loan applications… but I don't think he needs one. Let's get back to SBA loans.",
+          "I'm more of a fan of interest rates than football scores — but I can help you score a compliant loan application.",
+          "Both are great at goals. I'm better at goal sheets. What's your business goal?",
+          "Messi vs Ronaldo? That's a tough call. SBA 7(a) vs SBA Express? Now that I can help you decide."
+        ];
+        response = responses[Math.floor(Math.random() * responses.length)];
+      } else if (lowerMessage.includes('messi')) {
+        const responses = [
+          "Messi? Great at goals. I'm better at goal sheets.",
+          "I could talk about Messi's loan applications… but I don't think he needs one. Let's get back to SBA loans.",
+          "Messi's got amazing ball control. I've got amazing loan control. Which one helps your business?",
+          "If Messi ever needs business financing, I'll be here. Until then, let's focus on YOUR loan needs."
+        ];
+        response = responses[Math.floor(Math.random() * responses.length)];
+      } else if (lowerMessage.includes('ronaldo')) {
+        const responses = [
+          "Ronaldo's great at free kicks. I'm great at free consultations on SBA loans.",
+          "I'm more of a fan of interest rates than football scores — but I can help you score a compliant loan application.",
+          "Ronaldo's got dedication. I've got dedication to getting your loan approved. Let's channel that energy!",
+          "CR7? Impressive. SBA 7(a) loans? Also impressive, and more relevant to your business goals."
+        ];
+        response = responses[Math.floor(Math.random() * responses.length)];
+      }
     } else if (lowerMessage.includes('football') || lowerMessage.includes('soccer') || lowerMessage.includes('sports')) {
-      const responses = [
-        "I'm more of a fan of interest rates than football scores — but I can help you score with a winning loan application! 🏆",
-        "The only stats I track are debt-to-income ratios and cash flow projections. Much more exciting than sports, right? 📊😉",
-        "Sports betting? Risky. SBA loans? Government-backed. I know which team I'm on! 🏦",
-        "Fantasy football is fun, but have you considered the fantasy of owning your own business? Let's make it reality! 💼✨"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
-    } else if (lowerMessage.includes('joke') || lowerMessage.includes('funny') || lowerMessage.includes('humor')) {
-      const responses = [
-        "Here's a good one: Why did the business owner love SBA loans? Because they come with a government guarantee — unlike my jokes! 😄\n\nNow, what can I help you with regarding your loan application?",
-        "Why don't SBA loans ever get rejected at parties? Because they always bring proper documentation! 📋😂\n\nSpeaking of documentation...",
-        "What's the difference between a comedian and an SBA loan officer? One makes people laugh, the other makes dreams come true! 🎭💰",
-        "I'd tell you a joke about interest rates, but the punchline would compound over time... 📈😏\n\nBut seriously, let's discuss YOUR rates!"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
-    } else if (lowerMessage.includes('cat') || lowerMessage.includes('dog') || lowerMessage.includes('pet')) {
-      const responses = [
-        "Pets are adorable, but I specialize in business loans! Though if you're starting a pet-related business, I'm your guy! 🐕💼",
-        "I love pets, but I'm more of a 'cash flow' person than a 'cash for treats' person. Pet business financing, anyone? 🐱💰",
-        "Fun fact: Pet industry loans are quite popular! Grooming, boarding, veterinary clinics... Want to explore pet business opportunities? 🐾📈"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
+      response = "I'm more of a fan of interest rates than football scores — but I can help you score a compliant loan application.";
+    } else if (lowerMessage.includes('celebrity') || lowerMessage.includes('celebrities')) {
+      response = "Celebrity gossip isn't my forte, but I can make you feel like a celebrity when your loan gets approved. What's your business about?";
+    } else if (lowerMessage.includes('politics') || lowerMessage.includes('political')) {
+      response = "I stay out of politics, but I'm very political about proper loan documentation. Let's focus on what we can control.";
     } else if (lowerMessage.includes('weather')) {
-      const responses = [
-        "The only forecast I'm good at is loan approval odds! ☀️ Speaking of which, let's check what documents you need to brighten your approval chances.",
-        "Sunny skies ahead for your business with the right SBA loan! ⛅ What's your business forecast looking like?",
-        "I can't predict rain, but I can predict your loan approval chances with the right documentation! 🌦️📋"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
-    } else if (lowerMessage.includes('movie') || lowerMessage.includes('music') || lowerMessage.includes('entertainment')) {
-      const responses = [
-        "I'm more into reading SBA SOPs than scripts, but I can help you finance your entertainment business! 🎬💰",
-        "The only blockbuster I care about is your business success story! Ready to write the script? 🎭📝",
-        "Entertainment industry financing is actually quite interesting! Lots of creative businesses need SBA loans. Tell me more! 🎵💼"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
-    } else if (lowerMessage.includes('food') || lowerMessage.includes('cooking') || lowerMessage.includes('recipe')) {
-      const responses = [
-        "I don't cook, but I can help you cook up a great business plan for a restaurant! 👨‍🍳💰",
-        "Recipe for success: 1 cup of business plan, 2 tablespoons of financial statements, and a dash of SBA loan! 🍳📋",
-        "Food business loans are my specialty! Restaurants, food trucks, catering... What's cooking? 🍕💼"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
-    } else if (lowerMessage.includes('love') || lowerMessage.includes('dating') || lowerMessage.includes('relationship')) {
-      const responses = [
-        "The only relationship advice I give is about the relationship between debt and equity! 💕📊",
-        "I'm better at matching businesses with loans than people with people! 💘💼",
-        "Love is great, but have you considered loving your own business? Let's make that happen! ❤️🏢"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
-    } else if (lowerMessage.includes('politics') || lowerMessage.includes('political') || lowerMessage.includes('election')) {
-      const responses = [
-        "I stay out of politics, but I'm very political about proper loan documentation! 🗳️📋",
-        "The only campaign I run is for your loan approval! Vote for better business financing! 🏛️💰",
-        "Politics change, but SBA loan requirements are refreshingly consistent! Let's focus on what we can control. 📊"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
+      response = "The only forecast I'm good at is loan approval odds. Speaking of which, what documents do you need help with?";
     } else {
-      const responses = [
-        "That's outside my wheelhouse — I'm laser-focused on SBA loans, business finance, and compliance. Think of me as your dedicated loan specialist! 🎯\n\nWhat can I help you with regarding your business financing needs?",
-        "I'm like a Swiss Army knife, but only for SBA loans! 🔧💼\n\nLet's get back to building your business empire, shall we?",
-        "My expertise is narrower than a laser beam, but twice as effective when it comes to SBA loans! ⚡\n\nWhat business financing questions can I tackle for you?",
-        "I'm the Sherlock Holmes of SBA compliance — but that mystery will have to wait! 🕵️‍♂️\n\nWhat loan-related puzzle can I solve for you today?"
-      ];
-      response = responses[Math.floor(Math.random() * responses.length)];
+      response = "That's outside my wheelhouse — I'm laser-focused on SBA loans, business finance, and compliance. What can I help you with regarding your business financing needs?";
     }
 
     return {
