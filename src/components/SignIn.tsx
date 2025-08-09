@@ -94,9 +94,9 @@ const SignIn: React.FC<SignInProps> = ({ onSignIn }) => {
           </div>
 
           {/* Security Notice */}
-          <div className="mt-8 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <div className="mt-8 p-4 bg-emerald-50 dark:bg-gray-700 border border-emerald-200 dark:border-gray-600 rounded-xl">
             <div className="flex items-start space-x-2">
-              <CheckCircle className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+              <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
               <div className="text-sm">
                <div className="font-medium text-emerald-800 dark:text-white mb-1">Secure & Compliant</div>
                <div className="text-emerald-700 dark:text-gray-200">
