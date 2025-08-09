@@ -144,28 +144,85 @@ Total Documents: ${totalDocs}
   };
 
   const generateOffTopicResponse = (message: string): Message => {
+    const lowerMessage = message.toLowerCase();
     let response = '';
     let suggestions: string[] = ['SBA loan requirements', 'Document checklist', 'Eligibility criteria', 'Interest rates'];
 
-    if (message.includes('messi') || message.includes('ronaldo')) {
+    if (lowerMessage.includes('messi') || lowerMessage.includes('ronaldo')) {
       const responses = [
-        "Both are great at scoring goals. I'm better at scoring you a compliant loan application. ⚽→💰",
-        "Messi's balance sheet? Untouchable. His SBA loan application? I'd have to see his tax returns first. 📊",
-        "If they ever apply for SBA loans, I'll give you the compliance breakdown. Until then, let's focus on YOUR financial goals! 🎯"
+        "Both are legends at scoring goals. I'm a legend at scoring you SBA loan approvals. ⚽→💰\n\nNow, shall we discuss your *actual* game plan for financing?",
+        "Messi's dribbling skills? Incredible. My skills at navigating SBA compliance? Also incredible. 🏆\n\nLet's put those skills to work on your loan application!",
+        "Ronaldo's work ethic is impressive, but have you seen my dedication to getting your loan approved? 💪\n\nSpeaking of work ethic, let's tackle your business financing!",
+        "If Messi needed an SBA loan for his next venture, I'd still ask for 3 years of tax returns. Rules are rules! 📋\n\nWhat's YOUR next business venture?",
+        "Both have amazing footwork. I have amazing *paperwork* skills. Guess which one gets you a loan? 📄✨"
       ];
       response = responses[Math.floor(Math.random() * responses.length)];
-    } else if (message.includes('football') || message.includes('soccer') || message.includes('sports')) {
-      response = "I'm more of a fan of interest rates than football scores — but I can help you score with a winning loan application! 🏆";
-    } else if (message.includes('joke') || message.includes('funny')) {
-      response = "Here's a good one: Why did the business owner love SBA loans? Because they come with a government guarantee — unlike my jokes! 😄 Now, what can I help you with regarding your loan application?";
-    } else if (message.includes('cat') || message.includes('dog') || message.includes('pet')) {
-      response = "Pets are great, but I specialize in business loans! Though if you're starting a pet-related business, I can definitely help with SBA financing options. 🐕💼";
-    } else if (message.includes('weather')) {
-      response = "The only forecast I'm good at is loan approval odds! ☀️ Speaking of which, let's check what documents you need to brighten your approval chances.";
-    } else if (message.includes('movie') || message.includes('music')) {
-      response = "I'm more into reading SBA SOPs than scripts, but I can help you finance your entertainment business if that's what you're planning! 🎬💰";
+    } else if (lowerMessage.includes('football') || lowerMessage.includes('soccer') || lowerMessage.includes('sports')) {
+      const responses = [
+        "I'm more of a fan of interest rates than football scores — but I can help you score with a winning loan application! 🏆",
+        "The only stats I track are debt-to-income ratios and cash flow projections. Much more exciting than sports, right? 📊😉",
+        "Sports betting? Risky. SBA loans? Government-backed. I know which team I'm on! 🏦",
+        "Fantasy football is fun, but have you considered the fantasy of owning your own business? Let's make it reality! 💼✨"
+      ];
+      response = responses[Math.floor(Math.random() * responses.length)];
+    } else if (lowerMessage.includes('joke') || lowerMessage.includes('funny') || lowerMessage.includes('humor')) {
+      const responses = [
+        "Here's a good one: Why did the business owner love SBA loans? Because they come with a government guarantee — unlike my jokes! 😄\n\nNow, what can I help you with regarding your loan application?",
+        "Why don't SBA loans ever get rejected at parties? Because they always bring proper documentation! 📋😂\n\nSpeaking of documentation...",
+        "What's the difference between a comedian and an SBA loan officer? One makes people laugh, the other makes dreams come true! 🎭💰",
+        "I'd tell you a joke about interest rates, but the punchline would compound over time... 📈😏\n\nBut seriously, let's discuss YOUR rates!"
+      ];
+      response = responses[Math.floor(Math.random() * responses.length)];
+    } else if (lowerMessage.includes('cat') || lowerMessage.includes('dog') || lowerMessage.includes('pet')) {
+      const responses = [
+        "Pets are adorable, but I specialize in business loans! Though if you're starting a pet-related business, I'm your guy! 🐕💼",
+        "I love pets, but I'm more of a 'cash flow' person than a 'cash for treats' person. Pet business financing, anyone? 🐱💰",
+        "Fun fact: Pet industry loans are quite popular! Grooming, boarding, veterinary clinics... Want to explore pet business opportunities? 🐾📈"
+      ];
+      response = responses[Math.floor(Math.random() * responses.length)];
+    } else if (lowerMessage.includes('weather')) {
+      const responses = [
+        "The only forecast I'm good at is loan approval odds! ☀️ Speaking of which, let's check what documents you need to brighten your approval chances.",
+        "Sunny skies ahead for your business with the right SBA loan! ⛅ What's your business forecast looking like?",
+        "I can't predict rain, but I can predict your loan approval chances with the right documentation! 🌦️📋"
+      ];
+      response = responses[Math.floor(Math.random() * responses.length)];
+    } else if (lowerMessage.includes('movie') || lowerMessage.includes('music') || lowerMessage.includes('entertainment')) {
+      const responses = [
+        "I'm more into reading SBA SOPs than scripts, but I can help you finance your entertainment business! 🎬💰",
+        "The only blockbuster I care about is your business success story! Ready to write the script? 🎭📝",
+        "Entertainment industry financing is actually quite interesting! Lots of creative businesses need SBA loans. Tell me more! 🎵💼"
+      ];
+      response = responses[Math.floor(Math.random() * responses.length)];
+    } else if (lowerMessage.includes('food') || lowerMessage.includes('cooking') || lowerMessage.includes('recipe')) {
+      const responses = [
+        "I don't cook, but I can help you cook up a great business plan for a restaurant! 👨‍🍳💰",
+        "Recipe for success: 1 cup of business plan, 2 tablespoons of financial statements, and a dash of SBA loan! 🍳📋",
+        "Food business loans are my specialty! Restaurants, food trucks, catering... What's cooking? 🍕💼"
+      ];
+      response = responses[Math.floor(Math.random() * responses.length)];
+    } else if (lowerMessage.includes('love') || lowerMessage.includes('dating') || lowerMessage.includes('relationship')) {
+      const responses = [
+        "The only relationship advice I give is about the relationship between debt and equity! 💕📊",
+        "I'm better at matching businesses with loans than people with people! 💘💼",
+        "Love is great, but have you considered loving your own business? Let's make that happen! ❤️🏢"
+      ];
+      response = responses[Math.floor(Math.random() * responses.length)];
+    } else if (lowerMessage.includes('politics') || lowerMessage.includes('political') || lowerMessage.includes('election')) {
+      const responses = [
+        "I stay out of politics, but I'm very political about proper loan documentation! 🗳️📋",
+        "The only campaign I run is for your loan approval! Vote for better business financing! 🏛️💰",
+        "Politics change, but SBA loan requirements are refreshingly consistent! Let's focus on what we can control. 📊"
+      ];
+      response = responses[Math.floor(Math.random() * responses.length)];
     } else {
-      response = "That's outside my wheelhouse — I'm laser-focused on SBA loans, business finance, and compliance. Think of me as your dedicated loan specialist. What can I help you with regarding your business financing needs? 🎯";
+      const responses = [
+        "That's outside my wheelhouse — I'm laser-focused on SBA loans, business finance, and compliance. Think of me as your dedicated loan specialist! 🎯\n\nWhat can I help you with regarding your business financing needs?",
+        "I'm like a Swiss Army knife, but only for SBA loans! 🔧💼\n\nLet's get back to building your business empire, shall we?",
+        "My expertise is narrower than a laser beam, but twice as effective when it comes to SBA loans! ⚡\n\nWhat business financing questions can I tackle for you?",
+        "I'm the Sherlock Holmes of SBA compliance — but that mystery will have to wait! 🕵️‍♂️\n\nWhat loan-related puzzle can I solve for you today?"
+      ];
+      response = responses[Math.floor(Math.random() * responses.length)];
     }
 
     return {
@@ -281,82 +338,145 @@ Factors affecting timeline: completeness of application, loan amount, business c
 Size Standards vary by industry (measured by employees or annual receipts). Most businesses qualify if they have fewer than 500 employees.`;
       suggestions = ['Calculate loan payments', 'Industry size standards', 'Guarantee percentages'];
     } else if (lowerMessage.includes('interest') || lowerMessage.includes('rate')) {
-      response = `Current SBA 7(a) loan interest rates (as of January 2025):
+      const rateResponses = [
+        `🎯 **Current SBA 7(a) Rates** (January 2025):
 
-📈 Standard 7(a) Loans:
-• Loans ≤$50,000: Prime + 4.75% (currently ~12.25%)
-• Loans >$50,000: Prime + 2.75% (currently ~10.25%)
-• Variable or fixed rate options available
+**Standard 7(a) Loans:**
+• ≤$50K: Prime + 4.75% (~12.25% today)
+• >$50K: Prime + 2.75% (~10.25% today)
 
-⚡ SBA Express Loans:
-• Up to $500,000
-• Prime + 6.5% (currently ~14%)
-• Faster approval (36 hours)
+**SBA Express:** Prime + 6.5% (~14%) - *36-hour approval!*
 
-🏢 Real Estate Loans:
-• 10-25 year terms available
-• Slightly lower rates for owner-occupied properties
+**Real Estate:** 10-25 year terms, better rates for owner-occupied
 
-💡 Rate Factors:
-• Prime rate (currently 7.5%)
-• Loan amount and term
-• Borrower creditworthiness
-• Lender's margin
+💡 **Pro Tip:** These rates are 1-3% lower than conventional business loans. Your credit score and loan amount will fine-tune the exact rate.
 
-Remember: Rates change with the Federal Reserve's decisions. What you see today might be different next month — but SBA rates are typically 1-3% lower than conventional business loans.`;
+What loan amount are you considering? I can give you a more precise estimate! 🎯`,
+        
+        `📊 **Interest Rate Reality Check** (January 2025):
+
+The good news: SBA rates are government-subsidized, so you're getting a deal!
+
+**Current Landscape:**
+• Prime Rate: 7.5% (thanks, Federal Reserve! 📈)
+• SBA 7(a): 10.25%-12.25% depending on loan size
+• Conventional Business Loans: 13%-18% (ouch!)
+
+**Rate Factors That Matter:**
+✅ Your credit score (720+ gets the best rates)
+✅ Loan amount (bigger loans = better rates)
+✅ Collateral strength
+✅ Industry risk level
+
+**Reality Check:** Rates change monthly with Fed decisions, but SBA loans consistently beat conventional financing.
+
+What's your target loan amount? Let's see what rate bracket you'd fall into! 💰`
+      ];
+      response = rateResponses[Math.floor(Math.random() * rateResponses.length)];
       suggestions = ['Loan terms and payments', 'Fixed vs variable rates', 'How to qualify for best rates'];
     } else if (lowerMessage.includes('tax') || lowerMessage.includes('irs') || lowerMessage.includes('return')) {
-      response = `Tax return requirements for SBA loans (the fun stuff):
+      const taxResponses = [
+        `📋 **Tax Return Requirements** (The *Fun* Stuff):
 
-📋 Required Tax Documents:
+**What You Need:**
 • Business returns: 3 complete years + current YTD
 • Personal returns: 3 years for all owners ≥20%
-• All schedules and attachments included
-• **Must be signed and dated** (this trips up 40% of applicants)
+• **MUST BE SIGNED & DATED** ← This trips up 40% of applicants!
 
-🔍 What the SBA Looks For:
+**What We're Really Looking For:**
 • Consistent income trends
-• Debt service coverage ability
-• No significant tax liens or issues
-• Reasonable owner compensation
+• Can you actually pay this loan back?
+• No scary IRS liens lurking around
+• Owner salary that makes sense (not $1M on $50K revenue!)
 
-⚠️ Common Tax Return Issues:
-• Unsigned returns (automatic rejection)
-• Missing schedules (K-1s, depreciation, etc.)
-• Amended returns without explanation
-• Large NOLs without business justification
+**Common Mistakes:**
+❌ Unsigned returns = instant rejection
+❌ Missing K-1s or depreciation schedules
+❌ Amended returns with no explanation
+❌ Massive losses with no business reason
 
-💼 Business Structure Matters:
-• C-Corp: 1120 + personal returns
-• S-Corp: 1120S + K-1s + personal returns
-• Partnership: 1065 + K-1s + personal returns
-• Sole Prop: Schedule C + personal returns
+**Pro Tip:** CPA-prepared returns get bonus points. Shows you take compliance seriously!
 
-Pro tip: If your accountant prepared them, get a "prepared by" statement. The SBA loves seeing professional tax prep — it suggests you take compliance seriously.`;
+What's your business structure? I can tell you exactly which forms you need! 🎯`,
+        
+        `🎭 **Tax Returns: The SBA's Favorite Bedtime Reading**
+
+Here's what makes the SBA's heart flutter when reviewing your taxes:
+
+**The Golden Rules:**
+1. **Signatures Required** - Unsigned = automatic "nope"
+2. **Complete Packages** - All schedules, all attachments
+3. **3-Year Story** - They want to see your business journey
+4. **Consistency** - Wild swings need explanations
+
+**Business Structure Breakdown:**
+• **Sole Prop:** Schedule C + personal 1040s
+• **S-Corp:** 1120S + K-1s + personal returns
+• **Partnership:** 1065 + K-1s + everyone's personal returns
+• **C-Corp:** 1120 + personal returns for owners
+
+**Red Flags That Make Underwriters Nervous:**
+🚩 Losses without clear business reasons
+🚩 Owner salary of $200K when business made $50K
+🚩 Amended returns with mysterious explanations
+🚩 Missing depreciation schedules
+
+**Green Flags That Make Them Happy:**
+✅ CPA preparation
+✅ Consistent profitability
+✅ Reasonable owner compensation
+✅ Clean IRS compliance history
+
+Got your returns ready, or do we need to discuss what's missing? 📊`
+      ];
+      response = taxResponses[Math.floor(Math.random() * taxResponses.length)];
       suggestions = ['Tax return red flags', 'Amended return issues', 'Business vs personal tax questions'];
     } else {
-      response = `I'm your SBA loan specialist — think of me as your compliance-focused financial advisor. Here's what I can help you navigate:
+      const generalResponses = [
+        `🎯 **I'm Your SBA Loan Specialist** — Think of me as your compliance-focused financial advisor with a sense of humor!
 
-🎯 **My Expertise:**
+**My Superpowers:**
 • SBA loan requirements & eligibility (SOP 50 10 7.1)
-• Document preparation & compliance
-• Financial statement analysis
-• Tax return requirements & red flags
-• Business plan guidance
-• Loan application strategy
+• Document prep that actually gets approved
+• Spotting red flags before they become problems
+• Translating SBA-speak into human language
+• Making compliance... dare I say... interesting?
 
-💡 **Popular Questions:**
-• "What documents do I need for my industry?"
-• "Why was my application denied?"
-• "How do I improve my approval odds?"
-• "What's taking so long with my application?"
+**Questions I Love Answering:**
+• "What documents do I *actually* need?" (not the generic list)
+• "Why do applications get denied?" (spoiler: usually documentation)
+• "How do I improve my approval odds?" (I have strategies!)
+• "What's realistic for my situation?" (honest assessments only)
 
-🚀 **Quick Wins:**
-• Upload your documents for instant feedback
-• Get compliance status in real-time
-• Understand exactly what the SBA wants to see
+**My Promise:** No generic answers, no false hope, just practical guidance that actually works.
 
-What specific aspect of your SBA loan journey can I help you tackle today?`;
+What's your biggest SBA loan question or concern right now? 🚀`,
+        
+        `💼 **Welcome to SBA Loan Mastery 101!**
+
+I'm like a GPS for navigating SBA loan requirements — I'll get you there, avoid the traffic jams, and maybe crack a joke along the way.
+
+**What Makes Me Different:**
+✨ I actually read the SBA SOPs (all 700+ pages!)
+✨ I've seen every mistake in the book (and some creative new ones)
+✨ I give you the real timeline, not the marketing timeline
+✨ I explain *why* things matter, not just *what* you need
+
+**My Favorite Topics:**
+🎯 Eligibility requirements (are you actually qualified?)
+📋 Document strategies (what order, what format, what matters)
+💰 Interest rates & terms (current market reality)
+⚡ Timeline expectations (spoiler: longer than you think)
+🚩 Red flags & how to avoid them
+
+**Current Market Reality Check:**
+• Approval rates: ~60% (but 90%+ with proper prep)
+• Average timeline: 60-90 days (if everything goes smoothly)
+• Most common rejection reason: Incomplete documentation
+
+What's your starting point? New to SBA loans, or already in the process? 🎯`
+      ];
+      response = generalResponses[Math.floor(Math.random() * generalResponses.length)];
       suggestions = ['Check my eligibility', 'Required documents for my business', 'Why do applications get denied?', 'Current interest rates'];
     }
 
