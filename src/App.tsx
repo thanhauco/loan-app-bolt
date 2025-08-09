@@ -23,6 +23,12 @@ function App() {
   const [chatPanelWidth, setChatPanelWidth] = useState(384); // 24rem = 384px
   const [isDragging, setIsDragging] = useState(false);
 
+  // Debug function to ensure tab switching works
+  const handleTabChange = (tabId: string) => {
+    console.log('Switching to tab:', tabId);
+    setActiveTab(tabId);
+  };
+
   const handleSignIn = (userData: { name: string; email: string; type: 'gmail' | 'guest' }) => {
     setUser(userData);
     navigate('/');
@@ -197,12 +203,13 @@ function App() {
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
+                   onClick={() => handleTabChange(tab.id)}
                     className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                       activeTab === tab.id
                         ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                         : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
+                   type="button"
                   >
                     <tab.icon className="h-4 w-4" />
                     <span>{tab.label}</span>
@@ -213,6 +220,7 @@ function App() {
 
             {/* Tab Content */}
             <div className="flex-1 overflow-auto">
+             {console.log('Current active tab:', activeTab)}
               {activeTab === 'overview' && (
                 <ApplicationOverview 
                   uploadedDocuments={uploadedDocuments}
