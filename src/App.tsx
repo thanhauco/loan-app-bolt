@@ -112,6 +112,14 @@ function App() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
+                <div className="bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 rounded-full">
+                  <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">Active Application</span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
+                  <Calendar className="h-4 w-4" />
+                  <span>Last updated: Today</span>
+                </div>
+                
                 {/* Theme Toggle */}
                 <button
                   onClick={toggleTheme}
@@ -148,14 +156,6 @@ function App() {
                       Sign Out
                     </button>
                   </div>
-                </div>
-                
-                <div className="bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 rounded-full">
-                  <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">Active Application</span>
-                </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
-                  <Calendar className="h-4 w-4" />
-                  <span>Last updated: Today</span>
                 </div>
               </div>
             </div>
