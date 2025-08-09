@@ -98,8 +98,8 @@ const SignIn: React.FC<SignInProps> = ({ onSignIn }) => {
             <div className="flex items-start space-x-2">
               <CheckCircle className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
               <div className="text-sm">
-               <div className="font-medium text-emerald-800 dark:text-emerald-200 mb-1">Secure & Compliant</div>
-               <div className="text-emerald-700 dark:text-emerald-300">
+               <div className="font-medium text-emerald-800 dark:text-emerald-100 mb-1">Secure & Compliant</div>
+               <div className="text-emerald-700 dark:text-emerald-200">
                   Your data is protected with bank-level security and complies with SBA privacy requirements.
                 </div>
               </div>
