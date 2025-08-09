@@ -176,7 +176,7 @@ function App() {
         <div className="flex h-[calc(100vh-80px)]">
           {/* Chatbot Sidebar */}
           <div 
-            className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-colors"
+            className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-colors relative z-10"
             style={{ width: `${chatPanelWidth}px` }}
           >
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -194,16 +194,16 @@ function App() {
 
           {/* Resizable Divider */}
           <div
-            className={`w-1 bg-gray-200 dark:bg-gray-700 hover:bg-blue-500 dark:hover:bg-blue-400 cursor-col-resize transition-colors ${
+            className={`w-1 bg-gray-200 dark:bg-gray-700 hover:bg-blue-500 dark:hover:bg-blue-400 cursor-col-resize transition-colors relative z-10 ${
               isDragging ? 'bg-blue-500 dark:bg-blue-400' : ''
             }`}
             onMouseDown={handleMouseDown}
           />
 
           {/* Main Content */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col relative z-0">
             {/* Tab Navigation */}
-            <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors relative z-10">
+            <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors relative z-50">
               <nav className="flex space-x-8 px-6">
                 {tabs.map((tab) => (
                   <button
@@ -218,9 +218,14 @@ function App() {
                       activeTab === tab.id
                         ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                         : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
-                    }`}
+                    } relative z-50`}
                     type="button"
-                    style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+                    style={{ 
+                      pointerEvents: 'auto', 
+                      cursor: 'pointer',
+                      position: 'relative',
+                      zIndex: 100
+                    }}
                   >
                     <tab.icon className="h-4 w-4" />
                     <span>{tab.label}</span>
