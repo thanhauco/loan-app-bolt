@@ -137,6 +137,10 @@ Total Documents: ${totalDocs}
     let response = '';
     let suggestions: string[] = [];
 
+    // Check for off-topic questions first
+    if (isOffTopic(lowerMessage)) {
+      return generateOffTopicResponse(lowerMessage);
+    }
     if (lowerMessage.includes('upload') || lowerMessage.includes('document') || lowerMessage.includes('file') || lowerMessage.includes('status')) {
       const totalDocs = uploadedDocuments.length;
       const validDocs = uploadedDocuments.filter(doc => doc.status === 'valid').length;
@@ -209,16 +213,31 @@ All documents must be current and comply with SBA SOP 50 10 7.1 guidelines.`;
 Your business must demonstrate ability to repay the loan.`;
       suggestions = ['Required documents checklist', 'Loan amount limits', 'Interest rates'];
     } else if (lowerMessage.includes('time') || lowerMessage.includes('process') || lowerMessage.includes('long')) {
-      response = `SBA loan processing timeline:
+      response = `Here's the realistic SBA loan timeline (not the marketing brochure version):
 
-• Pre-Application: 1-2 weeks (document preparation)
-• Application Review: 30-60 days (lender review)
-• SBA Review: 5-10 business days (SBA approval)
-• Closing: 2-3 weeks (final documentation)
+⏱️ Document Preparation: 2-4 weeks
+• Gathering 3 years of financials
+• Business plan preparation
+• Legal document review
 
-Total Timeline: 60-90 days on average
+🔍 Lender Review: 30-45 days
+• Credit analysis and underwriting
+• Document verification
+• Initial approval decision
 
-Factors affecting timeline: completeness of application, loan amount, business complexity, and lender efficiency.`;
+🏛️ SBA Review: 5-10 business days
+• Final compliance check
+• SBA guarantee approval
+• Conditions and requirements
+
+📋 Closing Process: 2-3 weeks
+• Final documentation
+• Legal review and signatures
+• Fund disbursement
+
+**Total Timeline: 60-90 days** (if everything goes smoothly)
+
+Reality check: Add 2-4 weeks for document corrections, follow-up questions, and the occasional "we need one more form" surprise.`;
       suggestions = ['Speed up my application', 'What causes delays?', 'Required documents'];
     } else if (lowerMessage.includes('amount') || lowerMessage.includes('much') || lowerMessage.includes('size')) {
       response = `SBA 7(a) loan amounts and limits:
