@@ -155,7 +155,13 @@ Total Documents: ${totalDocs}
           "I could talk about Messi's loan applications… but I don't think he needs one. Let's get back to SBA loans.",
           "I'm more of a fan of interest rates than football scores — but I can help you score a compliant loan application.",
           "Both are great at goals. I'm better at goal sheets. What's your business goal?",
-          "Messi vs Ronaldo? That's a tough call. SBA 7(a) vs SBA Express? Now that I can help you decide."
+          "Messi vs Ronaldo? That's a tough call. SBA 7(a) vs SBA Express? Now that I can help you decide.",
+          "Both have impressive net worth. I can help you build yours with the right SBA loan.",
+          "They're both legends on the field. I'm a legend at getting loans approved. Want to see?",
+          "Great debate! Here's another one: 7(a) loan or SBA Express for your business?",
+          "Both score goals. I score loan approvals. Which skill is more useful for your business?",
+          "I don't pick sides in football, but I do pick the best loan options for your business.",
+          "They compete for trophies. I compete for your loan approval. Guess who has better odds?"
         ];
         response = responses[Math.floor(Math.random() * responses.length)];
       } else if (lowerMessage.includes('messi')) {
@@ -163,7 +169,13 @@ Total Documents: ${totalDocs}
           "Messi? Great at goals. I'm better at goal sheets.",
           "I could talk about Messi's loan applications… but I don't think he needs one. Let's get back to SBA loans.",
           "Messi's got amazing ball control. I've got amazing loan control. Which one helps your business?",
-          "If Messi ever needs business financing, I'll be here. Until then, let's focus on YOUR loan needs."
+          "If Messi ever needs business financing, I'll be here. Until then, let's focus on YOUR loan needs.",
+          "Messi's great at free kicks. I'm great at free consultations on SBA loans.",
+          "He's the GOAT on the field. I'm the GOAT at SBA compliance. Different fields, same excellence.",
+          "Messi makes millions per game. I can help you make your first million through smart financing.",
+          "His dribbling is legendary. My loan application process is pretty smooth too.",
+          "Messi retired from international play. I never retire from helping with loan applications.",
+          "He's got World Cup trophies. I've got loan approval strategies. Both are pretty valuable."
         ];
         response = responses[Math.floor(Math.random() * responses.length)];
       } else if (lowerMessage.includes('ronaldo')) {
@@ -171,7 +183,13 @@ Total Documents: ${totalDocs}
           "Ronaldo's great at free kicks. I'm great at free consultations on SBA loans.",
           "I'm more of a fan of interest rates than football scores — but I can help you score a compliant loan application.",
           "Ronaldo's got dedication. I've got dedication to getting your loan approved. Let's channel that energy!",
-          "CR7? Impressive. SBA 7(a) loans? Also impressive, and more relevant to your business goals."
+          "CR7? Impressive. SBA 7(a) loans? Also impressive, and more relevant to your business goals.",
+          "Ronaldo's known for his work ethic. I share that same energy for loan applications.",
+          "He's scored over 800 goals. I've helped score hundreds of loan approvals. Different games, same results.",
+          "Ronaldo reinvented himself at every club. I can help reinvent your business with the right financing.",
+          "His headers are unstoppable. My loan guidance is pretty solid too.",
+          "CR7 never gives up. Neither do I when it comes to getting your loan approved.",
+          "He's got five Ballon d'Ors. I've got five-star loan advice. Both are award-worthy."
         ];
         response = responses[Math.floor(Math.random() * responses.length)];
       }
