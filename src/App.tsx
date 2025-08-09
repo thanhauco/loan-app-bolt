@@ -20,6 +20,8 @@ function App() {
   });
   const [chatMessages, setChatMessages] = useState<any[]>([]);
   const [triggerChatUpdate, setTriggerChatUpdate] = useState(0);
+  const [chatPanelWidth, setChatPanelWidth] = useState(384); // 24rem = 384px
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleSignIn = (userData: { name: string; email: string; type: 'gmail' | 'guest' }) => {
     setUser(userData);
@@ -42,6 +44,48 @@ function App() {
     setTriggerChatUpdate(prev => prev + 1);
   };
   const MainApp = () => {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return;
+    
+    const newWidth = e.clientX;
+    const maxWidth = window.innerWidth * 0.4; // 40% of screen width
+    const minWidth = 280; // Minimum width for usability
+    
+    if (newWidth >= minWidth && newWidth <= maxWidth) {
+      setChatPanelWidth(newWidth);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  React.useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    } else {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, [isDragging]);
+
     if (!user) {
       return <Navigate to="/signin" replace />;
     }
@@ -108,7 +152,10 @@ function App() {
 
         <div className="flex h-[calc(100vh-80px)]">
           {/* Chatbot Sidebar */}
-          <div className="w-96 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-colors">
+          <div 
+            className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-colors"
+            style={{ width: `${chatPanelWidth}px` }}
+          >
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center space-x-2">
                 <MessageCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -121,6 +168,14 @@ function App() {
               triggerUpdate={triggerChatUpdate}
             />
           </div>
+
+          {/* Resizable Divider */}
+          <div
+            className={`w-1 bg-gray-200 dark:bg-gray-700 hover:bg-blue-500 dark:hover:bg-blue-400 cursor-col-resize transition-colors ${
+              isDragging ? 'bg-blue-500 dark:bg-blue-400' : ''
+            }`}
+            onMouseDown={handleMouseDown}
+          />
 
           {/* Main Content */}
           <div className="flex-1 flex flex-col">
