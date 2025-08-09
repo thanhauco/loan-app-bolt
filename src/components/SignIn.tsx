@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, User, Shield, CheckCircle, X } from 'lucide-react';
+import { Mail, User, Shield, CheckCircle, X, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface SignInProps {
@@ -7,7 +7,7 @@ interface SignInProps {
 }
 
 const SignIn: React.FC<SignInProps> = ({ onSignIn }) => {
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, toggleTheme } = useTheme();
   const [showGmailPopup, setShowGmailPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,6 +41,19 @@ const SignIn: React.FC<SignInProps> = ({ onSignIn }) => {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4 transition-colors">
+      {/* Dark Mode Toggle - Fixed Position */}
+      <button
+        onClick={toggleTheme}
+        className="fixed top-6 right-6 p-3 rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 z-10"
+        title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {isDarkMode ? (
+          <Sun className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+        ) : (
+          <Moon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+        )}
+      </button>
+      
       <div className="max-w-md w-full">
         {/* Logo and Header */}
         <div className="text-center mb-8">
