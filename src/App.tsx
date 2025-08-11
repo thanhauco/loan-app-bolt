@@ -7,6 +7,7 @@ import ChatBot from './components/ChatBot';
 import DocumentUpload from './components/DocumentUpload';
 import ComplianceChecker from './components/ComplianceChecker';
 import ApplicationOverview from './components/ApplicationOverview';
+import TestDocumentGenerator from './components/TestDocumentGenerator';
 
 function App() {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -112,6 +113,7 @@ function App() {
       { id: 'overview', label: 'Overview', icon: Building },
       { id: 'documents', label: 'Documents', icon: FileText },
       { id: 'compliance', label: 'Compliance', icon: CheckCircle },
+      { id: 'test-generator', label: 'Test Documents', icon: Upload },
     ];
 
     return (
@@ -271,6 +273,9 @@ function App() {
                   complianceStatus={complianceStatus}
                   setComplianceStatus={setComplianceStatus}
                 />
+              )}
+              {activeTab === 'test-generator' && (
+                <TestDocumentGenerator />
               )}
             </div>
           </div>
