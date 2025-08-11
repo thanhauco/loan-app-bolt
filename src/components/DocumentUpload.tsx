@@ -113,7 +113,8 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         'application/vnd.ms-excel',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'image/jpeg',
-        'image/png'
+        'image/png',
+        'text/plain'
       ];
 
       if (file.size > maxSize) {
@@ -272,7 +273,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
               onChange={(e) => e.target.files && handleFiles(e.target.files)}
               className="hidden"
               id="file-upload"
-              accept=".pdf,.doc,.docx,.xlsx,.xls,.jpg,.jpeg,.png"
+              accept=".pdf,.doc,.docx,.xlsx,.xls,.jpg,.jpeg,.png,.txt"
             />
             <label
               htmlFor="file-upload"
@@ -282,7 +283,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
               Choose Files
             </label>
             <div className="mt-2 text-xs text-gray-500">
-              Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Max 10MB)
+              Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG, TXT (Max 10MB)
             </div>
           </div>
 

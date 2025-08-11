@@ -157,6 +157,20 @@ export class DocumentVettingEngine {
 
   async extractTextFromFile(file: File): Promise<string> {
     try {
+      // If it's a text file, read it directly
+      if (file.type === 'text/plain') {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const text = e.target?.result as string;
+            resolve(text);
+          };
+          reader.onerror = () => reject(new Error('Failed to read text file'));
+          reader.readAsText(file);
+        });
+      }
+      
+      // For other file types, use OCR
       const result = await Tesseract.recognize(file, 'eng', {
         logger: m => console.log('OCR Progress:', m)
       });
