@@ -29,10 +29,11 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       icon: Building,
       color: 'blue',
       required: [
-        'Business License',
-        'Articles of Incorporation',
-        'Operating Agreement',
-        'Franchise Agreement (if applicable)'
+        'Business License (current)',
+        'Articles of Incorporation/Organization',
+        'Operating Agreement/Partnership Agreement',
+        'Franchise Agreement (if applicable)',
+        'Business Registration Certificate'
       ]
     },
     {
@@ -41,10 +42,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       icon: DollarSign,
       color: 'emerald',
       required: [
-        'Business Tax Returns (3 years)',
-        'Profit & Loss Statements',
-        'Balance Sheets',
-        'Cash Flow Statements'
+        'Business Tax Returns (3 complete years)',
+        'Interim Financial Statements (current YTD)',
+        'Profit & Loss Statements (3 years)',
+        'Balance Sheets (3 years)',
+        'Cash Flow Statements',
+        'Accounts Receivable/Payable Aging'
       ]
     },
     {
@@ -53,10 +56,11 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       icon: User,
       color: 'purple',
       required: [
-        'Personal Tax Returns (3 years)',
-        'Personal Financial Statement',
-        'Resume/Business Experience',
-        'Credit Authorization'
+        'Personal Tax Returns (3 complete years)',
+        'Personal Financial Statement (SBA Form 413)',
+        'Resume/Business Experience Summary',
+        'Credit Authorization (SBA Form 1846)',
+        'Personal History Statement (SBA Form 912)'
       ]
     },
     {
@@ -65,11 +69,13 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       icon: FileText,
       color: 'orange',
       required: [
-        'Business Plan',
-        'Use of Funds Statement',
-        'Debt Schedule',
-        'Lease Agreements',
-        'Purchase Agreements'
+        'Business Plan (comprehensive)',
+        'Use of Funds Statement (detailed)',
+        'Debt Schedule (SBA Form 2202)',
+        'Lease Agreements (current)',
+        'Purchase Agreements/Contracts',
+        'Loan Application (SBA Form 1919)',
+        'Environmental Questionnaire'
       ]
     }
   ];
@@ -126,14 +132,16 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
 
   const getDocumentRequirements = (filename: string): string[] => {
     const name = filename.toLowerCase();
-    if (name.includes('tax') || name.includes('1040')) {
-      return ['Must be signed and dated', 'All schedules included', 'Recent 3 years required'];
-    } else if (name.includes('financial') || name.includes('balance')) {
-      return ['CPA prepared preferred', 'Current year-to-date', 'Comparative periods'];
+    if (name.includes('tax') || name.includes('1040') || name.includes('1120')) {
+      return ['Must be signed and dated', 'All schedules included', 'Complete 3 years required', 'IRS transcripts may be requested'];
+    } else if (name.includes('financial') || name.includes('balance') || name.includes('profit')) {
+      return ['CPA prepared preferred', 'Current year-to-date required', 'Comparative 3-year periods', 'Notes to financial statements'];
     } else if (name.includes('business plan')) {
-      return ['Executive summary', 'Market analysis', 'Financial projections', 'Management team'];
+      return ['Executive summary', 'Market analysis', '3-year financial projections', 'Management team bios', 'Use of loan proceeds'];
+    } else if (name.includes('personal financial') || name.includes('413')) {
+      return ['SBA Form 413 required', 'Must be current (within 90 days)', 'All assets and liabilities', 'Signed and dated'];
     }
-    return ['Legible and complete', 'Current and valid', 'Properly executed'];
+    return ['Legible and complete', 'Current and valid', 'Properly executed', 'All pages included'];
   };
 
   const validateDocument = (doc: Document) => {
