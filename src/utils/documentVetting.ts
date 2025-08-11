@@ -242,7 +242,7 @@ export class DocumentVettingEngine {
     // Check for required fields
     const requiredFields = SBA_REQUIREMENTS.businessLicense.requiredFields;
     const foundFields = requiredFields.filter(pattern => pattern.test(text));
-    confidence += (foundFields.length / requiredFields.length) * 40;
+    confidence += (foundFields.length / requiredFields.length) * 50;
 
     if (foundFields.length < requiredFields.length) {
       issues.push(`Missing required fields: ${requiredFields.length - foundFields.length} fields not found`);
@@ -282,7 +282,8 @@ export class DocumentVettingEngine {
       confidence += 10;
     }
 
-    const status = confidence >= 70 && issues.length === 0 ? 'valid' : 'invalid';
+    // SBA SOP 50 10 8: Business license must be current and complete
+    const status = confidence >= 75 && issues.filter(i => !i.includes('quality')).length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -353,7 +354,8 @@ export class DocumentVettingEngine {
       confidence -= 20;
     }
 
-    const status = confidence >= 70 && issues.length === 0 ? 'valid' : 'invalid';
+    // SBA SOP 50 10 8: Tax returns must be signed, complete, and within 3 years
+    const status = confidence >= 80 && issues.filter(i => !i.includes('incomplete')).length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -428,7 +430,8 @@ export class DocumentVettingEngine {
       confidence += 10;
     }
 
-    const status = confidence >= 65 && issues.length <= 1 ? 'valid' : 'invalid';
+    // SBA SOP 50 10 8: Financial statements must be current and complete
+    const status = confidence >= 70 && issues.filter(i => !i.includes('CPA')).length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -490,7 +493,8 @@ export class DocumentVettingEngine {
       confidence -= 10;
     }
 
-    const status = confidence >= 70 && issues.length === 0 ? 'valid' : 'invalid';
+    // SBA SOP 50 10 8: Personal financial statement must be current (90 days) and signed
+    const status = confidence >= 75 && issues.length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -541,7 +545,8 @@ export class DocumentVettingEngine {
       confidence += 15;
     }
 
-    const status = confidence >= 60 && issues.length <= 1 ? 'valid' : 'invalid';
+    // SBA SOP 50 10 8: Business plan must be comprehensive with required sections
+    const status = confidence >= 65 && issues.filter(i => !i.includes('brief')).length <= 1 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -632,7 +637,8 @@ export class DocumentVettingEngine {
       confidence += 20;
     }
 
-    const status = confidence >= 65 ? 'valid' : 'invalid';
+    // SBA SOP 50 10 8: Use of funds must have detailed breakdown
+    const status = confidence >= 70 && issues.length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -677,7 +683,8 @@ export class DocumentVettingEngine {
       confidence += 20;
     }
 
-    const status = confidence >= 60 && issues.length === 0 ? 'valid' : 'invalid';
+    // SBA SOP 50 10 8: Articles must be properly filed with state
+    const status = confidence >= 65 && issues.length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
