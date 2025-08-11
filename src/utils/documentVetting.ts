@@ -132,14 +132,20 @@ export const SBA_REQUIREMENTS = {
       /articles\s+of\s+incorporation/i,
       /certificate\s+of\s+incorporation/i,
       /articles\s+of\s+organization/i,
-      /operating\s+agreement/i
+      /operating\s+agreement/i,
+      /limited\s+liability\s+company/i,
+      /secretary\s+of\s+state/i
     ],
     requiredFields: [
       /business\s+name/i,
+      /company.*name/i,
       /state\s+of\s+incorporation/i,
+      /state\s+of\s+california/i,
       /registered\s+agent/i,
-      /authorized\s+shares/i,
-      /file\s+date/i
+      /agent\s+for\s+service/i,
+      /file\s+date|filing\s+date/i,
+      /file\s+number/i,
+      /effective\s+date/i
     ],
     mustBeRecent: false
   }
@@ -659,7 +665,7 @@ export class DocumentVettingEngine {
     const foundFields = requiredFields.filter(pattern => pattern.test(text));
     confidence += (foundFields.length / requiredFields.length) * 50;
 
-    if (foundFields.length < 3) {
+    if (foundFields.length < 2) {
       issues.push('Missing required incorporation information');
     }
 
@@ -671,7 +677,7 @@ export class DocumentVettingEngine {
       confidence += 20;
     }
 
-    const status = confidence >= 70 ? 'valid' : 'invalid';
+    const status = confidence >= 60 && issues.length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
