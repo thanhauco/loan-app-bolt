@@ -29,7 +29,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ uploadedDocuments = [], triggerUpdate
       content: 'Hello! I\'m your SBA Loan Assistant. I can help you understand SBA loan requirements, document checklist, and compliance guidelines. How can I assist you today?',
       timestamp: new Date(),
       suggestions: [
-        'What documents do I need for SBA 7(a) loan?',
+        'What documents do I need for SBA 7(a) loan under SOP 50 10 8?',
         'SBA loan eligibility requirements',
         'How long does the approval process take?',
         'SBA loan size standards'
@@ -364,21 +364,21 @@ What's your target loan amount? Let's see what rate bracket you'd fall into!`
         `Tax return requirements (the fun stuff):
 
 What you need:
-• Business returns: 3 complete years + current YTD
-• Personal returns: 3 years for all owners ≥20%
+• Business returns: 3 complete years + current YTD (per SOP 50 10 8)
+• Personal returns: 3 years for all owners ≥20% ownership
 • MUST BE SIGNED & DATED ← This trips up 40% of applicants!
 
 What we're really looking for:
 • Consistent income trends
 • Can you actually pay this loan back?
-• No scary IRS liens lurking around
+• Clean IRS compliance history (enhanced screening per SOP 50 10 8)
 • Owner salary that makes sense (not $1M on $50K revenue!)
 
 Common mistakes:
 • Unsigned returns = instant rejection
 • Missing K-1s or depreciation schedules
 • Amended returns with no explanation
-• Massive losses with no business reason
+• Unexplained losses or income volatility
 
 Pro tip: CPA-prepared returns get bonus points. Shows you take compliance seriously!
 
@@ -421,7 +421,7 @@ Got your returns ready, or do we need to discuss what's missing?`
         `I'm your SBA loan specialist — think of me as your compliance-focused financial advisor with a sense of humor!
 
 My superpowers:
-• SBA loan requirements & eligibility (SOP 50 10 7.1)
+• SBA loan requirements & eligibility (SOP 50 10 8)
 • Document prep that actually gets approved
 • Spotting red flags before they become problems
 • Translating SBA-speak into human language
@@ -450,13 +450,13 @@ What makes me different:
 My favorite topics:
 • Eligibility requirements (are you actually qualified?)
 • Document strategies (what order, what format, what matters)
-• Interest rates & terms (current market reality)
+• Interest rates & terms (per SOP 50 10 8 guidelines)
 • Timeline expectations (spoiler: longer than you think)
 • Red flags & how to avoid them
 
 Current market reality check:
-• Approval rates: ~60% (but 90%+ with proper prep)
-• Average timeline: 60-90 days (if everything goes smoothly)
+• Approval rates: ~65% (but 92%+ with proper SOP 50 10 8 compliance)
+• Average timeline: 45-75 days (streamlined under new procedures)
 • Most common rejection reason: Incomplete documentation
 
 What's your starting point? New to SBA loans, or already in the process?`
