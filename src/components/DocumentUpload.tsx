@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Upload, File, CheckCircle, AlertCircle, X, Eye, Download, FileText, DollarSign, Building, User } from 'lucide-react';
+import { DocumentVettingEngine, VettingResult } from '../utils/documentVetting';
 
 interface Document {
   id: string;
@@ -21,6 +22,7 @@ interface DocumentUploadProps {
 const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setUploadedDocuments }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('business');
+  const [vettingEngine] = useState(() => DocumentVettingEngine.getInstance());
 
   const documentCategories = [
     {
@@ -102,6 +104,28 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
 
   const handleFiles = (files: FileList) => {
     Array.from(files).forEach((file) => {
+      // Validate file type and size
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'image/jpeg',
+        'image/png'
+      ];
+
+      if (file.size > maxSize) {
+        alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+        return;
+      }
+
+      if (!allowedTypes.includes(file.type)) {
+        alert(`File ${file.name} is not a supported format.`);
+        return;
+      }
+
       const newDoc: Document = {
         id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
         name: file.name,
@@ -116,17 +140,36 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       // Add document immediately with pending status
       setUploadedDocuments(prev => [...prev, newDoc]);
 
-      // Simulate document validation
-      setTimeout(() => {
-        const validationResult = validateDocument(newDoc);
+      // Perform real document vetting
+      vettingEngine.vetDocument(file).then((result: VettingResult) => {
         setUploadedDocuments(prev => 
           prev.map(doc => 
             doc.id === newDoc.id 
-              ? { ...doc, ...validationResult }
+              ? { 
+                  ...doc, 
+                  status: result.status,
+                  issues: result.issues,
+                  requirements: getDocumentRequirements(file.name),
+                  confidence: result.confidence,
+                  extractedData: result.extractedData
+                }
               : doc
           )
         );
-      }, 2000);
+      }).catch((error) => {
+        console.error('Document vetting failed:', error);
+        setUploadedDocuments(prev => 
+          prev.map(doc => 
+            doc.id === newDoc.id 
+              ? { 
+                  ...doc, 
+                  status: 'invalid',
+                  issues: ['Document processing failed. Please ensure the file is not corrupted and try again.']
+                }
+              : doc
+          )
+        );
+      });
     });
   };
 
@@ -142,53 +185,6 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       return ['SBA Form 413 required', 'Must be current (within 90 days)', 'All assets and liabilities', 'Signed and dated'];
     }
     return ['Legible and complete', 'Current and valid', 'Properly executed', 'All pages included'];
-  };
-
-  const validateDocument = (doc: Document) => {
-    // Mock demo: For first 3 files uploaded, show 2 verified and 1 failed
-    const totalDocsCount = uploadedDocuments.length;
-    
-    if (totalDocsCount === 1) {
-      // First file - verified
-      return {
-        status: 'valid' as const,
-        issues: []
-      };
-    } else if (totalDocsCount === 2) {
-      // Second file - verified
-      return {
-        status: 'valid' as const,
-        issues: []
-      };
-    } else if (totalDocsCount === 3) {
-      // Third file - failed
-      return {
-        status: 'invalid' as const,
-        issues: [
-          'Document quality is poor - please provide a clearer copy',
-          'Missing required signatures',
-          'Document appears to be incomplete'
-        ]
-      };
-    }
-    
-    // For subsequent files, use random validation
-    const isValid = Math.random() > 0.3;
-    if (isValid) {
-      return {
-        status: 'valid' as const,
-        issues: []
-      };
-    } else {
-      return {
-        status: 'invalid' as const,
-        issues: [
-          'Document quality is poor - please provide a clearer copy',
-          'Missing required signatures',
-          'Document appears to be incomplete'
-        ]
-      };
-    }
   };
 
   const removeDocument = (docId: string) => {
@@ -304,6 +300,9 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
                         <div className="text-sm text-gray-500">
                           {formatFileSize(doc.size)} • Uploaded {doc.uploadDate.toLocaleDateString()}
                         </div>
+                        {(doc as any).confidence && (
+                          <span className="ml-2">• Confidence: {Math.round((doc as any).confidence)}%</span>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -331,6 +330,16 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
                           </li>
                         ))}
                       </ul>
+                    </div>
+                  )}
+                  
+                  {doc.status === 'valid' && (doc as any).extractedData && (
+                    <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                      <div className="text-sm font-medium text-emerald-800 mb-1">Verification Complete:</div>
+                      <div className="text-sm text-emerald-700">
+                        Document successfully validated against SBA SOP 50 10 8 requirements.
+                        {(doc as any).confidence && ` Confidence: ${Math.round((doc as any).confidence)}%`}
+                      </div>
                     </div>
                   )}
                 </div>
