@@ -135,7 +135,7 @@ npm run dev
 
 ## SBA Compliance Features
 
-The application ensures compliance with SBA Standard Operating Procedures (SOP 50 10 7.1):
+The application ensures compliance with SBA Standard Operating Procedures (SOP 50 10 8):
 
 - **Eligibility Verification**: Automated size standards checking
 - **Document Requirements**: Comprehensive validation against SBA requirements
