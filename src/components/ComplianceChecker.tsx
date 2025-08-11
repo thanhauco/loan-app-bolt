@@ -45,7 +45,7 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
           title: 'SBA Size Standards Compliance',
           status: uploadedDocuments.some(doc => doc.name.toLowerCase().includes('tax')) ? 'pass' : 'warning',
           description: 'Business must meet SBA size standards for industry classification',
-          requirement: 'SBA SOP 50 10 7.1 - Section A',
+          requirement: 'SBA SOP 50 10 8 - Chapter 2, Section A',
           documents: ['Business Tax Returns', 'Financial Statements']
         },
         {
@@ -54,7 +54,7 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
           title: 'Business Registration & Licensing',
           status: uploadedDocuments.some(doc => doc.name.toLowerCase().includes('license')) ? 'pass' : 'fail',
           description: 'Valid business registration and required licenses must be current',
-          requirement: 'SBA SOP 50 10 7.1 - Section B.2',
+          requirement: 'SBA SOP 50 10 8 - Chapter 3, Section B',
           documents: ['Business License', 'Articles of Incorporation']
         },
         {
@@ -64,8 +64,8 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
           status: uploadedDocuments.filter(doc => 
             doc.category === 'financial' && doc.status === 'valid'
           ).length >= 2 ? 'pass' : 'warning',
-          description: 'Complete and current financial statements for 3 years',
-          requirement: 'SBA SOP 50 10 7.1 - Section C.1',
+          description: 'Complete and current financial statements with enhanced analysis requirements',
+          requirement: 'SBA SOP 50 10 8 - Chapter 4, Section C',
           documents: ['Profit & Loss', 'Balance Sheet', 'Cash Flow']
         },
         {
@@ -75,8 +75,8 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
           status: uploadedDocuments.some(doc => 
             doc.category === 'personal' && doc.status === 'valid'
           ) ? 'pass' : 'pending',
-          description: 'Personal guaranty required for owners with 20% or more ownership',
-          requirement: 'SBA SOP 50 10 7.1 - Section D.3',
+          description: 'Enhanced personal guaranty requirements for owners with 20% or more ownership',
+          requirement: 'SBA SOP 50 10 8 - Chapter 5, Section D',
           documents: ['Personal Financial Statement', 'Credit Authorization']
         },
         {
@@ -86,8 +86,8 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
           status: uploadedDocuments.some(doc => 
             doc.name.toLowerCase().includes('use of funds')
           ) ? 'pass' : 'fail',
-          description: 'Loan proceeds must be for eligible business purposes only',
-          requirement: 'SBA SOP 50 10 7.1 - Section E.1',
+          description: 'Loan proceeds must comply with updated eligible use guidelines',
+          requirement: 'SBA SOP 50 10 8 - Chapter 6, Section E',
           documents: ['Use of Funds Statement', 'Purchase Agreements']
         },
         {
@@ -97,8 +97,8 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
           status: uploadedDocuments.some(doc => 
             doc.category === 'personal' && doc.name.toLowerCase().includes('credit')
           ) ? 'pass' : 'warning',
-          description: 'Borrower must demonstrate good credit history and repayment ability',
-          requirement: 'SBA SOP 50 10 7.1 - Section F.2',
+          description: 'Enhanced credit analysis with updated scoring methodology',
+          requirement: 'SBA SOP 50 10 8 - Chapter 7, Section F',
           documents: ['Credit Reports', 'Debt Schedule']
         },
         {
@@ -106,8 +106,8 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
           category: 'Security',
           title: 'Collateral & Security Requirements',
           status: 'warning',
-          description: 'Available collateral must secure the loan per SBA guidelines',
-          requirement: 'SBA SOP 50 10 7.1 - Section G.1',
+          description: 'Updated collateral requirements with streamlined valuation process',
+          requirement: 'SBA SOP 50 10 8 - Chapter 8, Section G',
           documents: ['Appraisals', 'UCC Filings', 'Lease Agreements']
         },
         {
@@ -115,8 +115,8 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
           category: 'Environmental',
           title: 'Environmental Review Compliance',
           status: 'pending',
-          description: 'Environmental assessment required for certain business types',
-          requirement: 'SBA SOP 50 10 7.1 - Section H.3',
+          description: 'Enhanced environmental screening with updated assessment criteria',
+          requirement: 'SBA SOP 50 10 8 - Chapter 9, Section H',
           documents: ['Environmental Questionnaire', 'Site Assessment']
         }
       ];

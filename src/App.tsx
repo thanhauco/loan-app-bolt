@@ -126,7 +126,7 @@ function App() {
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-gray-900 dark:text-white">AI-Powered SBA Loan Agent</h1>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Compliant with SBA SOPs June 2025</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Compliant with SBA SOP 50 10 8 (January 2025)</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">

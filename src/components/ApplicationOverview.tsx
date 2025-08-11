@@ -173,14 +173,14 @@ const ApplicationOverview: React.FC<ApplicationOverviewProps> = ({ uploadedDocum
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">85%</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">90%</div>
               <div className="text-sm text-gray-600 dark:text-gray-300">SBA Guarantee</div>
             </div>
             <DollarSign className="h-8 w-8 text-orange-600 dark:text-orange-400" />
           </div>
           <div className="mt-4">
             <div className="text-xs text-gray-600 dark:text-gray-400">
-              Amount: ${(applicationData.loanAmount * 0.85).toLocaleString()}
+              Amount: ${(applicationData.loanAmount * 0.90).toLocaleString()}
             </div>
           </div>
         </div>

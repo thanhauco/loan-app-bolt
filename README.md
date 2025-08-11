@@ -19,7 +19,7 @@ A comprehensive web application for Small Business Administration (SBA) loan app
 - Support for multiple file formats (PDF, DOC, DOCX, XLS, XLSX, JPG, PNG)
 
 ### ✅ Compliance Checker
-- Automated SBA SOP 50 10 7.1 compliance verification
+• Automated SBA SOP 50 10 8 compliance verification
 - Real-time compliance status monitoring
 - Detailed requirement breakdowns by category
 - Action item tracking for non-compliant areas
