@@ -286,7 +286,7 @@ Document Breakdown by Category:`;
 • Loan Details: Business plan, use of funds statement, debt schedule
 • Additional: Lease agreements, contracts, franchise agreements (if applicable)
 
-All documents must be current and comply with SBA SOP 50 10 7.1 guidelines.`;
+All documents must be current and comply with SBA SOP 50 10 8 guidelines.`;
       suggestions = ['What are the eligibility requirements?', 'How much can I borrow?', 'Processing timeline?'];
     } else if (lowerMessage.includes('eligibility') || lowerMessage.includes('qualify')) {
       response = `SBA loan eligibility requirements include:
@@ -456,7 +456,7 @@ My favorite topics:
 
 Current market reality check:
 • Approval rates: ~65% (but 92%+ with proper SOP 50 10 8 compliance)
-• Average timeline: 45-75 days (streamlined under new procedures)
+• Average timeline: 45-75 days (streamlined under new SOP 50 10 8 procedures)
 • Most common rejection reason: Incomplete documentation
 
 What's your starting point? New to SBA loans, or already in the process?`
