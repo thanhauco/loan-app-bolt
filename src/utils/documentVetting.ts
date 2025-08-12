@@ -163,6 +163,17 @@ export class DocumentVettingEngine {
 
   async extractTextFromFile(file: File): Promise<string> {
     try {
+      // Define supported file types for OCR
+      const ocrSupportedTypes = [
+        'application/pdf',
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/gif',
+        'image/bmp',
+        'image/tiff'
+      ];
+
       // If it's a text file, read it directly
       if (file.type === 'text/plain') {
         return new Promise((resolve, reject) => {
@@ -176,14 +187,23 @@ export class DocumentVettingEngine {
         });
       }
       
-      // For other file types, use OCR
+      // Check if file type is supported by OCR
+      if (!ocrSupportedTypes.includes(file.type)) {
+        throw new Error(`File type ${file.type} is not supported for text extraction. Please upload PDF, image, or text files only.`);
+      }
+
+      // For supported file types, use OCR
       const result = await Tesseract.recognize(file, 'eng', {
         logger: m => console.log('OCR Progress:', m)
       });
       return result.data.text;
     } catch (error) {
       console.error('OCR extraction failed:', error);
-      throw new Error('Failed to extract text from document');
+      if (error instanceof Error) {
+        throw new Error(`Failed to extract text from document: ${error.message}`);
+      } else {
+        throw new Error('Failed to extract text from document');
+      }
     }
   }
 
