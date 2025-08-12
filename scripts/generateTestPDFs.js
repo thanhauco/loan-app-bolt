@@ -69,7 +69,8 @@ class ComprehensiveSBAPDFGenerator {
     }
     
     const filename = `business_license_${isValid ? 'current' : 'expired'}.pdf`;
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.business, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -126,7 +127,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text(`EIN: ${this.ein}`, 20, 65);
     
     const filename = 'articles_of_incorporation.pdf';
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.business, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -176,7 +178,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text(`Date: March 15, 2021`, 20, 280);
     
     const filename = 'operating_agreement.pdf';
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.business, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -206,7 +209,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text('Secretary of State and is valid as of the date shown above.', 20, 245);
     
     const filename = 'business_registration_certificate.pdf';
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.business, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -277,7 +281,8 @@ class ComprehensiveSBAPDFGenerator {
     }
     
     const filename = `business_tax_return_${year}_${isSigned ? 'signed' : 'unsigned'}.pdf`;
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.financial, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -356,7 +361,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text(`Date: ${new Date().toLocaleDateString()}`, 120, 285);
     
     const filename = 'interim_financial_statements_ytd.pdf';
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.financial, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -416,7 +422,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text(`Date: ${new Date(year + 1, 1, 28).toLocaleDateString()}`, 120, 250);
     
     const filename = `profit_loss_statement_${year}.pdf`;
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.financial, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -485,7 +492,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text(`Date: ${new Date(year + 1, 1, 28).toLocaleDateString()}`, 120, 250);
     
     const filename = `balance_sheet_${year}.pdf`;
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.financial, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -544,7 +552,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text(`Date: ${new Date(year + 1, 1, 28).toLocaleDateString()}`, 120, 250);
     
     const filename = `cash_flow_statement_${year}.pdf`;
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.financial, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -604,7 +613,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text('Over 90 days: 0.9%', 25, yPos + 85);
     
     const filename = 'accounts_receivable_aging.pdf';
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.financial, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -694,7 +704,8 @@ class ComprehensiveSBAPDFGenerator {
     }
     
     const filename = `personal_tax_return_${year}_${isSigned ? 'signed' : 'unsigned'}.pdf`;
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.personal, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -788,7 +799,8 @@ class ComprehensiveSBAPDFGenerator {
     }
     
     const filename = `personal_financial_statement_sba_form_413_${isCurrent ? 'current' : 'old'}.pdf`;
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.personal, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -876,7 +888,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text('• Certified ScrumMaster (CSM) (2019)', 20, 200);
     
     const filename = 'resume_business_experience.pdf';
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.personal, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -944,7 +957,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text('Printed Name: ' + this.ownerName, 20, 230);
     
     const filename = 'credit_authorization_sba_form_1846.pdf';
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.personal, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
@@ -1021,7 +1035,8 @@ class ComprehensiveSBAPDFGenerator {
     doc.text(`Printed Name: ${this.ownerName}`, 20, 265);
     
     const filename = 'personal_history_statement_sba_form_912.pdf';
-    doc.save(path.join(outputDir, filename));
+    const filePath = path.join(this.folders.personal, filename);
+    doc.save(filePath);
     console.log(`✓ Generated: ${filename}`);
   }
 
