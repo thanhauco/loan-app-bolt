@@ -123,11 +123,15 @@ function App() {
           <div className="max-w-full px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="bg-blue-600 dark:bg-blue-500 p-2 rounded-lg">
-                  <DollarSign className="h-6 w-6 text-white" />
+                <div className="p-2">
+                  <img 
+                    src="/ffb-bank-logo.png" 
+                    alt="FFB BANK Logo" 
+                    className="h-12 w-12 object-contain"
+                  />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">AI-Powered SBA Loan Agent</h1>
+                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">FFB Loan Agent</h1>
                   <p className="text-sm text-gray-600 dark:text-gray-300">Compliant with SBA SOP 50 10 8 (January 2025)</p>
                 </div>
               </div>
