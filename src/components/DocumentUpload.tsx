@@ -139,8 +139,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       };
 
       // Add document immediately with pending status
-      const updatedDocs = [...uploadedDocuments, newDoc];
-      setUploadedDocuments(updatedDocs);
+      setUploadedDocuments(prevDocs => [...prevDocs, newDoc]);
 
       // Perform real document vetting
       vettingEngine.vetDocument(file).then((result: VettingResult) => {
