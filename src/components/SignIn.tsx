@@ -60,7 +60,7 @@ const SignIn: React.FC<SignInProps> = ({ onSignIn }) => {
           <div className="bg-blue-600 dark:bg-blue-500 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Shield className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">SBA Loan Vetting</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">FFB Loan Agent</h1>
           <p className="text-gray-600 dark:text-gray-300">Secure access to your loan application portal</p>
         </div>
 

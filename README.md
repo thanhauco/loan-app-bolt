@@ -135,7 +135,7 @@ npm run dev
 
 ## SBA Compliance Features
 
-The application ensures compliance with SBA Standard Operating Procedures (SOP 50 10 7.1):
+The application ensures compliance with SBA Standard Operating Procedures (SOP 50 10 8):
 
 - **Eligibility Verification**: Automated size standards checking
 - **Document Requirements**: Comprehensive validation against SBA requirements
@@ -143,6 +143,93 @@ The application ensures compliance with SBA Standard Operating Procedures (SOP 5
 - **Legal Compliance**: Business registration and licensing validation
 - **Security Requirements**: Collateral and guaranty compliance
 - **Environmental Review**: Required assessments for applicable businesses
+
+## Document Validation Logic (SBA SOP 50 10 8 Compliant)
+
+### Confidence Calculation Framework
+
+All document validation follows SBA SOP 50 10 8 requirements with binary pass/fail criteria rather than arbitrary scoring:
+
+#### Business License Validation
+- **SBA Requirement**: Current, valid business license per SOP 50 10 8 Chapter 3
+- **Validation Logic**:
+  - REQUIRED: License number, business name, expiration date, issuing authority
+  - CRITICAL: Must not be expired (automatic fail if expired)
+  - PASS THRESHOLD: All required fields present + current status
+  - CONFIDENCE: Based on field completeness and date validity
+
+#### Tax Returns Validation (SOP 50 10 8 Chapter 4)
+- **SBA Requirement**: 3 complete years, signed and dated
+- **Validation Logic**:
+  - REQUIRED: Form identification (1040, 1120, 1120S, 1065), signature, date
+  - CRITICAL: Must be signed (automatic fail if unsigned)
+  - CRITICAL: Must be within 3-year requirement
+  - PASS THRESHOLD: Signed + complete + within timeframe
+  - CONFIDENCE: Based on completeness and signature verification
+
+#### Financial Statements Validation (SOP 50 10 8 Chapter 4)
+- **SBA Requirement**: Current financial statements with key metrics
+- **Validation Logic**:
+  - REQUIRED: Balance sheet data, P&L data, statement date
+  - PREFERRED: CPA preparation (bonus points, not required)
+  - CRITICAL: Must be current (within 12 months for interim statements)
+  - PASS THRESHOLD: Key financial data present + current date
+  - CONFIDENCE: Based on data completeness and recency
+
+#### Personal Financial Statement (SBA Form 413)
+- **SBA Requirement**: Current (90 days), signed, complete per SOP 50 10 8 Chapter 5
+- **Validation Logic**:
+  - REQUIRED: Assets, liabilities, net worth, signature, date
+  - CRITICAL: Must be within 90 days (automatic fail if older)
+  - CRITICAL: Must be signed (automatic fail if unsigned)
+  - PASS THRESHOLD: Complete + signed + current
+  - CONFIDENCE: Based on completeness and currency
+
+#### Business Plan Validation (SOP 50 10 8 Chapter 6)
+- **SBA Requirement**: Comprehensive plan demonstrating repayment ability
+- **Validation Logic**:
+  - REQUIRED SECTIONS (per SOP 50 10 8):
+    - Executive Summary
+    - Business Description
+    - Management Team/Experience
+    - Financial Projections (3-year minimum)
+    - Use of Funds Statement
+    - Repayment Analysis
+  - CRITICAL: Financial projections are MANDATORY, not optional
+  - CRITICAL: Must demonstrate repayment ability
+  - PASS THRESHOLD: ≥4 of 6 required sections + financial projections + repayment analysis
+  - CONFIDENCE: Based on section completeness and regulatory compliance
+
+#### Use of Funds Validation (SOP 50 10 8 Chapter 6)
+- **SBA Requirement**: Detailed breakdown of loan proceeds usage
+- **Validation Logic**:
+  - REQUIRED: Total loan amount, category breakdown, specific amounts
+  - REQUIRED CATEGORIES: Working capital, equipment, real estate, debt refinancing
+  - CRITICAL: Amounts must add up to total loan request
+  - PASS THRESHOLD: Detailed breakdown + amounts balance
+  - CONFIDENCE: Based on detail level and mathematical accuracy
+
+#### Articles of Incorporation Validation
+- **SBA Requirement**: Proper business formation documentation
+- **Validation Logic**:
+  - REQUIRED: Business name, state filing, registered agent, filing date
+  - REQUIRED: State certification or filing stamp
+  - PASS THRESHOLD: Complete state filing information
+  - CONFIDENCE: Based on official documentation completeness
+
+### Overall Validation Thresholds
+
+- **VALID**: Document meets ALL SBA SOP 50 10 8 requirements + confidence ≥70%
+- **INVALID**: Missing critical requirements OR confidence <70% OR has compliance issues
+- **PENDING**: Document processing in progress
+
+### SBA SOP 50 10 8 Compliance Notes
+
+1. **No Exceptions**: SBA regulations are federal requirements - no "good enough" standards
+2. **Binary Requirements**: Documents either meet SBA standards or they don't
+3. **Critical vs. Preferred**: Some items are required (signature, dates), others are preferred (CPA preparation)
+4. **Timeframe Sensitivity**: Many documents have specific currency requirements (90 days, 12 months, 3 years)
+5. **Completeness Standard**: Partial documents don't meet SBA standards
 
 ## Key Metrics Tracked
 

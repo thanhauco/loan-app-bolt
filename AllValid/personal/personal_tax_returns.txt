@@ -1,0 +1,26 @@
+U.S. INDIVIDUAL INCOME TAX RETURN
+Form 1040 - 2023
+John Smith
+SSN: XXX-XX-1234
+
+INCOME:
+Wages: $180,000
+Business Income: $64,000
+Interest: $3,500
+Dividends: $8,200
+Total Income: $255,700
+
+DEDUCTIONS:
+Standard Deduction: $13,850
+Total Deductions: $13,850
+
+TAXABLE INCOME: $241,850
+Tax: $52,832
+Federal Tax Withheld: $55,000
+REFUND DUE: $2,168
+
+SIGNATURE:
+Taxpayer Signature: [SIGNED] John Smith
+Date: April 10, 2024
+Spouse Signature: [SIGNED] Jane Smith
+Date: April 10, 2024

@@ -7,6 +7,7 @@ import ChatBot from './components/ChatBot';
 import DocumentUpload from './components/DocumentUpload';
 import ComplianceChecker from './components/ComplianceChecker';
 import ApplicationOverview from './components/ApplicationOverview';
+import TestDocumentGenerator from './components/TestDocumentGenerator';
 
 function App() {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -49,11 +50,13 @@ function App() {
     navigate('/signin');
   };
 
-  const handleDocumentUpload = (docs: any[]) => {
-    setUploadedDocuments(docs);
-    // Trigger chatbot to show upload summary
-    setTriggerChatUpdate(prev => prev + 1);
-  };
+  // Watch for changes in uploadedDocuments and trigger chatbot update
+  React.useEffect(() => {
+    if (uploadedDocuments.length > 0) {
+      // Trigger chatbot to show upload summary
+      setTriggerChatUpdate(prev => prev + 1);
+    }
+  }, [uploadedDocuments]);
   const MainApp = () => {
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -121,12 +124,16 @@ function App() {
           <div className="max-w-full px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="bg-blue-600 dark:bg-blue-500 p-2 rounded-lg">
-                  <DollarSign className="h-6 w-6 text-white" />
+                <div className="p-2">
+                  <img 
+                    src="/ffb-bank-logo.png" 
+                    alt="FFB BANK Logo" 
+                    className="h-12 w-12 object-contain"
+                  />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">AI-Powered SBA Loan Agent</h1>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Compliant with SBA SOP 50 10 8 (January 2025)</p>
+                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">FFB Loan Agent</h1>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">SBA SOPs June 2025</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -262,7 +269,8 @@ function App() {
               {activeTab === 'documents' && (
                 <DocumentUpload 
                   uploadedDocuments={uploadedDocuments}
-                  setUploadedDocuments={handleDocumentUpload}
+                  setUploadedDocuments={setUploadedDocuments}
+                  currentTab={activeTab}
                 />
               )}
               {activeTab === 'compliance' && (
@@ -271,6 +279,9 @@ function App() {
                   complianceStatus={complianceStatus}
                   setComplianceStatus={setComplianceStatus}
                 />
+              )}
+              {activeTab === 'test-generator' && (
+                <TestDocumentGenerator />
               )}
             </div>
           </div>

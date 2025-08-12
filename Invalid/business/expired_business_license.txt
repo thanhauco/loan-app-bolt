@@ -1,0 +1,9 @@
+BUSINESS LICENSE
+License Number: BL-2020-98765
+Business Name: Old Tech LLC
+License Type: General Business License
+Issue Date: January 15, 2020
+Expiration Date: January 15, 2022  // EXPIRED!
+Issuing Authority: City of San Francisco Business Registration
+Status: EXPIRED
+// MISSING SIGNATURE - INVALID

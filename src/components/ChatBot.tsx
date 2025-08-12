@@ -280,13 +280,13 @@ Document Breakdown by Category:`;
     } else if (lowerMessage.includes('document') || lowerMessage.includes('7(a)')) {
       response = `For an SBA 7(a) loan, you'll need these key documents:
 
-• Business Documents: Business license, articles of incorporation, operating agreement
-• Financial Statements: 3 years of tax returns, profit & loss statements, balance sheets
-• Personal Information: Personal tax returns, personal financial statement, resume
-• Loan Details: Business plan, use of funds statement, debt schedule
-• Additional: Lease agreements, contracts, franchise agreements (if applicable)
+• Business Documents: Current business license, articles of incorporation/organization, operating agreement, business registration certificate
+• Financial Statements: 3 complete years business tax returns, interim financial statements (YTD), 3 years P&L and balance sheets, cash flow statements, A/R and A/P aging
+• Personal Information: 3 years personal tax returns, personal financial statement (SBA Form 413), resume, credit authorization (SBA Form 1846), personal history statement (SBA Form 912)
+• Loan Application: SBA Form 1919, comprehensive business plan, detailed use of funds statement, debt schedule (SBA Form 2202), environmental questionnaire
+• Supporting Documents: Current lease agreements, purchase contracts, franchise agreements (if applicable)
 
-All documents must be current and comply with SBA SOP 50 10 7.1 guidelines.`;
+All documents must be current, complete, and comply with SBA SOP 50 10 8 requirements. IRS tax transcripts may be requested for verification.`;
       suggestions = ['What are the eligibility requirements?', 'How much can I borrow?', 'Processing timeline?'];
     } else if (lowerMessage.includes('eligibility') || lowerMessage.includes('qualify')) {
       response = `SBA loan eligibility requirements include:
@@ -364,23 +364,25 @@ What's your target loan amount? Let's see what rate bracket you'd fall into!`
         `Tax return requirements (the fun stuff):
 
 What you need:
-• Business returns: 3 complete years + current YTD (per SOP 50 10 8)
-• Personal returns: 3 years for all owners ≥20% ownership
+• Business returns: 3 complete years + current YTD interim statements (per SOP 50 10 8)
+• Personal returns: 3 complete years for all owners with ≥20% ownership
 • MUST BE SIGNED & DATED ← This trips up 40% of applicants!
+• IRS tax transcripts may be requested for verification
 
 What we're really looking for:
 • Consistent income trends
 • Can you actually pay this loan back?
-• Clean IRS compliance history (enhanced screening per SOP 50 10 8)
+• Clean IRS compliance history (enhanced verification per SOP 50 10 8)
 • Owner salary that makes sense (not $1M on $50K revenue!)
 
 Common mistakes:
 • Unsigned returns = instant rejection
-• Missing K-1s or depreciation schedules
+• Missing schedules (K-1s, depreciation, etc.)
 • Amended returns with no explanation
 • Unexplained losses or income volatility
+• Incomplete supporting documentation
 
-Pro tip: CPA-prepared returns get bonus points. Shows you take compliance seriously!
+Pro tip: CPA-prepared returns with compilation/review letters get bonus points. Shows you take compliance seriously!
 
 What's your business structure? I can tell you exactly which forms you need!`,
         
@@ -390,27 +392,30 @@ Here's what makes the SBA's heart flutter when reviewing your taxes:
 
 The golden rules:
 1. Signatures required - Unsigned = automatic "nope"
-2. Complete packages - All schedules, all attachments
+2. Complete packages - All schedules, all attachments, all pages
 3. 3-year story - They want to see your business journey
 4. Consistency - Wild swings need explanations
+5. IRS verification - Tax transcripts may be requested
 
 Business structure breakdown:
-• Sole Prop: Schedule C + personal 1040s
-• S-Corp: 1120S + K-1s + personal returns
-• Partnership: 1065 + K-1s + everyone's personal returns
-• C-Corp: 1120 + personal returns for owners
+• Sole Prop: Schedule C + personal 1040s (3 years each)
+• S-Corp: 1120S + K-1s + personal returns for all ≥20% owners
+• Partnership: 1065 + K-1s + personal returns for all ≥20% partners
+• C-Corp: 1120 + personal returns for all ≥20% shareholders
+• LLC: Depends on tax election - follow above accordingly
 
 Red flags that make underwriters nervous:
 • Losses without clear business reasons
 • Owner salary of $200K when business made $50K
 • Amended returns with mysterious explanations
-• Missing depreciation schedules
+• Missing schedules or supporting documentation
+• Inconsistent reporting between business and personal returns
 
 Green flags that make them happy:
-• CPA preparation
+• CPA preparation with compilation/review letters
 • Consistent profitability
 • Reasonable owner compensation
-• Clean IRS compliance history
+• Clean IRS compliance history with tax transcripts available
 
 Got your returns ready, or do we need to discuss what's missing?`
       ];
@@ -456,7 +461,7 @@ My favorite topics:
 
 Current market reality check:
 • Approval rates: ~65% (but 92%+ with proper SOP 50 10 8 compliance)
-• Average timeline: 45-75 days (streamlined under new procedures)
+• Average timeline: 45-75 days (streamlined under new SOP 50 10 8 procedures)
 • Most common rejection reason: Incomplete documentation
 
 What's your starting point? New to SBA loans, or already in the process?`

@@ -1,0 +1,37 @@
+USE OF FUNDS STATEMENT
+Tech Solutions LLC
+Loan Amount Requested: $250,000
+
+DETAILED BREAKDOWN:
+
+1. WORKING CAPITAL: $100,000 (40%)
+   - Accounts Receivable Financing: $60,000
+   - Inventory/Supplies: $25,000
+   - Operating Cash Reserve: $15,000
+
+2. EQUIPMENT PURCHASE: $75,000 (30%)
+   - Server Infrastructure: $35,000
+   - Workstations (5 units): $25,000
+   - Software Licenses: $15,000
+
+3. MARKETING & SALES: $50,000 (20%)
+   - Digital Marketing Campaign: $30,000
+   - Trade Show Participation: $10,000
+   - Sales Materials & Collateral: $10,000
+
+4. OFFICE EXPANSION: $25,000 (10%)
+   - Lease Deposits: $15,000
+   - Office Furniture: $10,000
+
+TOTAL: $250,000
+
+JUSTIFICATION:
+This funding will enable Tech Solutions LLC to expand operations, serve more clients, and increase revenue capacity. The working capital component ensures smooth operations during growth phase, while equipment purchases directly support service delivery capabilities.
+
+TIMELINE:
+Funds will be deployed over 6 months:
+- Month 1: Equipment purchases ($75,000)
+- Month 2: Office expansion ($25,000)
+- Months 3-6: Working capital and marketing ($150,000)
+
+Expected ROI: 24% annually based on projected revenue growth and operational efficiency improvements.

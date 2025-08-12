@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Upload, File, CheckCircle, AlertCircle, X, Eye, Download, FileText, DollarSign, Building, User } from 'lucide-react';
+import { DocumentVettingEngine, VettingResult } from '../utils/documentVetting';
 
 interface Document {
   id: string;
@@ -16,11 +17,33 @@ interface Document {
 interface DocumentUploadProps {
   uploadedDocuments: Document[];
   setUploadedDocuments: (docs: Document[]) => void;
+  currentTab: string;
 }
 
-const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setUploadedDocuments }) => {
+const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setUploadedDocuments, currentTab }) => {
   const [dragActive, setDragActive] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('business');
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    // Initialize from localStorage or default to 'business'
+    return localStorage.getItem('selectedDocumentCategory') || 'business';
+  });
+  const [vettingEngine] = useState(() => DocumentVettingEngine.getInstance());
+  
+  // Update localStorage when category changes
+  const handleCategoryChange = (categoryId: string) => {
+    console.log('🎯 Category changing from', selectedCategory, 'to', categoryId);
+    setSelectedCategory(categoryId);
+    localStorage.setItem('selectedDocumentCategory', categoryId);
+    console.log('💾 Saved to localStorage:', categoryId);
+  };
+  
+  // Restore category from localStorage when component mounts or when state changes
+  useEffect(() => {
+    const savedCategory = localStorage.getItem('selectedDocumentCategory');
+    if (savedCategory && savedCategory !== selectedCategory) {
+      console.log('🔄 Restoring category from localStorage:', savedCategory);
+      setSelectedCategory(savedCategory);
+    }
+  }, [selectedCategory]);
 
   const documentCategories = [
     {
@@ -29,10 +52,11 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       icon: Building,
       color: 'blue',
       required: [
-        'Business License',
-        'Articles of Incorporation',
-        'Operating Agreement',
-        'Franchise Agreement (if applicable)'
+        'Business License (current)',
+        'Articles of Incorporation/Organization',
+        'Operating Agreement/Partnership Agreement',
+        'Franchise Agreement (if applicable)',
+        'Business Registration Certificate'
       ]
     },
     {
@@ -41,10 +65,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       icon: DollarSign,
       color: 'emerald',
       required: [
-        'Business Tax Returns (3 years)',
-        'Profit & Loss Statements',
-        'Balance Sheets',
-        'Cash Flow Statements'
+        'Business Tax Returns (3 complete years)',
+        'Interim Financial Statements (current YTD)',
+        'Profit & Loss Statements (3 years)',
+        'Balance Sheets (3 years)',
+        'Cash Flow Statements',
+        'Accounts Receivable/Payable Aging'
       ]
     },
     {
@@ -53,10 +79,11 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       icon: User,
       color: 'purple',
       required: [
-        'Personal Tax Returns (3 years)',
-        'Personal Financial Statement',
-        'Resume/Business Experience',
-        'Credit Authorization'
+        'Personal Tax Returns (3 complete years)',
+        'Personal Financial Statement (SBA Form 413)',
+        'Resume/Business Experience Summary',
+        'Credit Authorization (SBA Form 1846)',
+        'Personal History Statement (SBA Form 912)'
       ]
     },
     {
@@ -65,11 +92,13 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       icon: FileText,
       color: 'orange',
       required: [
-        'Business Plan',
-        'Use of Funds Statement',
-        'Debt Schedule',
-        'Lease Agreements',
-        'Purchase Agreements'
+        'Business Plan (comprehensive)',
+        'Use of Funds Statement (detailed)',
+        'Debt Schedule (SBA Form 2202)',
+        'Lease Agreements (current)',
+        'Purchase Agreements/Contracts',
+        'Loan Application (SBA Form 1919)',
+        'Environmental Questionnaire'
       ]
     }
   ];
@@ -95,7 +124,34 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
   }, []);
 
   const handleFiles = (files: FileList) => {
+    console.log('🔄 handleFiles called, selectedCategory:', selectedCategory);
+    console.log('🔄 localStorage value:', localStorage.getItem('selectedDocumentCategory'));
+    
     Array.from(files).forEach((file) => {
+      // Validate file type and size
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      const allowedTypes = [
+        'application/pdf',
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/gif',
+        'image/bmp',
+        'image/tiff',
+        'text/plain'
+      ];
+
+      if (file.size > maxSize) {
+        alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+        return;
+      }
+
+      if (!allowedTypes.includes(file.type)) {
+        alert(`File ${file.name} is not a supported format.`);
+        return;
+      }
+
+      console.log('📄 Creating document with category:', selectedCategory);
       const newDoc: Document = {
         id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
         name: file.name,
@@ -109,78 +165,55 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
 
       // Add document immediately with pending status
       setUploadedDocuments(prev => [...prev, newDoc]);
+      
+      // Trigger chatbot update to show upload summary
+      // This will be handled by the parent component's useEffect
 
-      // Simulate document validation
-      setTimeout(() => {
-        const validationResult = validateDocument(newDoc);
-        setUploadedDocuments(prev => 
-          prev.map(doc => 
+      // Perform real document vetting
+      vettingEngine.vetDocument(file).then((result: VettingResult) => {
+        setUploadedDocuments(prevDocs => 
+          prevDocs.map(doc => 
             doc.id === newDoc.id 
-              ? { ...doc, ...validationResult }
+              ? { 
+                  ...doc, 
+                  status: result.status,
+                  issues: result.issues,
+                  requirements: getDocumentRequirements(file.name),
+                  confidence: result.confidence,
+                  extractedData: result.extractedData
+                }
               : doc
           )
         );
-      }, 2000);
+      }).catch((error) => {
+        console.error('Document vetting failed:', error);
+        setUploadedDocuments(prevDocs => 
+          prevDocs.map(doc => 
+            doc.id === newDoc.id 
+              ? { 
+                  ...doc, 
+                  status: 'invalid',
+                  issues: ['Document processing failed. Please ensure the file is not corrupted and try again.']
+                }
+              : doc
+          )
+        );
+      });
     });
   };
 
   const getDocumentRequirements = (filename: string): string[] => {
     const name = filename.toLowerCase();
-    if (name.includes('tax') || name.includes('1040')) {
-      return ['Must be signed and dated', 'All schedules included', 'Recent 3 years required'];
-    } else if (name.includes('financial') || name.includes('balance')) {
-      return ['CPA prepared preferred', 'Current year-to-date', 'Comparative periods'];
+    if (name.includes('tax') || name.includes('1040') || name.includes('1120')) {
+      return ['Must be signed and dated', 'All schedules included', 'Complete 3 years required', 'IRS transcripts may be requested'];
+    } else if (name.includes('financial') || name.includes('balance') || name.includes('profit')) {
+      return ['CPA prepared preferred', 'Current year-to-date required', 'Comparative 3-year periods', 'Notes to financial statements'];
     } else if (name.includes('business plan')) {
-      return ['Executive summary', 'Market analysis', 'Financial projections', 'Management team'];
+      return ['Executive summary', 'Market analysis', '3-year financial projections', 'Management team bios', 'Use of loan proceeds'];
+    } else if (name.includes('personal financial') || name.includes('413')) {
+      return ['SBA Form 413 required', 'Must be current (within 90 days)', 'All assets and liabilities', 'Signed and dated'];
     }
-    return ['Legible and complete', 'Current and valid', 'Properly executed'];
-  };
-
-  const validateDocument = (doc: Document) => {
-    // Mock demo: For first 3 files uploaded, show 2 verified and 1 failed
-    const totalDocsCount = uploadedDocuments.length;
-    
-    if (totalDocsCount === 1) {
-      // First file - verified
-      return {
-        status: 'valid' as const,
-        issues: []
-      };
-    } else if (totalDocsCount === 2) {
-      // Second file - verified
-      return {
-        status: 'valid' as const,
-        issues: []
-      };
-    } else if (totalDocsCount === 3) {
-      // Third file - failed
-      return {
-        status: 'invalid' as const,
-        issues: [
-          'Document quality is poor - please provide a clearer copy',
-          'Missing required signatures',
-          'Document appears to be incomplete'
-        ]
-      };
-    }
-    
-    // For subsequent files, use random validation
-    const isValid = Math.random() > 0.3;
-    if (isValid) {
-      return {
-        status: 'valid' as const,
-        issues: []
-      };
-    } else {
-      return {
-        status: 'invalid' as const,
-        issues: [
-          'Document quality is poor - please provide a clearer copy',
-          'Missing required signatures',
-          'Document appears to be incomplete'
-        ]
-      };
-    }
+    return ['Legible and complete', 'Current and valid', 'Properly executed', 'All pages included'];
   };
 
   const removeDocument = (docId: string) => {
@@ -222,7 +255,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         {documentCategories.map((category) => (
           <button
             key={category.id}
-            onClick={() => setSelectedCategory(category.id)}
+            onClick={() => handleCategoryChange(category.id)}
             className={`p-4 rounded-xl border-2 transition-all ${
               selectedCategory === category.id
                 ? `border-${category.color}-500 bg-${category.color}-50`
@@ -268,7 +301,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
               onChange={(e) => e.target.files && handleFiles(e.target.files)}
               className="hidden"
               id="file-upload"
-              accept=".pdf,.doc,.docx,.xlsx,.xls,.jpg,.jpeg,.png"
+              accept=".pdf,.doc,.docx,.xlsx,.xls,.jpg,.jpeg,.png,.txt"
             />
             <label
               htmlFor="file-upload"
@@ -278,7 +311,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
               Choose Files
             </label>
             <div className="mt-2 text-xs text-gray-500">
-              Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Max 10MB)
+              Supported formats: PDF, JPG, PNG, GIF, BMP, TIFF, TXT (Max 10MB)
             </div>
           </div>
 
@@ -296,6 +329,9 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
                         <div className="text-sm text-gray-500">
                           {formatFileSize(doc.size)} • Uploaded {doc.uploadDate.toLocaleDateString()}
                         </div>
+                        {(doc as any).confidence && (
+                          <span className="ml-2">• Confidence: {Math.round((doc as any).confidence)}%</span>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -323,6 +359,16 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
                           </li>
                         ))}
                       </ul>
+                    </div>
+                  )}
+                  
+                  {doc.status === 'valid' && (doc as any).extractedData && (
+                    <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                      <div className="text-sm font-medium text-emerald-800 mb-1">Verification Complete:</div>
+                      <div className="text-sm text-emerald-700">
+                        Document successfully validated against SBA SOP 50 10 8 requirements.
+                        {(doc as any).confidence && ` Confidence: ${Math.round((doc as any).confidence)}%`}
+                      </div>
                     </div>
                   )}
                 </div>
