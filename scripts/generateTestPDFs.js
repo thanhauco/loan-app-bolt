@@ -1091,3 +1091,6 @@ class ComprehensiveSBAPDFGenerator {
       '• Current Assets: $187,200',
       '• Strong cash flow with consistent profitability',
       '• Debt Service Coverage Ratio: 2.1x'
+    ]
+  }
+}
