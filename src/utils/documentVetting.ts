@@ -188,51 +188,108 @@ export class DocumentVettingEngine {
   }
 
   identifyDocumentType(filename: string, extractedText: string): string {
-    const name = filename.toLowerCase();
     const text = extractedText.toLowerCase();
+    const name = filename.toLowerCase();
+    
+    // Score each document type based on content patterns
+    const documentScores = {
+      businessLicense: 0,
+      taxReturns: 0,
+      financialStatements: 0,
+      personalFinancialStatement: 0,
+      businessPlan: 0,
+      useOfFunds: 0,
+      articlesOfIncorporation: 0
+    };
 
-    // Business License
-    if (name.includes('license') || SBA_REQUIREMENTS.businessLicense.patterns.some(p => p.test(text))) {
-      return 'businessLicense';
+    // Business License - Content-based scoring
+    SBA_REQUIREMENTS.businessLicense.patterns.forEach(pattern => {
+      if (pattern.test(text)) documentScores.businessLicense += 3;
+    });
+    SBA_REQUIREMENTS.businessLicense.requiredFields.forEach(field => {
+      if (field.test(text)) documentScores.businessLicense += 2;
+    });
+    if (name.includes('license')) documentScores.businessLicense += 1; // Filename hint
+
+    // Tax Returns - Content-based scoring
+    SBA_REQUIREMENTS.taxReturns.patterns.forEach(pattern => {
+      if (pattern.test(text)) documentScores.taxReturns += 3;
+    });
+    SBA_REQUIREMENTS.taxReturns.requiredFields.forEach(field => {
+      if (field.test(text)) documentScores.taxReturns += 2;
+    });
+    if (name.includes('tax') || name.includes('1040') || name.includes('1120')) {
+      documentScores.taxReturns += 1; // Filename hint
     }
 
-    // Tax Returns
-    if (name.includes('tax') || name.includes('1040') || name.includes('1120') || 
-        SBA_REQUIREMENTS.taxReturns.patterns.some(p => p.test(text))) {
-      return 'taxReturns';
+    // Financial Statements - Content-based scoring
+    SBA_REQUIREMENTS.financialStatements.patterns.forEach(pattern => {
+      if (pattern.test(text)) documentScores.financialStatements += 3;
+    });
+    SBA_REQUIREMENTS.financialStatements.requiredFields.forEach(field => {
+      if (field.test(text)) documentScores.financialStatements += 2;
+    });
+    if (name.includes('financial') || name.includes('balance') || name.includes('profit')) {
+      documentScores.financialStatements += 1; // Filename hint
     }
 
-    // Financial Statements
-    if (name.includes('financial') || name.includes('balance') || name.includes('profit') ||
-        SBA_REQUIREMENTS.financialStatements.patterns.some(p => p.test(text))) {
-      return 'financialStatements';
+    // Personal Financial Statement - Content-based scoring
+    SBA_REQUIREMENTS.personalFinancialStatement.patterns.forEach(pattern => {
+      if (pattern.test(text)) documentScores.personalFinancialStatement += 3;
+    });
+    SBA_REQUIREMENTS.personalFinancialStatement.requiredFields.forEach(field => {
+      if (field.test(text)) documentScores.personalFinancialStatement += 2;
+    });
+    if (name.includes('personal') || name.includes('413')) {
+      documentScores.personalFinancialStatement += 1; // Filename hint
     }
 
-    // Personal Financial Statement
-    if (name.includes('personal') || text.includes('form 413') ||
-        SBA_REQUIREMENTS.personalFinancialStatement.patterns.some(p => p.test(text))) {
-      return 'personalFinancialStatement';
+    // Business Plan - Content-based scoring
+    SBA_REQUIREMENTS.businessPlan.patterns.forEach(pattern => {
+      if (pattern.test(text)) documentScores.businessPlan += 3;
+    });
+    SBA_REQUIREMENTS.businessPlan.requiredSections.forEach(section => {
+      if (section.test(text)) documentScores.businessPlan += 2;
+    });
+    if (name.includes('business') && name.includes('plan')) {
+      documentScores.businessPlan += 1; // Filename hint
     }
 
-    // Business Plan
-    if (name.includes('business plan') || name.includes('plan') ||
-        SBA_REQUIREMENTS.businessPlan.patterns.some(p => p.test(text))) {
-      return 'businessPlan';
+    // Use of Funds - Content-based scoring
+    SBA_REQUIREMENTS.useOfFunds.patterns.forEach(pattern => {
+      if (pattern.test(text)) documentScores.useOfFunds += 3;
+    });
+    SBA_REQUIREMENTS.useOfFunds.requiredFields.forEach(field => {
+      if (field.test(text)) documentScores.useOfFunds += 2;
+    });
+    if (name.includes('use') && name.includes('funds')) {
+      documentScores.useOfFunds += 1; // Filename hint
     }
 
-    // Use of Funds
-    if (name.includes('use of funds') || name.includes('loan purpose') ||
-        SBA_REQUIREMENTS.useOfFunds.patterns.some(p => p.test(text))) {
-      return 'useOfFunds';
+    // Articles of Incorporation - Content-based scoring
+    SBA_REQUIREMENTS.articlesOfIncorporation.patterns.forEach(pattern => {
+      if (pattern.test(text)) documentScores.articlesOfIncorporation += 3;
+    });
+    SBA_REQUIREMENTS.articlesOfIncorporation.requiredFields.forEach(field => {
+      if (field.test(text)) documentScores.articlesOfIncorporation += 2;
+    });
+    if (name.includes('articles') || name.includes('incorporation') || name.includes('organization')) {
+      documentScores.articlesOfIncorporation += 1; // Filename hint
     }
 
-    // Articles of Incorporation
-    if (name.includes('articles') || name.includes('incorporation') || name.includes('organization') ||
-        SBA_REQUIREMENTS.articlesOfIncorporation.patterns.some(p => p.test(text))) {
-      return 'articlesOfIncorporation';
+    // Find the document type with the highest score
+    const maxScore = Math.max(...Object.values(documentScores));
+    
+    // Require minimum score of 3 to identify (at least one strong content match)
+    if (maxScore < 3) {
+      return 'unknown';
     }
 
-    return 'unknown';
+    // Return the document type with the highest score
+    const identifiedType = Object.entries(documentScores)
+      .find(([type, score]) => score === maxScore)?.[0];
+    
+    return identifiedType || 'unknown';
   }
 
   validateBusinessLicense(text: string, filename: string): VettingResult {
