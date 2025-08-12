@@ -11,9 +11,12 @@ const __dirname = path.dirname(__filename);
 
 // Ensure output directory exists
 const outputDir = path.join(__dirname, '..', 'test-pdfs');
-if (!fs.existsSync(outputDir)) {
-  fs.mkdirSync(outputDir, { recursive: true });
+
+// Clean and recreate the output directory
+if (fs.existsSync(outputDir)) {
+  fs.rmSync(outputDir, { recursive: true, force: true });
 }
+fs.mkdirSync(outputDir, { recursive: true });
 
 class ComprehensiveSBAPDFGenerator {
   constructor() {
