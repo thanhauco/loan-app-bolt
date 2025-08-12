@@ -1,0 +1,42 @@
+FINANCIAL STATEMENTS
+Tech Solutions LLC
+For Year Ended December 31, 2023
+
+BALANCE SHEET
+ASSETS:
+Current Assets:
+  Cash: $75,000
+  Accounts Receivable: $125,000
+  Inventory: $50,000
+  Total Current Assets: $250,000
+
+Fixed Assets:
+  Equipment: $100,000
+  Less Depreciation: ($20,000)
+  Net Fixed Assets: $80,000
+
+TOTAL ASSETS: $330,000
+
+LIABILITIES:
+Current Liabilities:
+  Accounts Payable: $45,000
+  Accrued Expenses: $15,000
+  Total Current Liabilities: $60,000
+
+Long-term Debt: $120,000
+TOTAL LIABILITIES: $180,000
+
+EQUITY:
+Owner's Equity: $150,000
+TOTAL LIABILITIES & EQUITY: $330,000
+
+INCOME STATEMENT
+Revenue: $500,000
+Cost of Sales: $200,000
+Gross Profit: $300,000
+Operating Expenses: $236,000
+Net Income: $64,000
+
+Prepared by: Smith & Associates CPA
+CPA License: CA-12345
+Date: February 28, 2024

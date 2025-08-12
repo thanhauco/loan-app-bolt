@@ -1,0 +1,32 @@
+SBA FORM 413 - PERSONAL FINANCIAL STATEMENT
+Date: January 10, 2025
+
+PERSONAL INFORMATION:
+Name: John Smith
+Address: 123 Main St, San Francisco, CA 94102
+Phone: (555) 123-4567
+Date of Birth: 01/15/1980
+
+ASSETS:
+Cash on Hand: $25,000
+Savings Account: $150,000
+Checking Account: $35,000
+Real Estate (Primary Residence): $800,000
+Automobiles: $45,000
+Securities: $200,000
+Other Assets: $50,000
+TOTAL ASSETS: $1,305,000
+
+LIABILITIES:
+Mortgage (Primary Residence): $450,000
+Auto Loans: $25,000
+Credit Cards: $8,000
+Other Debts: $12,000
+TOTAL LIABILITIES: $495,000
+
+NET WORTH: $810,000
+
+SIGNATURE:
+I certify that the information provided is true and complete.
+Signature: [SIGNED] John Smith
+Date: January 10, 2025

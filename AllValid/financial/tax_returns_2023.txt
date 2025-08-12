@@ -1,0 +1,29 @@
+U.S. CORPORATION INCOME TAX RETURN
+Form 1120 - 2023
+Tech Solutions LLC
+EIN: 12-3456789
+
+INCOME:
+Total Income: $500,000
+Cost of Goods Sold: $200,000
+Gross Profit: $300,000
+
+DEDUCTIONS:
+Salaries and Wages: $150,000
+Rent: $36,000
+Other Deductions: $50,000
+Total Deductions: $236,000
+
+TAXABLE INCOME: $64,000
+Tax Liability: $13,440
+
+SIGNATURE SECTION:
+Prepared by: John Smith, President
+Date: March 15, 2024
+Signature: [SIGNED] John Smith
+Title: President
+
+CPA CERTIFICATION:
+Prepared by: Smith & Associates CPA
+CPA License: CA-12345
+Date: March 15, 2024

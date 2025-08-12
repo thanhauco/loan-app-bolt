@@ -1,281 +1,433 @@
-# SBA Loan Vetting Application
+import fs from 'fs';
+import path from 'path';
 
-A comprehensive web application for Small Business Administration (SBA) loan application processing, featuring AI-powered document validation, compliance checking, and an intelligent chatbot assistant.
+// Create directory structure
+const createDirectories = () => {
+  const baseDirs = ['AllValid', 'Invalid'];
+  const subDirs = ['business', 'financial', 'personal', 'loan'];
+  
+  baseDirs.forEach(baseDir => {
+    if (!fs.existsSync(baseDir)) {
+      fs.mkdirSync(baseDir);
+    }
+    subDirs.forEach(subDir => {
+      const fullPath = path.join(baseDir, subDir);
+      if (!fs.existsSync(fullPath)) {
+        fs.mkdirSync(fullPath, { recursive: true });
+      }
+    });
+  });
+};
 
-## Features
+// Generate valid documents
+const generateValidDocuments = () => {
+  // Business documents - VALID
+  const validBusinessLicense = `BUSINESS LICENSE
+License Number: BL-2024-12345
+Business Name: Tech Solutions LLC
+License Type: General Business License
+Issue Date: January 15, 2024
+Expiration Date: January 15, 2026
+Issuing Authority: City of San Francisco Business Registration
+Status: ACTIVE
+Authorized Signature: John Smith, City Clerk
+Date Signed: January 15, 2024`;
 
-### 🤖 AI-Powered Chatbot Assistant
-- Interactive SBA loan guidance and support
-- Real-time document upload summaries
-- Compliance requirement explanations
-- Automated responses to common loan questions
-- Context-aware suggestions and next steps
+  const validArticlesOfIncorporation = `ARTICLES OF INCORPORATION
+State of California
+Secretary of State Filing
 
-### 📄 Document Management System
-- Drag-and-drop file upload interface
-- Multi-category document organization (Business, Financial, Personal, Loan)
-- Real-time document validation and status tracking
-- Comprehensive document requirements checklist
-- Support for multiple file formats (PDF, DOC, DOCX, XLS, XLSX, JPG, PNG)
+Business Name: Tech Solutions LLC
+Entity Type: Limited Liability Company
+Filing Date: December 1, 2023
+State Filing Number: 202312010001
+Registered Agent: John Smith
+Registered Address: 123 Main St, San Francisco, CA 94102
+Principal Address: 123 Main St, San Francisco, CA 94102
+Purpose: General business purposes
+Members: John Smith (Managing Member)
 
-### ✅ Compliance Checker
-• Automated SBA SOP 50 10 8 compliance verification
-- Real-time compliance status monitoring
-- Detailed requirement breakdowns by category
-- Action item tracking for non-compliant areas
-- Industry-standard regulatory compliance
+STATE CERTIFICATION STAMP
+Filed with Secretary of State
+December 1, 2023
+Certificate Number: LLC-2023-001`;
 
-### 📊 Application Overview Dashboard
-- Real-time application progress tracking
-- Key metrics and statistics visualization
-- Timeline management with milestone tracking
-- Recent activity monitoring
-- Automated alerts for required actions
+  // Financial documents - VALID
+  const validTaxReturns = `U.S. CORPORATION INCOME TAX RETURN
+Form 1120 - 2023
+Tech Solutions LLC
+EIN: 12-3456789
 
-### 🔐 Secure Authentication
-- Gmail OAuth integration
-- Guest access option
-- Secure session management
-- User profile management
+INCOME:
+Total Income: $500,000
+Cost of Goods Sold: $200,000
+Gross Profit: $300,000
 
-## Technology Stack
+DEDUCTIONS:
+Salaries and Wages: $150,000
+Rent: $36,000
+Other Deductions: $50,000
+Total Deductions: $236,000
 
-- **Frontend**: React 18 with TypeScript
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
-- **Routing**: React Router DOM
-- **Build Tool**: Vite
-- **Development**: Hot Module Replacement (HMR)
+TAXABLE INCOME: $64,000
+Tax Liability: $13,440
 
-## Project Structure
+SIGNATURE SECTION:
+Prepared by: John Smith, President
+Date: March 15, 2024
+Signature: [SIGNED] John Smith
+Title: President
 
-```
-src/
-├── components/
-│   ├── SignIn.tsx              # Authentication component
-│   ├── ChatBot.tsx             # AI chatbot interface
-│   ├── DocumentUpload.tsx      # File upload and management
-│   ├── ComplianceChecker.tsx   # SBA compliance validation
-│   └── ApplicationOverview.tsx # Dashboard and metrics
-├── App.tsx                     # Main application component
-├── main.tsx                    # Application entry point
-└── index.css                   # Global styles
-```
+CPA CERTIFICATION:
+Prepared by: Smith & Associates CPA
+CPA License: CA-12345
+Date: March 15, 2024`;
 
-## Getting Started
+  const validFinancialStatements = `FINANCIAL STATEMENTS
+Tech Solutions LLC
+For Year Ended December 31, 2023
 
-### Prerequisites
-- Node.js (version 16 or higher)
-- npm or yarn package manager
+BALANCE SHEET
+ASSETS:
+Current Assets:
+  Cash: $75,000
+  Accounts Receivable: $125,000
+  Inventory: $50,000
+  Total Current Assets: $250,000
 
-### Installation
+Fixed Assets:
+  Equipment: $100,000
+  Less Depreciation: ($20,000)
+  Net Fixed Assets: $80,000
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd sba-loan-vetting-app
-```
+TOTAL ASSETS: $330,000
 
-2. Install dependencies:
-```bash
-npm install
-```
+LIABILITIES:
+Current Liabilities:
+  Accounts Payable: $45,000
+  Accrued Expenses: $15,000
+  Total Current Liabilities: $60,000
 
-3. Start the development server:
-```bash
-npm run dev
-```
+Long-term Debt: $120,000
+TOTAL LIABILITIES: $180,000
 
-4. Open your browser and navigate to `http://localhost:5173`
+EQUITY:
+Owner's Equity: $150,000
+TOTAL LIABILITIES & EQUITY: $330,000
 
-### Available Scripts
+INCOME STATEMENT
+Revenue: $500,000
+Cost of Sales: $200,000
+Gross Profit: $300,000
+Operating Expenses: $236,000
+Net Income: $64,000
 
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build the application for production
-- `npm run preview` - Preview the production build locally
-- `npm run lint` - Run ESLint for code quality checks
+Prepared by: Smith & Associates CPA
+CPA License: CA-12345
+Date: February 28, 2024`;
 
-## Application Workflow
+  // Personal documents - VALID
+  const validPersonalFinancialStatement = `SBA FORM 413 - PERSONAL FINANCIAL STATEMENT
+Date: January 10, 2025
 
-### 1. Authentication
-- Users can sign in with Gmail or continue as a guest
-- Secure authentication with user profile management
+PERSONAL INFORMATION:
+Name: John Smith
+Address: 123 Main St, San Francisco, CA 94102
+Phone: (555) 123-4567
+Date of Birth: 01/15/1980
 
-### 2. Document Upload
-- Upload documents across four categories:
-  - **Business Documents**: Licenses, incorporation papers, agreements
-  - **Financial Statements**: Tax returns, P&L, balance sheets, cash flow
-  - **Personal Information**: Personal tax returns, financial statements, resumes
-  - **Loan Documentation**: Business plans, use of funds, debt schedules
+ASSETS:
+Cash on Hand: $25,000
+Savings Account: $150,000
+Checking Account: $35,000
+Real Estate (Primary Residence): $800,000
+Automobiles: $45,000
+Securities: $200,000
+Other Assets: $50,000
+TOTAL ASSETS: $1,305,000
 
-### 3. Document Validation
-- Automated document processing and validation
-- Real-time status updates (Valid, Failed, Pending)
-- Detailed error reporting for failed validations
-- Requirements checklist tracking
+LIABILITIES:
+Mortgage (Primary Residence): $450,000
+Auto Loans: $25,000
+Credit Cards: $8,000
+Other Debts: $12,000
+TOTAL LIABILITIES: $495,000
 
-### 4. Compliance Checking
-- Comprehensive SBA SOP 50 10 7.1 compliance verification
-- Eight key compliance areas:
-  - SBA Size Standards Compliance
-  - Business Registration & Licensing
-  - Financial Statement Requirements
-  - Personal Guaranty Compliance
-  - Eligible Use of Loan Proceeds
-  - Credit Analysis Standards
-  - Collateral & Security Requirements
-  - Environmental Review Compliance
+NET WORTH: $810,000
 
-### 5. AI Assistant
-- Context-aware chatbot providing SBA loan guidance
-- Automatic document upload summaries
-- Compliance requirement explanations
-- Processing timeline information
-- Eligibility criteria assistance
+SIGNATURE:
+I certify that the information provided is true and complete.
+Signature: [SIGNED] John Smith
+Date: January 10, 2025`;
 
-## SBA Compliance Features
+  const validPersonalTaxReturns = `U.S. INDIVIDUAL INCOME TAX RETURN
+Form 1040 - 2023
+John Smith
+SSN: XXX-XX-1234
 
-The application ensures compliance with SBA Standard Operating Procedures (SOP 50 10 8):
+INCOME:
+Wages: $180,000
+Business Income: $64,000
+Interest: $3,500
+Dividends: $8,200
+Total Income: $255,700
 
-- **Eligibility Verification**: Automated size standards checking
-- **Document Requirements**: Comprehensive validation against SBA requirements
-- **Financial Analysis**: Multi-year financial statement verification
-- **Legal Compliance**: Business registration and licensing validation
-- **Security Requirements**: Collateral and guaranty compliance
-- **Environmental Review**: Required assessments for applicable businesses
+DEDUCTIONS:
+Standard Deduction: $13,850
+Total Deductions: $13,850
 
-## Document Validation Logic (SBA SOP 50 10 8 Compliant)
+TAXABLE INCOME: $241,850
+Tax: $52,832
+Federal Tax Withheld: $55,000
+REFUND DUE: $2,168
 
-### Confidence Calculation Framework
+SIGNATURE:
+Taxpayer Signature: [SIGNED] John Smith
+Date: April 10, 2024
+Spouse Signature: [SIGNED] Jane Smith
+Date: April 10, 2024`;
 
-All document validation follows SBA SOP 50 10 8 requirements with binary pass/fail criteria rather than arbitrary scoring:
+  // Loan documents - VALID
+  const validBusinessPlan = `COMPREHENSIVE BUSINESS PLAN
+Tech Solutions LLC
 
-#### Business License Validation
-- **SBA Requirement**: Current, valid business license per SOP 50 10 8 Chapter 3
-- **Validation Logic**:
-  - REQUIRED: License number, business name, expiration date, issuing authority
-  - CRITICAL: Must not be expired (automatic fail if expired)
-  - PASS THRESHOLD: All required fields present + current status
-  - CONFIDENCE: Based on field completeness and date validity
+EXECUTIVE SUMMARY:
+Tech Solutions LLC is a technology consulting firm specializing in small business digital transformation. Founded in 2023, we provide comprehensive IT solutions including cloud migration, cybersecurity, and digital marketing services.
 
-#### Tax Returns Validation (SOP 50 10 8 Chapter 4)
-- **SBA Requirement**: 3 complete years, signed and dated
-- **Validation Logic**:
-  - REQUIRED: Form identification (1040, 1120, 1120S, 1065), signature, date
-  - CRITICAL: Must be signed (automatic fail if unsigned)
-  - CRITICAL: Must be within 3-year requirement
-  - PASS THRESHOLD: Signed + complete + within timeframe
-  - CONFIDENCE: Based on completeness and signature verification
+BUSINESS DESCRIPTION:
+Our company serves small to medium businesses in the San Francisco Bay Area, helping them modernize their technology infrastructure and improve operational efficiency through strategic technology implementations.
 
-#### Financial Statements Validation (SOP 50 10 8 Chapter 4)
-- **SBA Requirement**: Current financial statements with key metrics
-- **Validation Logic**:
-  - REQUIRED: Balance sheet data, P&L data, statement date
-  - PREFERRED: CPA preparation (bonus points, not required)
-  - CRITICAL: Must be current (within 12 months for interim statements)
-  - PASS THRESHOLD: Key financial data present + current date
-  - CONFIDENCE: Based on data completeness and recency
+MANAGEMENT TEAM:
+John Smith - CEO/Founder
+- MBA from Stanford University
+- 15 years experience in technology consulting
+- Former Senior Manager at Deloitte Consulting
+- Certified Project Management Professional (PMP)
 
-#### Personal Financial Statement (SBA Form 413)
-- **SBA Requirement**: Current (90 days), signed, complete per SOP 50 10 8 Chapter 5
-- **Validation Logic**:
-  - REQUIRED: Assets, liabilities, net worth, signature, date
-  - CRITICAL: Must be within 90 days (automatic fail if older)
-  - CRITICAL: Must be signed (automatic fail if unsigned)
-  - PASS THRESHOLD: Complete + signed + current
-  - CONFIDENCE: Based on completeness and currency
+Jane Smith - COO
+- BS Computer Science from UC Berkeley
+- 12 years experience in operations management
+- Former Operations Director at TechStart Inc.
 
-#### Business Plan Validation (SOP 50 10 8 Chapter 6)
-- **SBA Requirement**: Comprehensive plan demonstrating repayment ability
-- **Validation Logic**:
-  - REQUIRED SECTIONS (per SOP 50 10 8):
-    - Executive Summary
-    - Business Description
-    - Management Team/Experience
-    - Financial Projections (3-year minimum)
-    - Use of Funds Statement
-    - Repayment Analysis
-  - CRITICAL: Financial projections are MANDATORY, not optional
-  - CRITICAL: Must demonstrate repayment ability
-  - PASS THRESHOLD: ≥4 of 6 required sections + financial projections + repayment analysis
-  - CONFIDENCE: Based on section completeness and regulatory compliance
+FINANCIAL PROJECTIONS (3-Year):
 
-#### Use of Funds Validation (SOP 50 10 8 Chapter 6)
-- **SBA Requirement**: Detailed breakdown of loan proceeds usage
-- **Validation Logic**:
-  - REQUIRED: Total loan amount, category breakdown, specific amounts
-  - REQUIRED CATEGORIES: Working capital, equipment, real estate, debt refinancing
-  - CRITICAL: Amounts must add up to total loan request
-  - PASS THRESHOLD: Detailed breakdown + amounts balance
-  - CONFIDENCE: Based on detail level and mathematical accuracy
+YEAR 1 (2024):
+Revenue: $750,000
+Expenses: $600,000
+Net Income: $150,000
+Cash Flow: $175,000
 
-#### Articles of Incorporation Validation
-- **SBA Requirement**: Proper business formation documentation
-- **Validation Logic**:
-  - REQUIRED: Business name, state filing, registered agent, filing date
-  - REQUIRED: State certification or filing stamp
-  - PASS THRESHOLD: Complete state filing information
-  - CONFIDENCE: Based on official documentation completeness
+YEAR 2 (2025):
+Revenue: $1,200,000
+Expenses: $900,000
+Net Income: $300,000
+Cash Flow: $350,000
 
-### Overall Validation Thresholds
+YEAR 3 (2026):
+Revenue: $1,800,000
+Expenses: $1,300,000
+Net Income: $500,000
+Cash Flow: $575,000
 
-- **VALID**: Document meets ALL SBA SOP 50 10 8 requirements + confidence ≥70%
-- **INVALID**: Missing critical requirements OR confidence <70% OR has compliance issues
-- **PENDING**: Document processing in progress
+USE OF FUNDS:
+Total Loan Request: $250,000
+- Working Capital: $100,000 (40%)
+- Equipment Purchase: $75,000 (30%)
+- Marketing & Sales: $50,000 (20%)
+- Office Expansion: $25,000 (10%)
 
-### SBA SOP 50 10 8 Compliance Notes
+REPAYMENT ANALYSIS:
+Monthly Loan Payment: $4,167 (assuming 7% interest, 5-year term)
+Projected Monthly Cash Flow Year 1: $14,583
+Debt Service Coverage Ratio: 3.5x
+Strong repayment capacity demonstrated through conservative projections.
 
-1. **No Exceptions**: SBA regulations are federal requirements - no "good enough" standards
-2. **Binary Requirements**: Documents either meet SBA standards or they don't
-3. **Critical vs. Preferred**: Some items are required (signature, dates), others are preferred (CPA preparation)
-4. **Timeframe Sensitivity**: Many documents have specific currency requirements (90 days, 12 months, 3 years)
-5. **Completeness Standard**: Partial documents don't meet SBA standards
+MARKET ANALYSIS:
+Target market size: $2.5B (SMB technology services in Bay Area)
+Growth rate: 12% annually
+Competitive advantages: Local expertise, personalized service, proven track record`;
 
-## Key Metrics Tracked
+  const validUseOfFunds = `USE OF FUNDS STATEMENT
+Tech Solutions LLC
+Loan Amount Requested: $250,000
 
-- Application progress percentage
-- Document upload completion rates
-- Compliance check pass/fail ratios
-- Processing timeline estimates
-- Required action items
+DETAILED BREAKDOWN:
 
-## User Experience Features
+1. WORKING CAPITAL: $100,000 (40%)
+   - Accounts Receivable Financing: $60,000
+   - Inventory/Supplies: $25,000
+   - Operating Cash Reserve: $15,000
 
-- **Responsive Design**: Optimized for desktop and mobile devices
-- **Real-time Updates**: Live status updates across all components
-- **Interactive Dashboard**: Comprehensive application overview
-- **Progress Tracking**: Visual progress indicators and timelines
-- **Error Handling**: Clear error messages and resolution guidance
+2. EQUIPMENT PURCHASE: $75,000 (30%)
+   - Server Infrastructure: $35,000
+   - Workstations (5 units): $25,000
+   - Software Licenses: $15,000
 
-## Security & Privacy
+3. MARKETING & SALES: $50,000 (20%)
+   - Digital Marketing Campaign: $30,000
+   - Trade Show Participation: $10,000
+   - Sales Materials & Collateral: $10,000
 
-- Secure file upload and storage
-- User authentication and session management
-- Compliance with SBA privacy requirements
-- Bank-level security standards
-- Data encryption and protection
+4. OFFICE EXPANSION: $25,000 (10%)
+   - Lease Deposits: $15,000
+   - Office Furniture: $10,000
 
-## Development Notes
+TOTAL: $250,000
 
-- Built with modern React patterns and TypeScript for type safety
-- Modular component architecture for maintainability
-- Responsive design with Tailwind CSS
-- Comprehensive error handling and user feedback
-- Optimized for performance with Vite build system
+JUSTIFICATION:
+This funding will enable Tech Solutions LLC to expand operations, serve more clients, and increase revenue capacity. The working capital component ensures smooth operations during growth phase, while equipment purchases directly support service delivery capabilities.
 
-## Future Enhancements
+TIMELINE:
+Funds will be deployed over 6 months:
+- Month 1: Equipment purchases ($75,000)
+- Month 2: Office expansion ($25,000)
+- Months 3-6: Working capital and marketing ($150,000)
 
-- Integration with SBA APIs
-- Advanced document OCR and data extraction
-- Multi-language support
-- Enhanced reporting and analytics
-- Mobile application development
-- Integration with banking systems
+Expected ROI: 24% annually based on projected revenue growth and operational efficiency improvements.`;
 
-## Support
+  // Write valid documents
+  fs.writeFileSync('AllValid/business/business_license.txt', validBusinessLicense);
+  fs.writeFileSync('AllValid/business/articles_of_incorporation.txt', validArticlesOfIncorporation);
+  fs.writeFileSync('AllValid/financial/tax_returns_2023.txt', validTaxReturns);
+  fs.writeFileSync('AllValid/financial/financial_statements.txt', validFinancialStatements);
+  fs.writeFileSync('AllValid/personal/personal_financial_statement.txt', validPersonalFinancialStatement);
+  fs.writeFileSync('AllValid/personal/personal_tax_returns.txt', validPersonalTaxReturns);
+  fs.writeFileSync('AllValid/loan/comprehensive_business_plan.txt', validBusinessPlan);
+  fs.writeFileSync('AllValid/loan/use_of_funds.txt', validUseOfFunds);
+};
 
-For technical support or questions about SBA loan requirements, use the built-in AI chatbot assistant or refer to the official SBA documentation.
+// Generate invalid documents
+const generateInvalidDocuments = () => {
+  // Business documents - INVALID
+  const invalidBusinessLicense = `BUSINESS LICENSE
+License Number: BL-2020-98765
+Business Name: Old Tech LLC
+License Type: General Business License
+Issue Date: January 15, 2020
+Expiration Date: January 15, 2022  // EXPIRED!
+Issuing Authority: City of San Francisco Business Registration
+Status: EXPIRED
+// MISSING SIGNATURE - INVALID`;
 
----
+  const invalidArticlesOfIncorporation = `ARTICLES OF INCORPORATION
+State of California
 
-*This application is designed to streamline the SBA loan application process while ensuring full compliance with current SBA regulations and requirements.*
+Business Name: Incomplete Corp
+Entity Type: Corporation
+Filing Date: [MISSING]
+State Filing Number: [MISSING]
+Registered Agent: [MISSING]
+// INCOMPLETE - MISSING CRITICAL INFORMATION
+// NO STATE CERTIFICATION STAMP`;
+
+  // Financial documents - INVALID
+  const invalidTaxReturns = `U.S. CORPORATION INCOME TAX RETURN
+Form 1120 - 2023
+Incomplete Corp
+EIN: 12-3456789
+
+INCOME:
+Total Income: $300,000
+// INCOMPLETE FINANCIAL DATA
+
+SIGNATURE SECTION:
+Prepared by: [UNSIGNED]
+Date: [MISSING]
+// MISSING SIGNATURE - INVALID PER SBA REQUIREMENTS`;
+
+  const invalidFinancialStatements = `FINANCIAL STATEMENTS
+Old Business LLC
+For Year Ended December 31, 2021  // TOO OLD - OVER 12 MONTHS
+
+BALANCE SHEET
+ASSETS:
+Current Assets: [INCOMPLETE]
+// MISSING DETAILED BREAKDOWN
+
+LIABILITIES:
+[INCOMPLETE DATA]
+
+// NO CPA PREPARATION
+// OUTDATED - INVALID PER SBA CURRENCY REQUIREMENTS`;
+
+  // Personal documents - INVALID
+  const invalidPersonalFinancialStatement = `SBA FORM 413 - PERSONAL FINANCIAL STATEMENT
+Date: June 15, 2024  // OVER 90 DAYS OLD - INVALID
+
+PERSONAL INFORMATION:
+Name: John Doe
+Address: [INCOMPLETE]
+
+ASSETS:
+Cash: $10,000
+// INCOMPLETE ASSET LISTING
+
+LIABILITIES:
+// MISSING LIABILITY INFORMATION
+
+// MISSING SIGNATURE - INVALID
+// TOO OLD - EXCEEDS 90-DAY REQUIREMENT`;
+
+  const invalidPersonalTaxReturns = `U.S. INDIVIDUAL INCOME TAX RETURN
+Form 1040 - 2023
+John Doe
+
+INCOME:
+Wages: $50,000
+// INCOMPLETE INCOME INFORMATION
+
+// MISSING SIGNATURE SECTION - INVALID
+// INCOMPLETE TAX RETURN`;
+
+  // Loan documents - INVALID
+  const invalidBusinessPlan = `BASIC BUSINESS PLAN
+Simple Business LLC
+
+EXECUTIVE SUMMARY:
+We want to start a business.
+
+BUSINESS DESCRIPTION:
+General business activities.
+
+// MISSING CRITICAL SECTIONS:
+// - No Management Team Information
+// - No Financial Projections (CRITICAL SBA REQUIREMENT)
+// - No Use of Funds Statement
+// - No Repayment Analysis
+// - Insufficient Detail for SBA Requirements`;
+
+  const invalidUseOfFunds = `USE OF FUNDS
+Loan Amount: $100,000
+
+General business purposes: $100,000
+
+// VAGUE AND INSUFFICIENT DETAIL
+// MISSING SPECIFIC BREAKDOWN
+// NO PERCENTAGES OR CATEGORIES
+// DOES NOT MEET SBA REQUIREMENTS FOR DETAILED USE OF FUNDS`;
+
+  // Write invalid documents
+  fs.writeFileSync('Invalid/business/expired_business_license.txt', invalidBusinessLicense);
+  fs.writeFileSync('Invalid/business/incomplete_articles.txt', invalidArticlesOfIncorporation);
+  fs.writeFileSync('Invalid/financial/unsigned_tax_returns.txt', invalidTaxReturns);
+  fs.writeFileSync('Invalid/financial/outdated_financial_statements.txt', invalidFinancialStatements);
+  fs.writeFileSync('Invalid/personal/old_personal_financial_statement.txt', invalidPersonalFinancialStatement);
+  fs.writeFileSync('Invalid/personal/incomplete_personal_returns.txt', invalidPersonalTaxReturns);
+  fs.writeFileSync('Invalid/loan/basic_business_plan.txt', invalidBusinessPlan);
+  fs.writeFileSync('Invalid/loan/vague_use_of_funds.txt', invalidUseOfFunds);
+};
+
+// Main execution
+console.log('Creating directory structure...');
+createDirectories();
+
+console.log('Generating valid documents...');
+generateValidDocuments();
+
+console.log('Generating invalid documents...');
+generateInvalidDocuments();
+
+console.log('✅ Dataset generation complete!');
+console.log('📁 AllValid/ - Contains 8 SBA-compliant documents');
+console.log('📁 Invalid/ - Contains 8 non-compliant documents');
+console.log('🎯 Ready for validation testing!');
