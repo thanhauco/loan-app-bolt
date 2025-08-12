@@ -54,7 +54,6 @@ function App() {
     setUploadedDocuments(docs);
     // Trigger chatbot to show upload summary
     setTriggerChatUpdate(prev => prev + 1);
-    // Preserve the current active tab - don't change it
   };
   const MainApp = () => {
   const handleMouseDown = (e: React.MouseEvent) => {
