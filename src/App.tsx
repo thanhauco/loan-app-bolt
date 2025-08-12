@@ -50,11 +50,13 @@ function App() {
     navigate('/signin');
   };
 
-  const handleDocumentUpload = (docs: any[]) => {
-    setUploadedDocuments(docs);
-    // Trigger chatbot to show upload summary
-    setTriggerChatUpdate(prev => prev + 1);
-  };
+  // Watch for changes in uploadedDocuments and trigger chatbot update
+  React.useEffect(() => {
+    if (uploadedDocuments.length > 0) {
+      // Trigger chatbot to show upload summary
+      setTriggerChatUpdate(prev => prev + 1);
+    }
+  }, [uploadedDocuments]);
   const MainApp = () => {
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -267,7 +269,8 @@ function App() {
               {activeTab === 'documents' && (
                 <DocumentUpload 
                   uploadedDocuments={uploadedDocuments}
-                  setUploadedDocuments={handleDocumentUpload}
+                  setUploadedDocuments={setUploadedDocuments}
+                  currentTab={activeTab}
                 />
               )}
               {activeTab === 'compliance' && (

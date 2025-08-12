@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Upload, File, CheckCircle, AlertCircle, X, Eye, Download, FileText, DollarSign, Building, User } from 'lucide-react';
 import { DocumentVettingEngine, VettingResult } from '../utils/documentVetting';
 
@@ -17,12 +17,33 @@ interface Document {
 interface DocumentUploadProps {
   uploadedDocuments: Document[];
   setUploadedDocuments: (docs: Document[]) => void;
+  currentTab: string;
 }
 
-const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setUploadedDocuments }) => {
+const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setUploadedDocuments, currentTab }) => {
   const [dragActive, setDragActive] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('business');
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    // Initialize from localStorage or default to 'business'
+    return localStorage.getItem('selectedDocumentCategory') || 'business';
+  });
   const [vettingEngine] = useState(() => DocumentVettingEngine.getInstance());
+  
+  // Update localStorage when category changes
+  const handleCategoryChange = (categoryId: string) => {
+    console.log('🎯 Category changing from', selectedCategory, 'to', categoryId);
+    setSelectedCategory(categoryId);
+    localStorage.setItem('selectedDocumentCategory', categoryId);
+    console.log('💾 Saved to localStorage:', categoryId);
+  };
+  
+  // Restore category from localStorage when component mounts or when state changes
+  useEffect(() => {
+    const savedCategory = localStorage.getItem('selectedDocumentCategory');
+    if (savedCategory && savedCategory !== selectedCategory) {
+      console.log('🔄 Restoring category from localStorage:', savedCategory);
+      setSelectedCategory(savedCategory);
+    }
+  }, [selectedCategory]);
 
   const documentCategories = [
     {
@@ -103,6 +124,9 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
   }, []);
 
   const handleFiles = (files: FileList) => {
+    console.log('🔄 handleFiles called, selectedCategory:', selectedCategory);
+    console.log('🔄 localStorage value:', localStorage.getItem('selectedDocumentCategory'));
+    
     Array.from(files).forEach((file) => {
       // Validate file type and size
       const maxSize = 10 * 1024 * 1024; // 10MB
@@ -127,6 +151,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         return;
       }
 
+      console.log('📄 Creating document with category:', selectedCategory);
       const newDoc: Document = {
         id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
         name: file.name,
@@ -140,6 +165,9 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
 
       // Add document immediately with pending status
       setUploadedDocuments(prev => [...prev, newDoc]);
+      
+      // Trigger chatbot update to show upload summary
+      // This will be handled by the parent component's useEffect
 
       // Perform real document vetting
       vettingEngine.vetDocument(file).then((result: VettingResult) => {
@@ -227,7 +255,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         {documentCategories.map((category) => (
           <button
             key={category.id}
-            onClick={() => setSelectedCategory(category.id)}
+            onClick={() => handleCategoryChange(category.id)}
             className={`p-4 rounded-xl border-2 transition-all ${
               selectedCategory === category.id
                 ? `border-${category.color}-500 bg-${category.color}-50`
