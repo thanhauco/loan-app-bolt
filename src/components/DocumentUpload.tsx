@@ -108,12 +108,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       const maxSize = 10 * 1024 * 1024; // 10MB
       const allowedTypes = [
         'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'image/jpeg',
+        'image/jpg',
         'image/png',
+        'image/gif',
+        'image/bmp',
+        'image/tiff',
         'text/plain'
       ];
 
@@ -283,7 +283,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
               Choose Files
             </label>
             <div className="mt-2 text-xs text-gray-500">
-              Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG, TXT (Max 10MB)
+              Supported formats: PDF, JPG, PNG, GIF, BMP, TIFF, TXT (Max 10MB)
             </div>
           </div>
 

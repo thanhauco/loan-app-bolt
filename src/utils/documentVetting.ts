@@ -1,4 +1,8 @@
 import Tesseract from 'tesseract.js';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Configure PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 export interface VettingResult {
   status: 'valid' | 'invalid' | 'pending';
@@ -100,15 +104,17 @@ export const SBA_REQUIREMENTS = {
       /market\s+analysis/i,
       /financial\s+projections/i
     ],
-    requiredSections: [
+    requiredSections: [ // Per SBA SOP 50 10 8 Chapter 6
       /executive\s+summary/i,
       /business\s+description/i,
-      /market\s+analysis/i,
-      /organization\s+management/i,
+      /management\s+(?:team|experience)/i,
       /financial\s+projections/i,
-      /use\s+of\s+funds/i
+      /use\s+of\s+(?:funds|proceeds)/i,
+      /repayment\s+ability/i
     ],
-    minimumPages: 10
+    minimumPages: 5, // SBA allows shorter plans for smaller loans
+    mustDemonstrateRepayment: true,
+    requiresReasonableProjections: true
   },
   
   useOfFunds: {
@@ -176,14 +182,109 @@ export class DocumentVettingEngine {
         });
       }
       
-      // For other file types, use OCR
+      // Handle PDF files with special conversion
+      if (file.type === 'application/pdf') {
+        return await this.extractTextFromPDF(file);
+      }
+
+      // Handle image files
+      const imageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff'];
+      if (imageTypes.includes(file.type)) {
+        return await this.extractTextFromImage(file);
+      }
+
+      throw new Error(`File type ${file.type} is not supported for text extraction. Please upload PDF, image, or text files only.`);
+    } catch (error) {
+      console.error('OCR extraction failed:', error);
+      if (error instanceof Error) {
+        throw new Error(`Failed to extract text from document: ${error.message}`);
+      } else {
+        throw new Error('Failed to extract text from document');
+      }
+    }
+  }
+
+  private async extractTextFromPDF(file: File): Promise<string> {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+
+      // Extract text from each page
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items
+          .map((item: any) => item.str)
+          .join(' ');
+        fullText += pageText + '\n';
+      }
+
+      // If we got text directly from PDF, return it
+      if (fullText.trim().length > 50) {
+        return fullText;
+      }
+
+      // If no text or minimal text, convert to image and use OCR
+      console.log('PDF has minimal text, converting to image for OCR...');
+      return await this.convertPDFToImageAndOCR(file);
+    } catch (error) {
+      console.error('PDF text extraction failed, trying OCR fallback:', error);
+      return await this.convertPDFToImageAndOCR(file);
+    }
+  }
+
+  private async convertPDFToImageAndOCR(file: File): Promise<string> {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+
+      // Process first 3 pages (to avoid performance issues)
+      const maxPages = Math.min(pdf.numPages, 3);
+      
+      for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 2.0 });
+        
+        // Create canvas
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        // Render PDF page to canvas
+        await page.render({
+          canvasContext: context!,
+          viewport: viewport
+        }).promise;
+
+        // Convert canvas to blob and run OCR
+        const blob = await new Promise<Blob>((resolve) => {
+          canvas.toBlob((blob) => resolve(blob!), 'image/png');
+        });
+
+        const result = await Tesseract.recognize(blob, 'eng', {
+          logger: (m) => console.log(`OCR Page ${pageNum}:`, m)
+        });
+        
+        fullText += result.data.text + '\n';
+      }
+
+      return fullText;
+    } catch (error) {
+      throw new Error(`Failed to convert PDF to image for OCR: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  private async extractTextFromImage(file: File): Promise<string> {
+    try {
       const result = await Tesseract.recognize(file, 'eng', {
-        logger: m => console.log('OCR Progress:', m)
+        logger: (m) => console.log('OCR Progress:', m)
       });
       return result.data.text;
     } catch (error) {
-      console.error('OCR extraction failed:', error);
-      throw new Error('Failed to extract text from document');
+      throw new Error(`Failed to extract text from image: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -568,42 +669,68 @@ export class DocumentVettingEngine {
     const issues: string[] = [];
     let confidence = 0;
 
-    // Check for required sections
+    // SBA SOP 50 10 8 Chapter 6: Business Plan Requirements
     const requiredSections = SBA_REQUIREMENTS.businessPlan.requiredSections;
     const foundSections = requiredSections.filter(pattern => pattern.test(text));
-    confidence += (foundSections.length / requiredSections.length) * 60;
+    confidence += (foundSections.length / requiredSections.length) * 50;
 
-    if (foundSections.length < 4) {
-      issues.push(`Missing required business plan sections. Found ${foundSections.length} of ${requiredSections.length} required sections`);
+    // SBA requires minimum essential sections
+    if (foundSections.length < 3) {
+      issues.push(`Insufficient business plan content. SBA SOP 50 10 8 requires comprehensive business plan with key sections. Found ${foundSections.length} of ${requiredSections.length} required sections`);
     }
 
-    // Check document length (business plans should be comprehensive)
-    if (text.length < 2000) {
-      issues.push('Business plan appears too brief - should be comprehensive and detailed');
+    // SBA SOP 50 10 8: Business plan must be comprehensive enough to evaluate creditworthiness
+    if (text.length < 1000) {
+      issues.push('Business plan lacks sufficient detail for SBA evaluation per SOP 50 10 8');
+      confidence -= 25;
+    } else if (text.length > 2000) {
+      confidence += 20;
+    } else if (text.length > 1000) {
+      confidence += 10;
+    }
+
+    // SBA SOP 50 10 8: Financial projections are REQUIRED, not optional
+    const projectionPattern = /(?:projection|forecast|budget).*(?:\$|revenue|income|profit|cash\s+flow)/i;
+    if (!projectionPattern.test(text)) {
+      issues.push('Financial projections are required per SBA SOP 50 10 8 - must include revenue, expense, and cash flow projections');
       confidence -= 20;
-    } else if (text.length > 5000) {
+    } else {
+      confidence += 25;
+    }
+
+    // SBA SOP 50 10 8: Use of funds is MANDATORY
+    if (!/use\s+of\s+funds|loan\s+proceeds/i.test(text)) {
+      issues.push('Use of funds statement is required per SBA SOP 50 10 8');
+      confidence -= 20;
+    } else {
       confidence += 20;
     }
 
-    // Check for financial projections
-    const projectionPattern = /(?:projection|forecast|budget).*(?:\$|revenue|income|profit)/i;
-    if (!projectionPattern.test(text)) {
-      issues.push('Financial projections not clearly identified');
+    // SBA SOP 50 10 8: Must demonstrate repayment ability
+    const repaymentPattern = /(?:repayment|cash\s+flow|debt\s+service|ability\s+to\s+repay)/i;
+    if (!repaymentPattern.test(text)) {
+      issues.push('Business plan must demonstrate repayment ability per SBA SOP 50 10 8');
       confidence -= 15;
     } else {
       confidence += 15;
     }
 
-    // Check for use of funds section
-    if (!/use\s+of\s+funds|loan\s+proceeds/i.test(text)) {
-      issues.push('Use of funds section not found');
-      confidence -= 15;
+    // SBA SOP 50 10 8: Management experience must be documented
+    const managementPattern = /(?:management|experience|owner|principal|key\s+personnel)/i;
+    if (!managementPattern.test(text)) {
+      issues.push('Management experience and qualifications must be documented per SBA SOP 50 10 8');
+      confidence -= 10;
     } else {
-      confidence += 15;
+      confidence += 10;
     }
 
-    // SBA SOP 50 10 8: Business plan must be comprehensive with required sections
-    const status = confidence >= 65 && issues.filter(i => !i.includes('brief')).length <= 1 ? 'valid' : 'invalid';
+    // Check for business plan header/title
+    if (/business\s+plan/i.test(text)) {
+      confidence += 10;
+    }
+
+    // SBA SOP 50 10 8: Business plan must meet regulatory standards - no exceptions for "basic" plans
+    const status = confidence >= 70 && foundSections.length >= 3 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -611,8 +738,12 @@ export class DocumentVettingEngine {
       confidence: Math.max(0, Math.min(100, confidence)),
       extractedData: {
         sectionsFound: foundSections.length,
+        totalSectionsRequired: requiredSections.length,
         hasProjections: projectionPattern.test(text),
-        wordCount: text.split(/\s+/).length
+        hasRepaymentAnalysis: repaymentPattern.test(text),
+        hasManagementInfo: managementPattern.test(text),
+        wordCount: text.split(/\s+/).length,
+        meetsSOPRequirements: confidence >= 70 && foundSections.length >= 3
       }
     };
   }
