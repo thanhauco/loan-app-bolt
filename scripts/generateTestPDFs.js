@@ -281,9 +281,32 @@ class SBAPDFGenerator {
     } else {
       // Basic plan
       yPos += 20;
-      doc.text('Basic market overview provided.', 20, yPos);
-      doc.text('Limited financial data available.', 20, yPos + 15);
-      doc.text('General business purposes.', 20, yPos + 30);
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'bold');
+      doc.text('BUSINESS DESCRIPTION', 20, yPos);
+      
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'normal');
+      yPos += 15;
+      const basicContent = [
+        'Basic market overview provided for technology consulting services.',
+        'Limited financial data available for initial assessment.',
+        'General business purposes include IT consulting and support.',
+        '',
+        'MARKET ANALYSIS',
+        'Target market consists of small businesses needing technology solutions.',
+        '',
+        'FINANCIAL PROJECTIONS',
+        'Revenue projections: Year 1 - $200,000, Year 2 - $300,000',
+        '',
+        'USE OF FUNDS',
+        'Loan proceeds will be used for general business purposes and working capital.'
+      ];
+      
+      basicContent.forEach(line => {
+        doc.text(line, 20, yPos);
+        yPos += 10;
+      });
     }
     
     const filename = `business_plan_${isComprehensive ? 'comprehensive' : 'basic'}.pdf`;

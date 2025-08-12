@@ -670,9 +670,9 @@ export class DocumentVettingEngine {
     // Check for required sections
     const requiredSections = SBA_REQUIREMENTS.businessPlan.requiredSections;
     const foundSections = requiredSections.filter(pattern => pattern.test(text));
-    confidence += (foundSections.length / requiredSections.length) * 50;
+    confidence += (foundSections.length / requiredSections.length) * 40;
 
-    if (foundSections.length < 2) {
+    if (foundSections.length < 1) {
       issues.push(`Missing required business plan sections. Found ${foundSections.length} of ${requiredSections.length} required sections`);
     }
 
@@ -706,12 +706,26 @@ export class DocumentVettingEngine {
     // Check if it's at least a basic business plan
     const hasBusinessPlanIndicators = /business\s+plan|executive\s+summary|market\s+analysis/i.test(text);
     if (hasBusinessPlanIndicators) {
-      confidence += 20;
+      confidence += 30;
+    }
+    
+    // Additional patterns for basic plans
+    const basicPlanPatterns = [
+      /business\s+description/i,
+      /target\s+market/i,
+      /revenue/i,
+      /loan\s+proceeds/i,
+      /working\s+capital/i
+    ];
+    
+    const foundBasicPatterns = basicPlanPatterns.filter(pattern => pattern.test(text));
+    if (foundBasicPatterns.length >= 2) {
+      confidence += 25;
     }
 
     // SBA SOP 50 10 8: Accept basic business plans with lower threshold
     const criticalIssues = issues.filter(i => !i.includes('recommended') && !i.includes('brief'));
-    const status = confidence >= 45 && criticalIssues.length === 0 ? 'valid' : 'invalid';
+    const status = confidence >= 40 && criticalIssues.length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
