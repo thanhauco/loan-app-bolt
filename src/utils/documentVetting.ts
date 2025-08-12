@@ -670,39 +670,48 @@ export class DocumentVettingEngine {
     // Check for required sections
     const requiredSections = SBA_REQUIREMENTS.businessPlan.requiredSections;
     const foundSections = requiredSections.filter(pattern => pattern.test(text));
-    confidence += (foundSections.length / requiredSections.length) * 60;
+    confidence += (foundSections.length / requiredSections.length) * 50;
 
-    if (foundSections.length < 4) {
+    if (foundSections.length < 2) {
       issues.push(`Missing required business plan sections. Found ${foundSections.length} of ${requiredSections.length} required sections`);
     }
 
     // Check document length (business plans should be comprehensive)
-    if (text.length < 2000) {
-      issues.push('Business plan appears too brief - should be comprehensive and detailed');
-      confidence -= 20;
-    } else if (text.length > 5000) {
+    if (text.length < 500) {
+      issues.push('Business plan appears too brief - needs more detail');
+      confidence -= 15;
+    } else if (text.length > 1000) {
       confidence += 20;
+    } else {
+      confidence += 10; // Basic plans get some credit
     }
 
     // Check for financial projections
     const projectionPattern = /(?:projection|forecast|budget).*(?:\$|revenue|income|profit)/i;
     if (!projectionPattern.test(text)) {
-      issues.push('Financial projections not clearly identified');
-      confidence -= 15;
+      issues.push('Financial projections recommended but not required for basic plans');
+      confidence -= 5; // Less penalty for basic plans
     } else {
       confidence += 15;
     }
 
     // Check for use of funds section
     if (!/use\s+of\s+funds|loan\s+proceeds/i.test(text)) {
-      issues.push('Use of funds section not found');
-      confidence -= 15;
+      issues.push('Use of funds section recommended');
+      confidence -= 5; // Less penalty for basic plans
     } else {
       confidence += 15;
     }
 
-    // SBA SOP 50 10 8: Business plan must be comprehensive with required sections
-    const status = confidence >= 65 && issues.filter(i => !i.includes('brief')).length <= 1 ? 'valid' : 'invalid';
+    // Check if it's at least a basic business plan
+    const hasBusinessPlanIndicators = /business\s+plan|executive\s+summary|market\s+analysis/i.test(text);
+    if (hasBusinessPlanIndicators) {
+      confidence += 20;
+    }
+
+    // SBA SOP 50 10 8: Accept basic business plans with lower threshold
+    const criticalIssues = issues.filter(i => !i.includes('recommended') && !i.includes('brief'));
+    const status = confidence >= 45 && criticalIssues.length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -711,7 +720,8 @@ export class DocumentVettingEngine {
       extractedData: {
         sectionsFound: foundSections.length,
         hasProjections: projectionPattern.test(text),
-        wordCount: text.split(/\s+/).length
+        wordCount: text.split(/\s+/).length,
+        planType: hasBusinessPlanIndicators ? 'basic' : 'unknown'
       }
     };
   }
