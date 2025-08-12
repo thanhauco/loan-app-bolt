@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { jsPDF } = require('jspdf');
+import fs from 'fs';
+import path from 'path';
+import { jsPDF } from 'jspdf';
+import { fileURLToPath } from 'url';
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Ensure output directory exists
 const outputDir = path.join(__dirname, '..', 'test-pdfs');
@@ -396,41 +401,39 @@ class SBAPDFGenerator {
 }
 
 // CLI execution
-if (require.main === module) {
-  const generator = new SBAPDFGenerator();
-  
-  const args = process.argv.slice(2);
-  if (args.length === 0) {
-    generator.generateAllPDFs();
-  } else {
-    const command = args[0];
-    switch (command) {
-      case 'license':
-        generator.generateBusinessLicense(args[1] !== 'invalid');
-        break;
-      case 'tax':
-        generator.generateTaxReturn(parseInt(args[1]) || 2023, args[2] !== 'unsigned');
-        break;
-      case 'personal':
-        generator.generatePersonalFinancialStatement(args[1] !== 'old');
-        break;
-      case 'business-plan':
-        generator.generateBusinessPlan(args[1] !== 'basic');
-        break;
-      case 'articles':
-        generator.generateArticlesOfIncorporation(args[1] !== 'incomplete');
-        break;
-      default:
-        console.log('Usage: node scripts/generateTestPDFs.js [command] [options]');
-        console.log('Commands:');
-        console.log('  license [invalid]     - Generate business license');
-        console.log('  tax [year] [unsigned] - Generate tax return');
-        console.log('  personal [old]        - Generate personal financial statement');
-        console.log('  business-plan [basic] - Generate business plan');
-        console.log('  articles [incomplete] - Generate articles of incorporation');
-        console.log('  (no command)          - Generate all PDFs');
-    }
+const generator = new SBAPDFGenerator();
+
+const args = process.argv.slice(2);
+if (args.length === 0) {
+  generator.generateAllPDFs();
+} else {
+  const command = args[0];
+  switch (command) {
+    case 'license':
+      generator.generateBusinessLicense(args[1] !== 'invalid');
+      break;
+    case 'tax':
+      generator.generateTaxReturn(parseInt(args[1]) || 2023, args[2] !== 'unsigned');
+      break;
+    case 'personal':
+      generator.generatePersonalFinancialStatement(args[1] !== 'old');
+      break;
+    case 'business-plan':
+      generator.generateBusinessPlan(args[1] !== 'basic');
+      break;
+    case 'articles':
+      generator.generateArticlesOfIncorporation(args[1] !== 'incomplete');
+      break;
+    default:
+      console.log('Usage: node scripts/generateTestPDFs.js [command] [options]');
+      console.log('Commands:');
+      console.log('  license [invalid]     - Generate business license');
+      console.log('  tax [year] [unsigned] - Generate tax return');
+      console.log('  personal [old]        - Generate personal financial statement');
+      console.log('  business-plan [basic] - Generate business plan');
+      console.log('  articles [incomplete] - Generate articles of incorporation');
+      console.log('  (no command)          - Generate all PDFs');
   }
 }
 
-module.exports = SBAPDFGenerator;
+export default SBAPDFGenerator;
