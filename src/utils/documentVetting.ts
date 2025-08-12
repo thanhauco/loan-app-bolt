@@ -1,4 +1,8 @@
 import Tesseract from 'tesseract.js';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Configure PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 export interface VettingResult {
   status: 'valid' | 'invalid' | 'pending';
@@ -163,17 +167,6 @@ export class DocumentVettingEngine {
 
   async extractTextFromFile(file: File): Promise<string> {
     try {
-      // Define supported file types for OCR
-      const ocrSupportedTypes = [
-        'application/pdf',
-        'image/jpeg',
-        'image/jpg',
-        'image/png',
-        'image/gif',
-        'image/bmp',
-        'image/tiff'
-      ];
-
       // If it's a text file, read it directly
       if (file.type === 'text/plain') {
         return new Promise((resolve, reject) => {
@@ -187,16 +180,18 @@ export class DocumentVettingEngine {
         });
       }
       
-      // Check if file type is supported by OCR
-      if (!ocrSupportedTypes.includes(file.type)) {
-        throw new Error(`File type ${file.type} is not supported for text extraction. Please upload PDF, image, or text files only.`);
+      // Handle PDF files with special conversion
+      if (file.type === 'application/pdf') {
+        return await this.extractTextFromPDF(file);
       }
 
-      // For supported file types, use OCR
-      const result = await Tesseract.recognize(file, 'eng', {
-        logger: m => console.log('OCR Progress:', m)
-      });
-      return result.data.text;
+      // Handle image files
+      const imageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff'];
+      if (imageTypes.includes(file.type)) {
+        return await this.extractTextFromImage(file);
+      }
+
+      throw new Error(`File type ${file.type} is not supported for text extraction. Please upload PDF, image, or text files only.`);
     } catch (error) {
       console.error('OCR extraction failed:', error);
       if (error instanceof Error) {
@@ -204,6 +199,90 @@ export class DocumentVettingEngine {
       } else {
         throw new Error('Failed to extract text from document');
       }
+    }
+  }
+
+  private async extractTextFromPDF(file: File): Promise<string> {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+
+      // Extract text from each page
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items
+          .map((item: any) => item.str)
+          .join(' ');
+        fullText += pageText + '\n';
+      }
+
+      // If we got text directly from PDF, return it
+      if (fullText.trim().length > 50) {
+        return fullText;
+      }
+
+      // If no text or minimal text, convert to image and use OCR
+      console.log('PDF has minimal text, converting to image for OCR...');
+      return await this.convertPDFToImageAndOCR(file);
+    } catch (error) {
+      console.error('PDF text extraction failed, trying OCR fallback:', error);
+      return await this.convertPDFToImageAndOCR(file);
+    }
+  }
+
+  private async convertPDFToImageAndOCR(file: File): Promise<string> {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+
+      // Process first 3 pages (to avoid performance issues)
+      const maxPages = Math.min(pdf.numPages, 3);
+      
+      for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 2.0 });
+        
+        // Create canvas
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        // Render PDF page to canvas
+        await page.render({
+          canvasContext: context!,
+          viewport: viewport
+        }).promise;
+
+        // Convert canvas to blob and run OCR
+        const blob = await new Promise<Blob>((resolve) => {
+          canvas.toBlob((blob) => resolve(blob!), 'image/png');
+        });
+
+        const result = await Tesseract.recognize(blob, 'eng', {
+          logger: (m) => console.log(`OCR Page ${pageNum}:`, m)
+        });
+        
+        fullText += result.data.text + '\n';
+      }
+
+      return fullText;
+    } catch (error) {
+      throw new Error(`Failed to convert PDF to image for OCR: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  private async extractTextFromImage(file: File): Promise<string> {
+    try {
+      const result = await Tesseract.recognize(file, 'eng', {
+        logger: (m) => console.log('OCR Progress:', m)
+      });
+      return result.data.text;
+    } catch (error) {
+      throw new Error(`Failed to extract text from image: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
