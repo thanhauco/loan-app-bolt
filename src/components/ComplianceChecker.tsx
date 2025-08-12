@@ -200,7 +200,7 @@ const ComplianceChecker: React.FC<ComplianceCheckerProps> = ({
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-bold text-gray-900">SBA Compliance Status</h2>
-            <p className="text-gray-600">Based on SBA SOP 50 10 8 (January 2025)</p>
+            <p className="text-gray-600">SBA SOPs June 2025</p>
           </div>
           <div className={`px-4 py-2 rounded-full font-medium ${getOverallStatusColor(complianceStatus.overall)}`}>
             {complianceStatus.overall.charAt(0).toUpperCase() + complianceStatus.overall.slice(1).replace('-', ' ')}
