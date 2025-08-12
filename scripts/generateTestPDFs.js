@@ -289,18 +289,30 @@ class SBAPDFGenerator {
       doc.setFont(undefined, 'normal');
       yPos += 15;
       const basicContent = [
-        'Basic market overview provided for technology consulting services.',
-        'Limited financial data available for initial assessment.',
-        'General business purposes include IT consulting and support.',
+        `${this.businessName} provides technology consulting services to small businesses.`,
+        'The company has been operating since 2021 with experienced management.',
+        'Our target market consists of small businesses needing IT solutions.',
         '',
-        'MARKET ANALYSIS',
-        'Target market consists of small businesses needing technology solutions.',
+        'MANAGEMENT EXPERIENCE',
+        `${this.ownerName} has 10 years of experience in technology consulting.`,
+        'The management team has proven ability to operate and grow the business.',
         '',
         'FINANCIAL PROJECTIONS',
-        'Revenue projections: Year 1 - $200,000, Year 2 - $300,000',
+        'Revenue projections: Year 1 - $400,000, Year 2 - $550,000, Year 3 - $700,000',
+        'Expense projections: Year 1 - $320,000, Year 2 - $420,000, Year 3 - $520,000',
+        'Net income projections: Year 1 - $80,000, Year 2 - $130,000, Year 3 - $180,000',
+        'Cash flow analysis demonstrates ability to repay loan obligations.',
         '',
         'USE OF FUNDS',
-        'Loan proceeds will be used for general business purposes and working capital.'
+        'Total loan request: $150,000',
+        '- Working capital: $75,000 (50%)',
+        '- Equipment purchases: $45,000 (30%)', 
+        '- Marketing and expansion: $30,000 (20%)',
+        '',
+        'REPAYMENT ABILITY',
+        'Based on projected cash flow, the business can comfortably service debt.',
+        'Monthly debt service coverage ratio projected at 1.5x or higher.',
+        'The loan will enable growth that supports repayment capacity.'
       ];
       
       basicContent.forEach(line => {

@@ -104,15 +104,17 @@ export const SBA_REQUIREMENTS = {
       /market\s+analysis/i,
       /financial\s+projections/i
     ],
-    requiredSections: [
+    requiredSections: [ // Per SBA SOP 50 10 8 Chapter 6
       /executive\s+summary/i,
       /business\s+description/i,
-      /market\s+analysis/i,
-      /organization\s+management/i,
+      /management\s+(?:team|experience)/i,
       /financial\s+projections/i,
-      /use\s+of\s+funds/i
+      /use\s+of\s+(?:funds|proceeds)/i,
+      /repayment\s+ability/i
     ],
-    minimumPages: 10
+    minimumPages: 5, // SBA allows shorter plans for smaller loans
+    mustDemonstrateRepayment: true,
+    requiresReasonableProjections: true
   },
   
   useOfFunds: {
@@ -667,65 +669,68 @@ export class DocumentVettingEngine {
     const issues: string[] = [];
     let confidence = 0;
 
-    // Check for required sections
+    // SBA SOP 50 10 8 Chapter 6: Business Plan Requirements
     const requiredSections = SBA_REQUIREMENTS.businessPlan.requiredSections;
     const foundSections = requiredSections.filter(pattern => pattern.test(text));
-    confidence += (foundSections.length / requiredSections.length) * 40;
+    confidence += (foundSections.length / requiredSections.length) * 50;
 
-    if (foundSections.length < 1) {
-      issues.push(`Missing required business plan sections. Found ${foundSections.length} of ${requiredSections.length} required sections`);
+    // SBA requires minimum essential sections
+    if (foundSections.length < 3) {
+      issues.push(`Insufficient business plan content. SBA SOP 50 10 8 requires comprehensive business plan with key sections. Found ${foundSections.length} of ${requiredSections.length} required sections`);
     }
 
-    // Check document length (business plans should be comprehensive)
-    if (text.length < 500) {
-      issues.push('Business plan appears too brief - needs more detail');
-      confidence -= 15;
-    } else if (text.length > 1000) {
+    // SBA SOP 50 10 8: Business plan must be comprehensive enough to evaluate creditworthiness
+    if (text.length < 1000) {
+      issues.push('Business plan lacks sufficient detail for SBA evaluation per SOP 50 10 8');
+      confidence -= 25;
+    } else if (text.length > 2000) {
       confidence += 20;
-    } else {
-      confidence += 10; // Basic plans get some credit
+    } else if (text.length > 1000) {
+      confidence += 10;
     }
 
-    // Check for financial projections
-    const projectionPattern = /(?:projection|forecast|budget).*(?:\$|revenue|income|profit)/i;
+    // SBA SOP 50 10 8: Financial projections are REQUIRED, not optional
+    const projectionPattern = /(?:projection|forecast|budget).*(?:\$|revenue|income|profit|cash\s+flow)/i;
     if (!projectionPattern.test(text)) {
-      issues.push('Financial projections recommended but not required for basic plans');
-      confidence -= 5; // Less penalty for basic plans
+      issues.push('Financial projections are required per SBA SOP 50 10 8 - must include revenue, expense, and cash flow projections');
+      confidence -= 20;
     } else {
-      confidence += 15;
-    }
-
-    // Check for use of funds section
-    if (!/use\s+of\s+funds|loan\s+proceeds/i.test(text)) {
-      issues.push('Use of funds section recommended');
-      confidence -= 5; // Less penalty for basic plans
-    } else {
-      confidence += 15;
-    }
-
-    // Check if it's at least a basic business plan
-    const hasBusinessPlanIndicators = /business\s+plan|executive\s+summary|market\s+analysis/i.test(text);
-    if (hasBusinessPlanIndicators) {
-      confidence += 30;
-    }
-    
-    // Additional patterns for basic plans
-    const basicPlanPatterns = [
-      /business\s+description/i,
-      /target\s+market/i,
-      /revenue/i,
-      /loan\s+proceeds/i,
-      /working\s+capital/i
-    ];
-    
-    const foundBasicPatterns = basicPlanPatterns.filter(pattern => pattern.test(text));
-    if (foundBasicPatterns.length >= 2) {
       confidence += 25;
     }
 
-    // SBA SOP 50 10 8: Accept basic business plans with lower threshold
-    const criticalIssues = issues.filter(i => !i.includes('recommended') && !i.includes('brief'));
-    const status = confidence >= 40 && criticalIssues.length === 0 ? 'valid' : 'invalid';
+    // SBA SOP 50 10 8: Use of funds is MANDATORY
+    if (!/use\s+of\s+funds|loan\s+proceeds/i.test(text)) {
+      issues.push('Use of funds statement is required per SBA SOP 50 10 8');
+      confidence -= 20;
+    } else {
+      confidence += 20;
+    }
+
+    // SBA SOP 50 10 8: Must demonstrate repayment ability
+    const repaymentPattern = /(?:repayment|cash\s+flow|debt\s+service|ability\s+to\s+repay)/i;
+    if (!repaymentPattern.test(text)) {
+      issues.push('Business plan must demonstrate repayment ability per SBA SOP 50 10 8');
+      confidence -= 15;
+    } else {
+      confidence += 15;
+    }
+
+    // SBA SOP 50 10 8: Management experience must be documented
+    const managementPattern = /(?:management|experience|owner|principal|key\s+personnel)/i;
+    if (!managementPattern.test(text)) {
+      issues.push('Management experience and qualifications must be documented per SBA SOP 50 10 8');
+      confidence -= 10;
+    } else {
+      confidence += 10;
+    }
+
+    // Check for business plan header/title
+    if (/business\s+plan/i.test(text)) {
+      confidence += 10;
+    }
+
+    // SBA SOP 50 10 8: Business plan must meet regulatory standards - no exceptions for "basic" plans
+    const status = confidence >= 70 && foundSections.length >= 3 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -733,9 +738,12 @@ export class DocumentVettingEngine {
       confidence: Math.max(0, Math.min(100, confidence)),
       extractedData: {
         sectionsFound: foundSections.length,
+        totalSectionsRequired: requiredSections.length,
         hasProjections: projectionPattern.test(text),
+        hasRepaymentAnalysis: repaymentPattern.test(text),
+        hasManagementInfo: managementPattern.test(text),
         wordCount: text.split(/\s+/).length,
-        planType: hasBusinessPlanIndicators ? 'basic' : 'unknown'
+        meetsSOPRequirements: confidence >= 70 && foundSections.length >= 3
       }
     };
   }
