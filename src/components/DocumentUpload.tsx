@@ -259,11 +259,11 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
             className={`p-4 rounded-xl border-2 transition-all ${
               selectedCategory === category.id
                 ? `border-${category.color}-500 bg-${category.color}-50 dark:bg-${category.color}-900/30 text-${category.color}-900 dark:text-white`
-                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800'
+                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-300'
             }`}
           >
             <category.icon className={`h-6 w-6 mx-auto mb-2 ${
-              selectedCategory === category.id ? `text-${category.color}-600 dark:text-white` : 'text-gray-400 dark:text-gray-500'
+              selectedCategory === category.id ? `text-${category.color}-600 dark:text-white` : 'text-gray-400 dark:text-gray-300'
             }`} />
             <div className="text-sm font-medium">
               {category.name}
