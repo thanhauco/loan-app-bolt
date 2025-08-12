@@ -2001,16 +2001,17 @@ class ComprehensiveSBAPDFGenerator {
 
   generateAllDocuments() {
     console.log('🚀 Generating Comprehensive SBA Loan Document Set...\n');
+    console.log('Creating organized folder structure...');
     
     // Business Documents
-    console.log('📄 Business Documents:');
+    console.log('\n📄 BUSINESS DOCUMENTS:');
     this.generateBusinessLicense(true);
     this.generateArticlesOfIncorporation();
     this.generateOperatingAgreement();
     this.generateBusinessRegistrationCertificate();
     
     // Financial Documents
-    console.log('\n💰 Financial Documents:');
+    console.log('\n💰 FINANCIAL DOCUMENTS:');
     this.generateBusinessTaxReturn(2023, true);
     this.generateBusinessTaxReturn(2022, true);
     this.generateBusinessTaxReturn(2021, true);
@@ -2027,7 +2028,7 @@ class ComprehensiveSBAPDFGenerator {
     this.generateAccountsReceivableAging();
     
     // Personal Documents
-    console.log('\n👤 Personal Documents:');
+    console.log('\n👤 PERSONAL DOCUMENTS:');
     this.generatePersonalTaxReturn(2023, true);
     this.generatePersonalTaxReturn(2022, true);
     this.generatePersonalTaxReturn(2021, true);
@@ -2037,7 +2038,7 @@ class ComprehensiveSBAPDFGenerator {
     this.generatePersonalHistoryStatement();
     
     // Loan Documents
-    console.log('\n📋 Loan Documents:');
+    console.log('\n📋 LOAN DOCUMENTS:');
     this.generateComprehensiveBusinessPlan();
     this.generateUseOfFundsStatement();
     this.generateDebtSchedule();
@@ -2053,11 +2054,17 @@ class ComprehensiveSBAPDFGenerator {
     console.log('Personal Documents: 7 files');
     console.log('Loan Documents: 7 files');
     console.log('Total: 31 comprehensive SBA loan documents');
+    console.log('\n📁 FOLDER STRUCTURE:');
+    console.log('test-pdfs/business/     - 4 business documents');
+    console.log('test-pdfs/financial/    - 13 financial documents');
+    console.log('test-pdfs/personal/     - 7 personal documents');
+    console.log('test-pdfs/loan/         - 7 loan documents');
     console.log('\n🎯 Usage Instructions:');
     console.log('1. Upload these documents through the UI to test the vetting system');
     console.log('2. All documents are SBA SOP 50 10 8 compliant and should pass validation');
     console.log('3. Documents include realistic financial data and proper formatting');
     console.log('4. Test both individual document validation and overall compliance checking');
+    console.log('\nReady for comprehensive SBA compliance testing! 🎯');
   }
 }
 
