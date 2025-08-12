@@ -719,7 +719,8 @@ export class DocumentVettingEngine {
 
     // SBA SOP 50 10 8: Financial projections are REQUIRED, not optional
     const projectionPattern = /(?:projection|forecast|budget).*(?:\$|revenue|income|profit|cash\s+flow)/i;
-    if (!projectionPattern.test(text)) {
+    const hasProjections = projectionPattern.test(text);
+    if (!hasProjections) {
       issues.push('Financial projections are required per SBA SOP 50 10 8 - must include revenue, expense, and cash flow projections');
       confidence -= 20;
     } else {
@@ -758,7 +759,7 @@ export class DocumentVettingEngine {
     }
 
     // SBA SOP 50 10 8: Business plan must meet regulatory standards - no exceptions for "basic" plans
-    const status = confidence >= 70 && foundSections.length >= 3 ? 'valid' : 'invalid';
+    const status = confidence >= 70 && foundSections.length >= 3 && issues.length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -767,11 +768,11 @@ export class DocumentVettingEngine {
       extractedData: {
         sectionsFound: foundSections.length,
         totalSectionsRequired: requiredSections.length,
-        hasProjections: projectionPattern.test(text),
+        hasProjections: hasProjections,
         hasRepaymentAnalysis: repaymentPattern.test(text),
         hasManagementInfo: managementPattern.test(text),
         wordCount: text.split(/\s+/).length,
-        meetsSOPRequirements: confidence >= 70 && foundSections.length >= 3
+        meetsSOPRequirements: confidence >= 70 && foundSections.length >= 3 && issues.length === 0
       }
     };
   }
