@@ -1090,4 +1090,4 @@ class ComprehensiveSBAPDFGenerator {
       '• 2023 Net Income: $58,200 (12% net margin)',
       '• Current Assets: $187,200',
       '• Strong cash flow with consistent profitability',
-      '• Debt Service Coverage Ratio: 2
+      '• Debt Service Coverage Ratio: 2.1x'
