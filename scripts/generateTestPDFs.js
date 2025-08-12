@@ -1581,4 +1581,543 @@ class ComprehensiveSBAPDFGenerator {
     
     // Table headers
     doc.setFont(undefined, 'bold');
-    doc.text('
+    doc.text('Creditor Name', 20, 100);
+    doc.text('Original', 80, 100);
+    doc.text('Current', 110, 100);
+    doc.text('Monthly', 140, 100);
+    doc.text('Maturity', 170, 100);
+    doc.text('Collateral', 190, 100);
+    doc.text('', 20, 105);
+    doc.text('Amount', 80, 105);
+    doc.text('Balance', 110, 105);
+    doc.text('Payment', 140, 105);
+    doc.text('Date', 170, 105);
+    doc.text('', 190, 105);
+    
+    // Debt entries
+    doc.setFont(undefined, 'normal');
+    const debts = [
+      ['Wells Fargo Bank', '$50,000', '$35,000', '$1,250', '03/2027', 'Equipment'],
+      ['Equipment Finance Co', '$25,000', '$18,000', '$650', '08/2026', 'Computers'],
+      ['Business Credit Card', '$15,000', '$8,500', '$350', 'Revolving', 'Unsecured'],
+      ['SBA Loan (Proposed)', '$250,000', '$250,000', '$2,705', '12/2034', 'Business Assets']
+    ];
+    
+    let yPos = 120;
+    debts.forEach(([creditor, original, current, payment, maturity, collateral]) => {
+      doc.text(creditor, 20, yPos);
+      doc.text(original, 80, yPos);
+      doc.text(current, 110, yPos);
+      doc.text(payment, 140, yPos);
+      doc.text(maturity, 170, yPos);
+      doc.text(collateral, 190, yPos);
+      yPos += 15;
+    });
+    
+    // Totals
+    doc.setFont(undefined, 'bold');
+    doc.text('TOTALS:', 20, yPos + 10);
+    doc.text('$340,000', 80, yPos + 10);
+    doc.text('$311,500', 110, yPos + 10);
+    doc.text('$4,955', 140, yPos + 10);
+    
+    // Additional information
+    doc.setFont(undefined, 'normal');
+    doc.text('Notes:', 20, yPos + 40);
+    doc.text('1. All existing debts are current with no delinquencies', 25, yPos + 55);
+    doc.text('2. Proposed SBA loan will be secured by business assets', 25, yPos + 65);
+    doc.text('3. Personal guaranty will be provided by business owner', 25, yPos + 75);
+    doc.text('4. Debt service coverage ratio projected at 1.8x+', 25, yPos + 85);
+    
+    const filename = 'debt_schedule_sba_form_2202.pdf';
+    doc.save(path.join(outputDir, filename));
+    console.log(`✓ Generated: ${filename}`);
+  }
+
+  generateLeaseAgreement() {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('COMMERCIAL LEASE AGREEMENT', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text('This Commercial Lease Agreement is entered into on January 1, 2024,', 20, 45);
+    doc.text('between Bay Area Properties LLC (Landlord) and', 20, 55);
+    doc.text(`${this.businessName} (Tenant).`, 20, 65);
+    
+    // Property details
+    doc.setFont(undefined, 'bold');
+    doc.text('PROPERTY DESCRIPTION:', 20, 85);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Address: ${this.businessAddress}`, 25, 100);
+    doc.text('Suite: 200', 25, 110);
+    doc.text('Square Footage: 2,500 sq ft', 25, 120);
+    doc.text('Use: General office and technology consulting', 25, 130);
+    
+    // Lease terms
+    doc.setFont(undefined, 'bold');
+    doc.text('LEASE TERMS:', 20, 150);
+    doc.setFont(undefined, 'normal');
+    doc.text('Lease Term: 5 years', 25, 165);
+    doc.text('Commencement Date: January 1, 2024', 25, 175);
+    doc.text('Expiration Date: December 31, 2028', 25, 185);
+    doc.text('Monthly Base Rent: $4,500', 25, 195);
+    doc.text('Annual Rent: $54,000', 25, 205);
+    doc.text('Security Deposit: $9,000 (2 months)', 25, 215);
+    
+    // Additional terms
+    doc.setFont(undefined, 'bold');
+    doc.text('ADDITIONAL TERMS:', 20, 235);
+    doc.setFont(undefined, 'normal');
+    doc.text('• Tenant responsible for utilities', 25, 250);
+    doc.text('• Common area maintenance: $350/month', 25, 260);
+    doc.text('• Property taxes: Included in rent', 25, 270);
+    
+    doc.addPage();
+    doc.text('• Insurance: Tenant maintains general liability', 25, 20);
+    doc.text('• Parking: 8 designated spaces included', 25, 30);
+    doc.text('• Renewal option: 5-year extension available', 25, 40);
+    
+    // Signatures
+    doc.setFont(undefined, 'bold');
+    doc.text('SIGNATURES:', 20, 70);
+    doc.setFont(undefined, 'normal');
+    doc.text('LANDLORD:', 20, 90);
+    doc.text('Bay Area Properties LLC', 20, 105);
+    doc.text('By: Michael Johnson, Property Manager', 20, 115);
+    doc.text('Date: January 1, 2024', 20, 125);
+    
+    doc.text('TENANT:', 20, 150);
+    doc.text(this.businessName, 20, 165);
+    doc.text(`By: ${this.ownerName}, CEO`, 20, 175);
+    doc.text('Date: January 1, 2024', 20, 185);
+    
+    doc.text('This lease is current and in good standing with no defaults.', 20, 220);
+    doc.text('All rent payments are current through ' + new Date().toLocaleDateString(), 20, 235);
+    
+    const filename = 'lease_agreement_current.pdf';
+    doc.save(path.join(outputDir, filename));
+    console.log(`✓ Generated: ${filename}`);
+  }
+
+  generatePurchaseAgreement() {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('EQUIPMENT PURCHASE AGREEMENT', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text('Agreement Date: ' + new Date().toLocaleDateString(), 20, 45);
+    doc.text(`Buyer: ${this.businessName}`, 20, 55);
+    doc.text(`Buyer Address: ${this.businessAddress}`, 20, 65);
+    doc.text('Seller: TechEquipment Solutions Inc.', 20, 75);
+    doc.text('Seller Address: 456 Technology Drive, San Jose, CA 95110', 20, 85);
+    
+    // Equipment details
+    doc.setFont(undefined, 'bold');
+    doc.text('EQUIPMENT TO BE PURCHASED:', 20, 110);
+    doc.setFont(undefined, 'normal');
+    
+    const equipment = [
+      'Item 1: Dell PowerEdge Server R750',
+      '  Model: R750, 32GB RAM, 2TB Storage',
+      '  Quantity: 2 units',
+      '  Unit Price: $8,500',
+      '  Total: $17,000',
+      '',
+      'Item 2: Cisco Network Infrastructure',
+      '  Switches, Routers, Firewall',
+      '  Quantity: 1 complete system',
+      '  Price: $12,000',
+      '',
+      'Item 3: Workstation Computers',
+      '  Dell Precision 7000 Series',
+      '  Quantity: 5 units',
+      '  Unit Price: $3,200',
+      '  Total: $16,000',
+      '',
+      'Item 4: Software Licenses',
+      '  Microsoft Office 365, Adobe Creative Suite',
+      '  Development Tools and Platforms',
+      '  Total: $8,000'
+    ];
+    
+    let yPos = 125;
+    equipment.forEach(line => {
+      if (yPos > 270) {
+        doc.addPage();
+        yPos = 20;
+      }
+      doc.text(line, 25, yPos);
+      yPos += 10;
+    });
+    
+    doc.addPage();
+    
+    // Purchase terms
+    doc.setFont(undefined, 'bold');
+    doc.text('PURCHASE TERMS:', 20, 30);
+    doc.setFont(undefined, 'normal');
+    doc.text('Total Purchase Price: $53,000', 25, 45);
+    doc.text('Payment Terms: Net 30 days', 25, 55);
+    doc.text('Delivery: FOB Destination', 25, 65);
+    doc.text('Warranty: 3 years manufacturer warranty', 25, 75);
+    doc.text('Installation: Included', 25, 85);
+    doc.text('Training: 8 hours included', 25, 95);
+    
+    // Financing
+    doc.setFont(undefined, 'bold');
+    doc.text('FINANCING:', 20, 115);
+    doc.setFont(undefined, 'normal');
+    doc.text('This purchase will be financed through the SBA 7(a) loan', 25, 130);
+    doc.text('proceeds as detailed in the Use of Funds statement.', 25, 140);
+    doc.text('Equipment will serve as collateral for the loan.', 25, 150);
+    
+    // Signatures
+    doc.setFont(undefined, 'bold');
+    doc.text('SIGNATURES:', 20, 180);
+    doc.setFont(undefined, 'normal');
+    doc.text('SELLER:', 20, 200);
+    doc.text('TechEquipment Solutions Inc.', 20, 215);
+    doc.text('By: Sarah Chen, Sales Manager', 20, 225);
+    doc.text('Date: ' + new Date().toLocaleDateString(), 20, 235);
+    
+    doc.text('BUYER:', 120, 200);
+    doc.text(this.businessName, 120, 215);
+    doc.text(`By: ${this.ownerName}, CEO`, 120, 225);
+    doc.text('Date: ' + new Date().toLocaleDateString(), 120, 235);
+    
+    const filename = 'equipment_purchase_agreement.pdf';
+    doc.save(path.join(outputDir, filename));
+    console.log(`✓ Generated: ${filename}`);
+  }
+
+  generateLoanApplication() {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('SBA FORM 1919', 105, 20, { align: 'center' });
+    doc.text('BORROWER INFORMATION FORM', 105, 30, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text('This form is to be completed by the small business loan applicant', 20, 50);
+    doc.text('and submitted to the participating lender.', 20, 60);
+    
+    // Business Information
+    doc.setFont(undefined, 'bold');
+    doc.text('BUSINESS INFORMATION:', 20, 80);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Legal Business Name: ${this.businessName}`, 25, 95);
+    doc.text(`DBA Name: ${this.businessName}`, 25, 105);
+    doc.text(`Business Address: ${this.businessAddress}`, 25, 115);
+    doc.text(`Business Phone: ${this.businessPhone}`, 25, 125);
+    doc.text(`Business Email: ${this.businessEmail}`, 25, 135);
+    doc.text(`Federal EIN: ${this.ein}`, 25, 145);
+    doc.text('Date Business Started: March 15, 2021', 25, 155);
+    doc.text('Legal Structure: Limited Liability Company (LLC)', 25, 165);
+    doc.text('NAICS Code: 541511 - Custom Computer Programming Services', 25, 175);
+    doc.text('Number of Employees: 11 (8 full-time, 3 part-time)', 25, 185);
+    
+    // Loan Information
+    doc.setFont(undefined, 'bold');
+    doc.text('LOAN INFORMATION:', 20, 205);
+    doc.setFont(undefined, 'normal');
+    doc.text('Loan Amount Requested: $250,000', 25, 220);
+    doc.text('Loan Purpose: Business Expansion', 25, 230);
+    doc.text('Loan Term Requested: 10 years', 25, 240);
+    doc.text('SBA Program: 7(a) Standard', 25, 250);
+    
+    doc.addPage();
+    
+    // Owner Information
+    doc.setFont(undefined, 'bold');
+    doc.text('PRINCIPAL OWNER INFORMATION:', 20, 20);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Name: ${this.ownerName}`, 25, 35);
+    doc.text(`Title: Chief Executive Officer`, 25, 45);
+    doc.text(`SSN: ${this.ssn}`, 25, 55);
+    doc.text('Date of Birth: January 15, 1985', 25, 65);
+    doc.text(`Address: ${this.businessAddress}`, 25, 75);
+    doc.text(`Phone: ${this.businessPhone}`, 25, 85);
+    doc.text('Ownership Percentage: 100%', 25, 95);
+    doc.text('U.S. Citizen: Yes', 25, 105);
+    
+    // Financial Information
+    doc.setFont(undefined, 'bold');
+    doc.text('FINANCIAL INFORMATION:', 20, 125);
+    doc.setFont(undefined, 'normal');
+    doc.text('Annual Sales (Most Recent Year): $485,000', 25, 140);
+    doc.text('Net Income (Most Recent Year): $58,200', 25, 150);
+    doc.text('Current Assets: $187,200', 25, 160);
+    doc.text('Current Liabilities: $65,100', 25, 170);
+    doc.text('Net Worth: $424,000', 25, 180);
+    doc.text('Existing Debt: $61,500', 25, 190);
+    
+    // Use of Proceeds
+    doc.setFont(undefined, 'bold');
+    doc.text('USE OF LOAN PROCEEDS:', 20, 210);
+    doc.setFont(undefined, 'normal');
+    doc.text('Working Capital: $100,000 (40%)', 25, 225);
+    doc.text('Equipment/Technology: $75,000 (30%)', 25, 235);
+    doc.text('Marketing: $35,000 (14%)', 25, 245);
+    doc.text('Facility Expansion: $25,000 (10%)', 25, 255);
+    doc.text('Professional Services: $15,000 (6%)', 25, 265);
+    
+    doc.addPage();
+    
+    // Certifications
+    doc.setFont(undefined, 'bold');
+    doc.text('CERTIFICATIONS:', 20, 20);
+    doc.setFont(undefined, 'normal');
+    doc.text('The undersigned certifies that:', 20, 35);
+    doc.text('• All information provided is true and complete', 25, 50);
+    doc.text('• The business meets SBA size standards', 25, 60);
+    doc.text('• The business is independently owned and operated', 25, 70);
+    doc.text('• The business is not dominant in its field', 25, 80);
+    doc.text('• No principals are delinquent on federal debt', 25, 90);
+    doc.text('• The business has not been debarred from federal programs', 25, 100);
+    
+    // Signature
+    doc.text(`Applicant Signature: ${this.ownerName}`, 20, 200);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 215);
+    doc.text(`Title: Chief Executive Officer`, 20, 230);
+    doc.text(`Print Name: ${this.ownerName}`, 20, 245);
+    
+    const filename = 'loan_application_sba_form_1919.pdf';
+    doc.save(path.join(outputDir, filename));
+    console.log(`✓ Generated: ${filename}`);
+  }
+
+  generateEnvironmentalQuestionnaire() {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('ENVIRONMENTAL QUESTIONNAIRE', 105, 20, { align: 'center' });
+    doc.text('SBA ENVIRONMENTAL REVIEW', 105, 30, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text('This questionnaire must be completed for all SBA loan applications', 20, 50);
+    doc.text('to comply with environmental review requirements.', 20, 60);
+    
+    // Business Information
+    doc.setFont(undefined, 'bold');
+    doc.text('BUSINESS INFORMATION:', 20, 80);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Business Name: ${this.businessName}`, 25, 95);
+    doc.text(`Business Address: ${this.businessAddress}`, 25, 105);
+    doc.text('Industry: Technology Consulting Services', 25, 115);
+    doc.text('NAICS Code: 541511', 25, 125);
+    doc.text(`Loan Amount: $250,000`, 25, 135);
+    
+    // Environmental Questions
+    doc.setFont(undefined, 'bold');
+    doc.text('ENVIRONMENTAL SCREENING QUESTIONS:', 20, 155);
+    doc.setFont(undefined, 'normal');
+    
+    const questions = [
+      '1. Does the business involve manufacturing, processing, or',
+      '   handling of hazardous materials? NO',
+      '',
+      '2. Will the loan proceeds be used for construction or',
+      '   renovation activities? NO',
+      '',
+      '3. Is the business located in or near wetlands, floodplains,',
+      '   or other environmentally sensitive areas? NO',
+      '',
+      '4. Does the business generate, store, or dispose of',
+      '   hazardous waste? NO',
+      '',
+      '5. Are there any underground storage tanks on the property? NO',
+      '',
+      '6. Has the property ever been used for gas stations,',
+      '   dry cleaners, or other potentially contaminating uses? NO',
+      '',
+      '7. Are there any known environmental contamination issues',
+      '   at the business location? NO',
+      '',
+      '8. Will the business activities impact air quality,',
+      '   water quality, or noise levels? NO'
+    ];
+    
+    let yPos = 170;
+    questions.forEach(line => {
+      if (yPos > 270) {
+        doc.addPage();
+        yPos = 20;
+      }
+      doc.text(line, 25, yPos);
+      yPos += 10;
+    });
+    
+    doc.addPage();
+    
+    // Additional Information
+    doc.setFont(undefined, 'bold');
+    doc.text('ADDITIONAL INFORMATION:', 20, 30);
+    doc.setFont(undefined, 'normal');
+    doc.text('Business Description:', 25, 45);
+    doc.text('Thanh\'s Business Solutions LLC operates as a technology consulting', 25, 60);
+    doc.text('firm providing software development, IT support, and digital marketing', 25, 70);
+    doc.text('services. The business operates from standard office space and does', 25, 80);
+    doc.text('not involve any manufacturing, chemical processing, or other activities', 25, 90);
+    doc.text('that could impact the environment.', 25, 100);
+    
+    doc.text('The loan proceeds will be used for:', 25, 120);
+    doc.text('• Working capital for business operations', 30, 135);
+    doc.text('• Purchase of computer equipment and software', 30, 145);
+    doc.text('• Marketing and business development activities', 30, 155);
+    doc.text('• Office space expansion (no construction)', 30, 165);
+    
+    doc.text('Environmental Impact Assessment:', 25, 185);
+    doc.text('The proposed loan activities will have no adverse environmental', 25, 200);
+    doc.text('impact. The business operates in compliance with all applicable', 25, 210);
+    doc.text('environmental regulations and maintains appropriate insurance', 25, 220);
+    doc.text('coverage.', 25, 230);
+    
+    // Certification
+    doc.setFont(undefined, 'bold');
+    doc.text('CERTIFICATION:', 20, 250);
+    doc.setFont(undefined, 'normal');
+    doc.text('I certify that the information provided is accurate and complete.', 20, 265);
+    doc.text(`Signature: ${this.ownerName}`, 20, 280);
+    
+    doc.addPage();
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 20);
+    doc.text(`Title: Chief Executive Officer`, 20, 35);
+    doc.text(`Company: ${this.businessName}`, 20, 50);
+    
+    const filename = 'environmental_questionnaire.pdf';
+    doc.save(path.join(outputDir, filename));
+    console.log(`✓ Generated: ${filename}`);
+  }
+
+  generateAllDocuments() {
+    console.log('🚀 Generating Comprehensive SBA Loan Document Set...\n');
+    
+    // Business Documents
+    console.log('📄 Business Documents:');
+    this.generateBusinessLicense(true);
+    this.generateArticlesOfIncorporation();
+    this.generateOperatingAgreement();
+    this.generateBusinessRegistrationCertificate();
+    
+    // Financial Documents
+    console.log('\n💰 Financial Documents:');
+    this.generateBusinessTaxReturn(2023, true);
+    this.generateBusinessTaxReturn(2022, true);
+    this.generateBusinessTaxReturn(2021, true);
+    this.generateInterimFinancialStatement();
+    this.generateProfitLossStatement(2023);
+    this.generateProfitLossStatement(2022);
+    this.generateProfitLossStatement(2021);
+    this.generateBalanceSheet(2023);
+    this.generateBalanceSheet(2022);
+    this.generateBalanceSheet(2021);
+    this.generateCashFlowStatement(2023);
+    this.generateCashFlowStatement(2022);
+    this.generateCashFlowStatement(2021);
+    this.generateAccountsReceivableAging();
+    
+    // Personal Documents
+    console.log('\n👤 Personal Documents:');
+    this.generatePersonalTaxReturn(2023, true);
+    this.generatePersonalTaxReturn(2022, true);
+    this.generatePersonalTaxReturn(2021, true);
+    this.generatePersonalFinancialStatement(true);
+    this.generateResume();
+    this.generateCreditAuthorization();
+    this.generatePersonalHistoryStatement();
+    
+    // Loan Documents
+    console.log('\n📋 Loan Documents:');
+    this.generateComprehensiveBusinessPlan();
+    this.generateUseOfFundsStatement();
+    this.generateDebtSchedule();
+    this.generateLeaseAgreement();
+    this.generatePurchaseAgreement();
+    this.generateLoanApplication();
+    this.generateEnvironmentalQuestionnaire();
+    
+    console.log(`\n✅ All documents generated successfully in: ${outputDir}`);
+    console.log('\n📝 Document Summary:');
+    console.log('Business Documents: 4 files');
+    console.log('Financial Documents: 13 files');
+    console.log('Personal Documents: 7 files');
+    console.log('Loan Documents: 7 files');
+    console.log('Total: 31 comprehensive SBA loan documents');
+    console.log('\n🎯 Usage Instructions:');
+    console.log('1. Upload these documents through the UI to test the vetting system');
+    console.log('2. All documents are SBA SOP 50 10 8 compliant and should pass validation');
+    console.log('3. Documents include realistic financial data and proper formatting');
+    console.log('4. Test both individual document validation and overall compliance checking');
+  }
+}
+
+// CLI execution
+const generator = new ComprehensiveSBAPDFGenerator();
+
+const args = process.argv.slice(2);
+if (args.length === 0) {
+  generator.generateAllDocuments();
+} else {
+  const command = args[0];
+  switch (command) {
+    case 'business':
+      console.log('📄 Generating Business Documents...');
+      generator.generateBusinessLicense(true);
+      generator.generateArticlesOfIncorporation();
+      generator.generateOperatingAgreement();
+      generator.generateBusinessRegistrationCertificate();
+      break;
+    case 'financial':
+      console.log('💰 Generating Financial Documents...');
+      generator.generateBusinessTaxReturn(2023, true);
+      generator.generateBusinessTaxReturn(2022, true);
+      generator.generateBusinessTaxReturn(2021, true);
+      generator.generateInterimFinancialStatement();
+      [2023, 2022, 2021].forEach(year => {
+        generator.generateProfitLossStatement(year);
+        generator.generateBalanceSheet(year);
+        generator.generateCashFlowStatement(year);
+      });
+      generator.generateAccountsReceivableAging();
+      break;
+    case 'personal':
+      console.log('👤 Generating Personal Documents...');
+      generator.generatePersonalTaxReturn(2023, true);
+      generator.generatePersonalTaxReturn(2022, true);
+      generator.generatePersonalTaxReturn(2021, true);
+      generator.generatePersonalFinancialStatement(true);
+      generator.generateResume();
+      generator.generateCreditAuthorization();
+      generator.generatePersonalHistoryStatement();
+      break;
+    case 'loan':
+      console.log('📋 Generating Loan Documents...');
+      generator.generateComprehensiveBusinessPlan();
+      generator.generateUseOfFundsStatement();
+      generator.generateDebtSchedule();
+      generator.generateLeaseAgreement();
+      generator.generatePurchaseAgreement();
+      generator.generateLoanApplication();
+      generator.generateEnvironmentalQuestionnaire();
+      break;
+    default:
+      console.log('Usage: node scripts/generateTestPDFs.js [business|financial|personal|loan]');
+      console.log('  business  - Generate business documents only');
+      console.log('  financial - Generate financial documents only');
+      console.log('  personal  - Generate personal documents only');
+      console.log('  loan      - Generate loan documents only');
+      console.log('  (no args) - Generate all documents');
+  }
+}
+
+export default ComprehensiveSBAPDFGenerator;
