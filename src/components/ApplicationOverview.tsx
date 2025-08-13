@@ -124,7 +124,7 @@ const ApplicationOverview: React.FC<ApplicationOverviewProps> = ({ uploadedDocum
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{documentStats.uploaded}/}</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{documentStats.uploaded}/{documentStats.total}</div>
               <div className="text-sm text-gray-600 dark:text-gray-300">Documents Uploaded</div>
             </div>
             <FileText className="h-8 w-8 text-blue-600 dark:text-blue-400" />
