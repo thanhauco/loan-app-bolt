@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Upload, File, CheckCircle, AlertCircle, X, Eye, Download, FileText, DollarSign, Building, User } from 'lucide-react';
+import { Upload, File, CheckCircle, AlertCircle, X, Eye, Download, FileText, DollarSign, Building, User, Send } from 'lucide-react';
 import { DocumentVettingEngine, VettingResult } from '../utils/documentVetting';
 
 interface Document {
@@ -27,6 +27,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
     return localStorage.getItem('selectedDocumentCategory') || 'business';
   });
   const [vettingEngine] = useState(() => DocumentVettingEngine.getInstance());
+  const [showSubmissionModal, setShowSubmissionModal] = useState(false);
   
   // Update localStorage when category changes
   const handleCategoryChange = (categoryId: string) => {
@@ -44,6 +45,23 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       setSelectedCategory(savedCategory);
     }
   }, [selectedCategory]);
+
+  // Check if all documents are valid and show submission modal
+  useEffect(() => {
+    const totalValidDocs = uploadedDocuments.filter(doc => doc.status === 'valid').length;
+    const totalRequiredDocs = 8; // Minimum required documents for SBA loan
+    
+    if (totalValidDocs >= totalRequiredDocs && !showSubmissionModal) {
+      setShowSubmissionModal(true);
+    }
+  }, [uploadedDocuments, showSubmissionModal]);
+
+  const handleSubmitApplication = () => {
+    // Handle application submission logic here
+    console.log('Submitting application...');
+    setShowSubmissionModal(false);
+    // You can add actual submission logic here
+  };
 
   const documentCategories = [
     {
@@ -249,7 +267,8 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
   const selectedCategoryData = documentCategories.find(cat => cat.id === selectedCategory);
 
   return (
-    <div className="p-6 space-y-6 bg-gray-50 dark:bg-gray-900 min-h-full transition-colors">
+    <>
+      <div className="p-6 space-y-6 bg-gray-50 dark:bg-gray-900 min-h-full transition-colors">
       {/* Category Selection */}
       <div className="grid grid-cols-4 gap-4">
         {documentCategories.map((category) => (
@@ -407,7 +426,54 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+      {/* Submission Modal */}
+      {showSubmissionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative transition-colors">
+            <button
+              onClick={() => setShowSubmissionModal(false)}
+              className="absolute top-4 right-4 p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Congratulations! All Your Documents Are Valid & Ready to Submit
+              </h2>
+              
+              <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                Once submitted, your application will be transmitted securely to the SBA for review. 
+                You will receive a confirmation email with tracking information.
+              </p>
+              
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={handleSubmitApplication}
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
+                >
+                  <Send className="h-5 w-5 mr-2" />
+                  Submit Application
+                </button>
+              </div>
+              
+              <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>Next Steps:</strong> After submission, expect SBA review within 5-10 business days. 
+                  You'll receive updates via email and can track progress in your dashboard.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
