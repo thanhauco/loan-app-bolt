@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Upload, File, CheckCircle, AlertCircle, X, Eye, Download, FileText, DollarSign, Building, User, Send } from 'lucide-react';
+import { Upload, CheckCircle, AlertCircle, X, FileText, DollarSign, Building, User, Send } from 'lucide-react';
 import { DocumentVettingEngine, VettingResult } from '../utils/documentVetting';
 
 interface Document {
@@ -16,11 +16,10 @@ interface Document {
 
 interface DocumentUploadProps {
   uploadedDocuments: Document[];
-  setUploadedDocuments: (docs: Document[]) => void;
-  currentTab: string;
+  setUploadedDocuments: (docs: Document[] | ((prev: Document[]) => Document[])) => void;
 }
 
-const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setUploadedDocuments, currentTab }) => {
+const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setUploadedDocuments }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(() => {
     // Initialize from localStorage or default to 'business'
@@ -28,6 +27,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
   });
   const [vettingEngine] = useState(() => DocumentVettingEngine.getInstance());
   const [showSubmissionModal, setShowSubmissionModal] = useState(false);
+  const [modalHasBeenShown, setModalHasBeenShown] = useState(false);
   
   // Update localStorage when category changes
   const handleCategoryChange = (categoryId: string) => {
@@ -46,33 +46,23 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
     }
   }, [selectedCategory]);
 
-  // Check if all documents are valid and show submission modal
+  // Check if all documents for the current category are valid and show submission modal
   useEffect(() => {
-    console.log('🔍 Checking popup conditions...', {
-      totalDocs: uploadedDocuments.length,
-      currentModal: showSubmissionModal
-    });
-    
-    // Only check Business documents for testing
-    const businessDocs = uploadedDocuments.filter(doc => doc.category === 'business');
-    console.log('🏢 Business documents:', businessDocs.map(d => ({ name: d.name, status: d.status })));
-    
-    const validBusinessDocs = businessDocs.filter(doc => doc.status === 'valid');
-    console.log('✅ Valid business documents:', validBusinessDocs.length, 'of', businessDocs.length);
-    
-    // Show popup if all business documents are valid and there's at least 1 business doc
-    const shouldShowPopup = businessDocs.length > 0 && validBusinessDocs.length === businessDocs.length && !showSubmissionModal;
-    console.log('🚀 Should show popup?', shouldShowPopup, {
-      hasBusinessDocs: businessDocs.length > 0,
-      allValid: validBusinessDocs.length === businessDocs.length,
-      modalNotShown: !showSubmissionModal
-    });
-    
-    if (shouldShowPopup) {
-      console.log('🎉 Showing submission modal!');
+    const categoryData = documentCategories.find(cat => cat.id === selectedCategory);
+    if (!categoryData) return;
+
+    const requiredDocsCount = categoryData.required.length;
+    const categoryDocs = uploadedDocuments.filter(doc => doc.category === selectedCategory);
+    const validCategoryDocs = categoryDocs.filter(doc => doc.status === 'valid');
+
+    const allDocsUploadedAndValid = validCategoryDocs.length >= requiredDocsCount && requiredDocsCount > 0;
+
+    if (allDocsUploadedAndValid && !modalHasBeenShown) {
+      console.log(`🎉 All ${requiredDocsCount} required documents for ${selectedCategory} are valid. Showing submission modal!`);
       setShowSubmissionModal(true);
+      setModalHasBeenShown(true);
     }
-  }, [uploadedDocuments, showSubmissionModal]);
+  }, [uploadedDocuments, selectedCategory, modalHasBeenShown]);
 
   const handleSubmitApplication = () => {
     // Handle application submission logic here
@@ -200,14 +190,15 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       };
 
       // Add document immediately with pending status
-      setUploadedDocuments(prev => [...prev, newDoc]);
+      setUploadedDocuments((prev: Document[]) => [...prev, newDoc]);
+      setModalHasBeenShown(false); // Reset modal shown state on new upload
       
       // Trigger chatbot update to show upload summary
       // This will be handled by the parent component's useEffect
 
       // Perform real document vetting
       vettingEngine.vetDocument(file).then((result: VettingResult) => {
-        setUploadedDocuments(prevDocs => 
+        setUploadedDocuments((prevDocs: Document[]) => 
           prevDocs.map(doc => 
             doc.id === newDoc.id 
               ? { 
@@ -223,7 +214,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         );
       }).catch((error) => {
         console.error('Document vetting failed:', error);
-        setUploadedDocuments(prevDocs => 
+        setUploadedDocuments((prevDocs: Document[]) => 
           prevDocs.map(doc => 
             doc.id === newDoc.id 
               ? { 
@@ -444,15 +435,15 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
           </div>
         </div>
       </div>
-    </div>
+      </div>
 
     {/* Submission Success Modal */}
     {showSubmissionModal && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 relative transition-colors">
-          <button
-            onClick={() => setShowSubmissionModal(false)}
-            className="absolute top-4 right-4 p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          <button 
+            onClick={() => setShowSubmissionModal(false)} 
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -479,7 +470,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
           <div className="flex space-x-3">
             <button
               onClick={() => setShowSubmissionModal(false)}
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
               Continue Uploading
             </button>
@@ -494,7 +485,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         </div>
       </div>
     )}
-    </>
+  </>
   );
 };
 
