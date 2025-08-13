@@ -435,7 +435,7 @@ export class DocumentVettingEngine {
     }
 
     // Check for expiration date
-    const expirationMatch = text.match(/expir(?:ation|es?)?\s*(?:date)?:?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i);
+    const expirationMatch = text.match(/expir(?:ation|es?)?\s*(?:date)?:?\s*([a-zA-Z]+\s+\d{1,2},?\s+\d{4}|\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i);
     if (expirationMatch) {
       const expirationDate = new Date(expirationMatch[1]);
       const currentDate = new Date();
