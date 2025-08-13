@@ -540,9 +540,10 @@ export class DocumentVettingEngine {
     // SBA SOP 50 10 8: Tax returns must be signed, complete, and within 3 years - RELAXED THRESHOLD
     const criticalIssues = issues.filter(i => 
       i.includes('must be signed') || 
-      i.includes('older than 3 years')
+      i.includes('older than 3 years') ||
+      i.includes('Missing critical tax return information')
     );
-    const status = confidence >= 75 && criticalIssues.length === 0 ? 'valid' : 'invalid'; // Slightly increased threshold for tax returns
+    const status = confidence >= 70 && criticalIssues.length === 0 ? 'valid' : 'invalid';
     
     return {
       status,
