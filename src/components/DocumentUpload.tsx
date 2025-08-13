@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Upload, File, CheckCircle, AlertCircle, X, Eye, Download, FileText, DollarSign, Building, User } from 'lucide-react';
+import { Upload, CheckCircle, AlertCircle, X, FileText, DollarSign, Building, User, Send } from 'lucide-react';
 import { DocumentVettingEngine, VettingResult } from '../utils/documentVetting';
 
 interface Document {
@@ -16,17 +16,18 @@ interface Document {
 
 interface DocumentUploadProps {
   uploadedDocuments: Document[];
-  setUploadedDocuments: (docs: Document[]) => void;
-  currentTab: string;
+  setUploadedDocuments: (docs: Document[] | ((prev: Document[]) => Document[])) => void;
 }
 
-const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setUploadedDocuments, currentTab }) => {
+const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setUploadedDocuments }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(() => {
     // Initialize from localStorage or default to 'business'
     return localStorage.getItem('selectedDocumentCategory') || 'business';
   });
   const [vettingEngine] = useState(() => DocumentVettingEngine.getInstance());
+  const [showSubmissionModal, setShowSubmissionModal] = useState(false);
+  const [modalHasBeenShown, setModalHasBeenShown] = useState(false);
   
   // Update localStorage when category changes
   const handleCategoryChange = (categoryId: string) => {
@@ -44,6 +45,31 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       setSelectedCategory(savedCategory);
     }
   }, [selectedCategory]);
+
+  // Check if all documents for the current category are valid and show submission modal
+  useEffect(() => {
+    const categoryData = documentCategories.find(cat => cat.id === selectedCategory);
+    if (!categoryData) return;
+
+    const requiredDocsCount = categoryData.required.length;
+    const categoryDocs = uploadedDocuments.filter(doc => doc.category === selectedCategory);
+    const validCategoryDocs = categoryDocs.filter(doc => doc.status === 'valid');
+
+    const allDocsUploadedAndValid = validCategoryDocs.length >= requiredDocsCount && requiredDocsCount > 0;
+
+    if (allDocsUploadedAndValid && !modalHasBeenShown) {
+      console.log(`🎉 All ${requiredDocsCount} required documents for ${selectedCategory} are valid. Showing submission modal!`);
+      setShowSubmissionModal(true);
+      setModalHasBeenShown(true);
+    }
+  }, [uploadedDocuments, selectedCategory, modalHasBeenShown]);
+
+  const handleSubmitApplication = () => {
+    // Handle application submission logic here
+    console.log('Submitting application...');
+    setShowSubmissionModal(false);
+    // You can add actual submission logic here
+  };
 
   const documentCategories = [
     {
@@ -164,14 +190,15 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
       };
 
       // Add document immediately with pending status
-      setUploadedDocuments(prev => [...prev, newDoc]);
+      setUploadedDocuments((prev: Document[]) => [...prev, newDoc]);
+      setModalHasBeenShown(false); // Reset modal shown state on new upload
       
       // Trigger chatbot update to show upload summary
       // This will be handled by the parent component's useEffect
 
       // Perform real document vetting
       vettingEngine.vetDocument(file).then((result: VettingResult) => {
-        setUploadedDocuments(prevDocs => 
+        setUploadedDocuments((prevDocs: Document[]) => 
           prevDocs.map(doc => 
             doc.id === newDoc.id 
               ? { 
@@ -187,7 +214,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         );
       }).catch((error) => {
         console.error('Document vetting failed:', error);
-        setUploadedDocuments(prevDocs => 
+        setUploadedDocuments((prevDocs: Document[]) => 
           prevDocs.map(doc => 
             doc.id === newDoc.id 
               ? { 
@@ -249,7 +276,8 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
   const selectedCategoryData = documentCategories.find(cat => cat.id === selectedCategory);
 
   return (
-    <div className="p-6 space-y-6">
+    <>
+      <div className="p-6 space-y-6 bg-gray-50 dark:bg-gray-900 min-h-full transition-colors">
       {/* Category Selection */}
       <div className="grid grid-cols-4 gap-4">
         {documentCategories.map((category) => (
@@ -258,16 +286,14 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
             onClick={() => handleCategoryChange(category.id)}
             className={`p-4 rounded-xl border-2 transition-all ${
               selectedCategory === category.id
-                ? `border-${category.color}-500 bg-${category.color}-50`
-                : 'border-gray-200 hover:border-gray-300 bg-white'
+                ? `border-${category.color}-500 bg-${category.color}-50 dark:bg-${category.color}-900/30 text-${category.color}-900 dark:text-white`
+                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-300'
             }`}
           >
             <category.icon className={`h-6 w-6 mx-auto mb-2 ${
-              selectedCategory === category.id ? `text-${category.color}-600` : 'text-gray-400'
+              selectedCategory === category.id ? `text-${category.color}-600 dark:text-white` : 'text-gray-400 dark:text-gray-300'
             }`} />
-            <div className={`text-sm font-medium ${
-              selectedCategory === category.id ? `text-${category.color}-900` : 'text-gray-600'
-            }`}>
+            <div className="text-sm font-medium">
               {category.name}
             </div>
           </button>
@@ -280,19 +306,19 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
           <div
             className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
               dragActive
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-300 hover:border-gray-400'
+                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
+                : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 bg-white dark:bg-gray-800'
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
           >
-            <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+            <Upload className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               Upload {selectedCategoryData?.name}
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               Drag and drop files here, or click to browse
             </p>
             <input
@@ -305,12 +331,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
             />
             <label
               htmlFor="file-upload"
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 cursor-pointer transition-colors"
             >
               <Upload className="h-4 w-4 mr-2" />
               Choose Files
             </label>
-            <div className="mt-2 text-xs text-gray-500">
+            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
               Supported formats: PDF, JPG, PNG, GIF, BMP, TIFF, TXT (Max 10MB)
             </div>
           </div>
@@ -320,13 +346,13 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
             {uploadedDocuments
               .filter(doc => doc.category === selectedCategory)
               .map((doc) => (
-                <div key={doc.id} className="bg-white border border-gray-200 rounded-lg p-4">
+                <div key={doc.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <FileText className="h-8 w-8 text-gray-400" />
+                      <FileText className="h-8 w-8 text-gray-400 dark:text-gray-500" />
                       <div>
                         <div className="font-medium text-gray-900">{doc.name}</div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
                           {formatFileSize(doc.size)} • Uploaded {doc.uploadDate.toLocaleDateString()}
                         </div>
                         {(doc as any).confidence && (
@@ -341,7 +367,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
                       </div>
                       <button
                         onClick={() => removeDocument(doc.id)}
-                        className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                        className="p-1 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -349,9 +375,9 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
                   </div>
                   
                   {doc.issues && doc.issues.length > 0 && (
-                    <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <div className="text-sm font-medium text-red-800 mb-1">Issues Found:</div>
-                      <ul className="text-sm text-red-700 space-y-1">
+                    <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                      <div className="text-sm font-medium text-red-800 dark:text-red-200 mb-1">Issues Found:</div>
+                      <ul className="text-sm text-red-700 dark:text-red-300 space-y-1">
                         {doc.issues.map((issue, index) => (
                           <li key={index} className="flex items-start space-x-1">
                             <span>•</span>
@@ -362,10 +388,10 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
                     </div>
                   )}
                   
-                  {doc.status === 'valid' && (doc as any).extractedData && (
-                    <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-                      <div className="text-sm font-medium text-emerald-800 mb-1">Verification Complete:</div>
-                      <div className="text-sm text-emerald-700">
+                  {doc.status === 'valid' && (
+                    <div className="mt-3 p-3 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-lg">
+                      <div className="text-sm font-medium text-emerald-800 dark:text-emerald-200 mb-1">Verification Complete:</div>
+                      <div className="text-sm text-emerald-700 dark:text-emerald-300">
                         Document successfully validated against SBA SOP 50 10 8 requirements.
                         {(doc as any).confidence && ` Confidence: ${Math.round((doc as any).confidence)}%`}
                       </div>
@@ -377,8 +403,8 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         </div>
 
         {/* Requirements Checklist */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Required Documents</h3>
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors">
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Required Documents</h3>
           <div className="space-y-3">
             {selectedCategoryData?.required.map((requirement, index) => {
               const hasDocument = uploadedDocuments.some(
@@ -389,11 +415,11 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
               return (
                 <div key={index} className="flex items-start space-x-2">
                   <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${
-                    hasDocument ? 'bg-emerald-500' : 'bg-gray-200'
+                    hasDocument ? 'bg-emerald-500 dark:bg-emerald-600' : 'bg-gray-200 dark:bg-gray-700'
                   }`}>
                     {hasDocument && <CheckCircle className="h-3 w-3 text-white" />}
                   </div>
-                  <div className={`text-sm ${hasDocument ? 'text-emerald-700' : 'text-gray-600'}`}>
+                  <div className={`text-sm ${hasDocument ? 'text-emerald-700 dark:text-emerald-300' : 'text-gray-600 dark:text-gray-300'}`}>
                     {requirement}
                   </div>
                 </div>
@@ -401,15 +427,65 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
             })}
           </div>
           
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <div className="text-sm font-medium text-blue-900 mb-1">Pro Tip</div>
-            <div className="text-sm text-blue-700">
+          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+            <div className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">Pro Tip</div>
+            <div className="text-sm text-blue-700 dark:text-blue-300">
               Upload documents in PDF format for faster processing and better compatibility with SBA systems.
             </div>
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+    {/* Submission Success Modal */}
+    {showSubmissionModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 relative transition-colors">
+          <button 
+            onClick={() => setShowSubmissionModal(false)} 
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          
+          <div className="text-center mb-6">
+            <div className="bg-emerald-500 dark:bg-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Ready for Submission!</h2>
+            <p className="text-gray-600 dark:text-gray-300">All your business documents have been validated and are ready for SBA review.</p>
+          </div>
+          
+          <div className="space-y-4 mb-6">
+            <div className="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
+              <h3 className="font-medium text-emerald-800 dark:text-emerald-200 mb-2">Next Steps:</h3>
+              <ul className="text-sm text-emerald-700 dark:text-emerald-300 space-y-1">
+                <li>• Your application will be submitted to the SBA</li>
+                <li>• SBA will review your application</li>
+                <li>• You'll receive updates on your application status</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="flex space-x-3">
+            <button
+              onClick={() => setShowSubmissionModal(false)}
+              className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              Continue Uploading
+            </button>
+            <button
+              onClick={handleSubmitApplication}
+              className="flex-1 px-4 py-2 bg-emerald-600 dark:bg-emerald-500 text-white rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-colors flex items-center justify-center space-x-2"
+            >
+              <Send className="h-4 w-4" />
+              <span>Submit Application</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+  </>
   );
 };
 

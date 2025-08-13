@@ -31,7 +31,7 @@ const ApplicationOverview: React.FC<ApplicationOverviewProps> = ({ uploadedDocum
   };
 
   const documentStats = {
-    total: 16,
+    total: 23,
     uploaded: uploadedDocuments.length,
     validated: uploadedDocuments.filter(doc => doc.status === 'valid').length,
     pending: uploadedDocuments.filter(doc => doc.status === 'pending').length,
