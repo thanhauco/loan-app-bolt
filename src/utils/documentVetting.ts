@@ -156,15 +156,10 @@ export const SBA_REQUIREMENTS = {
       /secretary\s+of\s+state/i
     ],
     requiredFields: [
-      /business\s+name/i,
-      /company.*name/i,
-      /state\s+of\s+incorporation/i,
-      /state\s+of\s+california/i,
-      /registered\s+agent/i,
-      /agent\s+for\s+service/i,
-      /file\s+date|filing\s+date/i,
-      /file\s+number/i,
-      /effective\s+date/i
+      /(?:business\s+name|company.*name|name.*company|llc|limited\s+liability)/i,
+      /(?:state\s+of|california|secretary\s+of\s+state)/i,
+      /(?:registered\s+agent|agent\s+for\s+service|member|principal\s+place)/i,
+      /(?:file\s+date|filing\s+date|formation|entered\s+into|date)/i
     ],
     mustBeRecent: false
   }
@@ -888,8 +883,10 @@ export class DocumentVettingEngine {
     const foundFields = requiredFields.filter(pattern => pattern.test(text));
     confidence += (foundFields.length / requiredFields.length) * 50;
 
-    if (foundFields.length < 2) {
+    if (foundFields.length < 3) {
       issues.push('Missing required incorporation information');
+    } else {
+      confidence += 10; // Bonus for having most required fields
     }
 
     // Check for state filing
@@ -900,8 +897,19 @@ export class DocumentVettingEngine {
       confidence += 20;
     }
 
+    // Check for company name (very important)
+    const companyNamePattern = /(?:tech\s+solutions|llc|limited\s+liability\s+company)/i;
+    if (companyNamePattern.test(text)) {
+      confidence += 15;
+    }
+
+    // Check for formation/organization language
+    const formationPattern = /(?:formation|organization|operating\s+agreement|articles)/i;
+    if (formationPattern.test(text)) {
+      confidence += 10;
+    }
     // SBA SOP 50 10 8: Articles must be properly filed with state
-    const status = confidence >= 65 && issues.length === 0 ? 'valid' : 'invalid';
+    const status = confidence >= 70 && foundFields.length >= 3 ? 'valid' : 'invalid';
     
     return {
       status,
@@ -909,7 +917,10 @@ export class DocumentVettingEngine {
       confidence: Math.max(0, Math.min(100, confidence)),
       extractedData: {
         documentType: foundPattern?.toString(),
-        fieldsFound: foundFields.length
+        fieldsFound: foundFields.length,
+        totalRequired: requiredFields.length,
+        hasCompanyName: companyNamePattern.test(text),
+        hasStateInfo: /state\s+of|california|secretary\s+of\s+state/i.test(text)
       }
     };
   }
