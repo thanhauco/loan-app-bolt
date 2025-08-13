@@ -445,6 +445,55 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
         </div>
       </div>
     </div>
+
+    {/* Submission Success Modal */}
+    {showSubmissionModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 relative transition-colors">
+          <button
+            onClick={() => setShowSubmissionModal(false)}
+            className="absolute top-4 right-4 p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          
+          <div className="text-center mb-6">
+            <div className="bg-emerald-500 dark:bg-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Ready for Submission!</h2>
+            <p className="text-gray-600 dark:text-gray-300">All your business documents have been validated and are ready for SBA review.</p>
+          </div>
+          
+          <div className="space-y-4 mb-6">
+            <div className="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
+              <h3 className="font-medium text-emerald-800 dark:text-emerald-200 mb-2">Next Steps:</h3>
+              <ul className="text-sm text-emerald-700 dark:text-emerald-300 space-y-1">
+                <li>• Your application will be submitted to the SBA</li>
+                <li>• SBA will review your application</li>
+                <li>• You'll receive updates on your application status</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="flex space-x-3">
+            <button
+              onClick={() => setShowSubmissionModal(false)}
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              Continue Uploading
+            </button>
+            <button
+              onClick={handleSubmitApplication}
+              className="flex-1 px-4 py-2 bg-emerald-600 dark:bg-emerald-500 text-white rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-colors flex items-center justify-center space-x-2"
+            >
+              <Send className="h-4 w-4" />
+              <span>Submit Application</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     </>
   );
 };
