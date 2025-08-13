@@ -48,12 +48,23 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
 
   // Check if all documents are valid and show submission modal
   useEffect(() => {
+    console.log('🔍 Checking popup conditions...');
+    console.log('📊 All uploaded documents:', uploadedDocuments);
+    
     // Only check Business documents for testing
     const businessDocs = uploadedDocuments.filter(doc => doc.category === 'business');
+    console.log('🏢 Business documents:', businessDocs);
+    
     const validBusinessDocs = businessDocs.filter(doc => doc.status === 'valid');
+    console.log('✅ Valid business documents:', validBusinessDocs);
+    console.log('🎯 Current showSubmissionModal state:', showSubmissionModal);
     
     // Show popup if all business documents are valid and there's at least 1 business doc
-    if (businessDocs.length > 0 && validBusinessDocs.length === businessDocs.length && !showSubmissionModal) {
+    const shouldShowPopup = businessDocs.length > 0 && validBusinessDocs.length === businessDocs.length && !showSubmissionModal;
+    console.log('🚀 Should show popup?', shouldShowPopup);
+    
+    if (shouldShowPopup) {
+      console.log('🎉 Showing submission modal!');
       setShowSubmissionModal(true);
     }
   }, [uploadedDocuments, showSubmissionModal]);
