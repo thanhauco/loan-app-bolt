@@ -48,10 +48,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
 
   // Check if all documents are valid and show submission modal
   useEffect(() => {
-    const totalValidDocs = uploadedDocuments.filter(doc => doc.status === 'valid').length;
-    const totalRequiredDocs = 8; // Minimum required documents for SBA loan
+    // Only check Business documents for testing
+    const businessDocs = uploadedDocuments.filter(doc => doc.category === 'business');
+    const validBusinessDocs = businessDocs.filter(doc => doc.status === 'valid');
     
-    if (totalValidDocs >= totalRequiredDocs && !showSubmissionModal) {
+    // Show popup if all business documents are valid and there's at least 1 business doc
+    if (businessDocs.length > 0 && validBusinessDocs.length === businessDocs.length && !showSubmissionModal) {
       setShowSubmissionModal(true);
     }
   }, [uploadedDocuments, showSubmissionModal]);
