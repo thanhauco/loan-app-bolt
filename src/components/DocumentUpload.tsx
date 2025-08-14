@@ -47,23 +47,57 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
     }
   }, [selectedCategory]);
 
-  // Check if all documents for the current category are valid and show submission modal
+  // Check if any category has all its required documents marked as valid
+  // and there are no invalid documents in any tab
   useEffect(() => {
-    const categoryData = documentCategories.find(cat => cat.id === selectedCategory);
-    if (!categoryData) return;
-
-    const requiredDocsCount = categoryData.required.length;
-    const categoryDocs = uploadedDocuments.filter(doc => doc.category === selectedCategory);
-    const validCategoryDocs = categoryDocs.filter(doc => doc.status === 'valid');
-
-    const allDocsUploadedAndValid = validCategoryDocs.length >= requiredDocsCount && requiredDocsCount > 0;
-
-    if (allDocsUploadedAndValid && !modalHasBeenShown) {
-      console.log(`🎉 All ${requiredDocsCount} required documents for ${selectedCategory} are valid. Showing submission modal!`);
-      setShowSubmissionModal(true);
-      setModalHasBeenShown(true);
+    // Debug: Log all uploaded documents
+    console.log('📄 Uploaded Documents:', uploadedDocuments);
+    
+    // Check if we've already shown the modal to prevent showing it again
+    if (modalHasBeenShown) {
+      console.log('ℹ️ Modal already shown in this session');
+      return;
     }
-  }, [uploadedDocuments, selectedCategory, modalHasBeenShown]);
+
+    // First, check if there are any invalid documents in any tab
+    const hasInvalidDocuments = uploadedDocuments.some(doc => doc.status === 'invalid');
+    if (hasInvalidDocuments) {
+      console.log('⚠️ Not showing modal - there are invalid documents that need attention');
+      return;
+    }
+
+    // Check each category to see if its requirements are met
+    const categoryStatus = documentCategories.map(category => {
+      const requiredDocsCount = category.required.length;
+      if (requiredDocsCount === 0) return null; // Skip categories with no requirements
+      
+      const categoryDocs = uploadedDocuments.filter(doc => doc.category === category.id);
+      const validCategoryDocs = categoryDocs.filter(doc => doc.status === 'valid');
+      
+      const isComplete = validCategoryDocs.length >= requiredDocsCount;
+      
+      const status = {
+        category: category.name,
+        required: requiredDocsCount,
+        valid: validCategoryDocs.length,
+        complete: isComplete,
+        docs: categoryDocs.map(d => ({ name: d.name, status: d.status }))
+      };
+      
+      console.log(`📊 ${category.name} Status:`, status);
+      
+      // If this category is complete and there are no invalid documents, show the modal
+      if (isComplete) {
+        console.log(`🎉 All required documents for ${category.name} are valid and no invalid documents found!`);
+        setShowSubmissionModal(true);
+        setModalHasBeenShown(true);
+      }
+      
+      return status;
+    }).filter(Boolean); // Remove null entries (categories with no requirements)
+
+    console.log('📋 Category status:', categoryStatus);
+  }, [uploadedDocuments, modalHasBeenShown]);
 
   const handleSubmitApplication = async () => {
     console.log('Submitting application with documents:', uploadedDocuments);
