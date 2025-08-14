@@ -8,9 +8,16 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Hardcoded SendGrid configuration for demo purposes
-sgMail.setApiKey('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');
+// Configure SendGrid
+const SENDGRID_API_KEY = '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';
 const SENDER_EMAIL = 'thanhv@wmiworldwide.com';
+
+// Set SendGrid API key
+sgMail.setApiKey(SENDGRID_API_KEY);
+
+console.log('SendGrid email sender configured');
+console.log('Sender Email:', SENDER_EMAIL);
+console.log('Using API Key:', '***' + SENDGRID_API_KEY.slice(-4));
 
 const app = express();
 const port = 3001;
@@ -46,17 +53,24 @@ app.post('/api/submit-application', async (req, res) => {
     return res.status(400).json({ message: 'No documents provided.' });
   }
 
+  console.log('Received document submission request with', documents.length, 'documents');
+  
   try {
+    // Validate documents
+    if (!Array.isArray(documents)) {
+      throw new Error('Invalid documents format');
+    }
 
     const documentListHtml = documents
       .map(
         (doc) => `
       <li>
-        <strong>${doc.name}</strong> (Category: ${doc.category})
+        <strong>${doc.name || 'Unnamed Document'}</strong> (Category: ${doc.category || 'Uncategorized'})
         <ul>
-          <li>Status: ${doc.status}</li>
-          <li>Size: ${(doc.size / 1024).toFixed(2)} KB</li>
-          ${doc.issues ? `<li>Issues: ${doc.issues.join(', ')}</li>` : ''}
+          <li>Status: ${doc.status || 'unknown'}</li>
+          <li>Size: ${doc.size ? (doc.size / 1024).toFixed(2) + ' KB' : 'N/A'}</li>
+          ${doc.issues && doc.issues.length ? `<li>Issues: ${doc.issues.join(', ')}</li>` : ''}
+          ${doc.confidence ? `<li>Confidence: ${Math.round(doc.confidence)}%</li>` : ''}
         </ul>
       </li>`
       )
@@ -66,6 +80,8 @@ app.post('/api/submit-application', async (req, res) => {
     const validDocs = documents.filter(doc => doc.status === 'valid').length;
     const pendingDocs = documents.filter(doc => doc.status === 'pending').length;
     const invalidDocs = documents.filter(doc => doc.status === 'invalid').length;
+
+    console.log(`Document summary: ${validDocs} valid, ${pendingDocs} pending, ${invalidDocs} invalid`);
 
     const emailBody = `
       <h1>SBA Loan Application Submission</h1>
@@ -88,24 +104,62 @@ app.post('/api/submit-application', async (req, res) => {
 
     const msg = {
       to: 'thanhv@wmiworldwide.com', // Hardcoded recipient email for demo
-      from: SENDER_EMAIL, // Using the hardcoded sender email
+      from: SENDER_EMAIL,
       subject: 'New Loan Application Submission',
       html: emailBody,
+      // Add text version for email clients that don't support HTML
+      text: `New Loan Application Submission\n\n` +
+            `Total Documents: ${totalDocs}\n` +
+            `Valid: ${validDocs}, Pending: ${pendingDocs}, Invalid: ${invalidDocs}\n\n` +
+            documents.map(doc => 
+              `- ${doc.name || 'Unnamed Document'}: ${doc.status || 'unknown'}` + 
+              (doc.issues && doc.issues.length ? ` (${doc.issues.join(', ')})` : '')
+            ).join('\n')
     };
 
-    await sgMail.send(msg);
-
+    console.log('Sending email via SendGrid...');
+    const sendResult = await sgMail.send(msg);
     console.log('Email sent successfully via SendGrid');
+    console.log('Message ID:', sendResult[0]?.headers?.['x-message-id'] || 'Unknown');
 
     res.status(200).json({ 
         message: 'Application submitted successfully!'
     });
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('❌ Error sending email:', error);
+    
+    let errorMessage = 'Failed to send submission email.';
+    
     if (error.response) {
-      console.error(error.response.body);
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error('Error response body:', error.response.body);
+      errorMessage += ` (Status: ${error.response.status})`;
+      
+      if (error.response.body && typeof error.response.body === 'string') {
+        try {
+          const errorDetails = JSON.parse(error.response.body);
+          if (errorDetails.errors && errorDetails.errors[0]) {
+            errorMessage += ` - ${errorDetails.errors[0].message}`;
+          }
+        } catch (e) {
+          console.error('Error parsing error response:', e);
+        }
+      }
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('No response received from SendGrid');
+      errorMessage += ' - No response from email service.';
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error('Error setting up email request:', error.message);
+      errorMessage += ` - ${error.message}`;
     }
-    res.status(500).json({ message: 'Failed to send submission email.' });
+    
+    res.status(500).json({ 
+      message: errorMessage,
+      error: error.toString()
+    });
   }
 });
 
