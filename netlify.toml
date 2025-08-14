@@ -1,0 +1,27 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--prefer-offline"
+
+# Environment variables for production
+[context.production.environment]
+  NODE_ENV = "production"
+  ALLOWED_ORIGINS = "https://reliable-starship-38d7a1.netlify.app/"
+  # Add your SendGrid API key and SENDER_EMAIL in Netlify dashboard
+  # SENDGRID_API_KEY = "your_sendgrid_api_key"
+  # SENDER_EMAIL = "your_verified_sender@example.com"
+
+# Environment variables for local development
+[context.development.environment]
+  NODE_ENV = "development"
+  ALLOWED_ORIGINS = "http://localhost:5173"
+
+# Redirects for SPA (Single Page Application)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

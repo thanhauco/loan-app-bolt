@@ -151,6 +151,8 @@ export const SBA_REQUIREMENTS = {
       /articles\s+of\s+incorporation/i,
       /certificate\s+of\s+incorporation/i,
       /articles\s+of\s+organization/i,
+      /certificate\s+of\s+formation/i,
+      /certificate\s+of\s+organization/i,
       /operating\s+agreement/i,
       /limited\s+liability\s+company/i,
       /secretary\s+of\s+state/i
@@ -934,7 +936,11 @@ export class DocumentVettingEngine {
       confidence += 10;
     }
     // SBA SOP 50 10 8: Articles must be properly filed with state
-    const status = confidence >= 70 && foundFields.length >= 3 ? 'valid' : 'invalid';
+    // If there are critical issues, never mark as valid
+    const criticalIssues = issues.filter(i =>
+      /does not appear to be|Missing required|State filing information not clearly visible/i.test(i)
+    );
+    const status = confidence >= 70 && foundFields.length >= 3 && criticalIssues.length === 0 ? 'valid' : 'invalid';
     
     return {
       status,

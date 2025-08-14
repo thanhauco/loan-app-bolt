@@ -28,6 +28,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
   const [vettingEngine] = useState(() => DocumentVettingEngine.getInstance());
   const [showSubmissionModal, setShowSubmissionModal] = useState(false);
   const [modalHasBeenShown, setModalHasBeenShown] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   
   // Update localStorage when category changes
   const handleCategoryChange = (categoryId: string) => {
@@ -64,11 +65,37 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
     }
   }, [uploadedDocuments, selectedCategory, modalHasBeenShown]);
 
-  const handleSubmitApplication = () => {
-    // Handle application submission logic here
-    console.log('Submitting application...');
-    setShowSubmissionModal(false);
-    // You can add actual submission logic here
+  const handleSubmitApplication = async () => {
+    console.log('Submitting application with documents:', uploadedDocuments);
+
+    try {
+      const response = await fetch('/api/submit-application', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ documents: uploadedDocuments }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log('Submission successful!', result);
+        setShowSubmissionModal(false);
+        setShowSuccessMessage(true);
+        
+        // Hide the success message after 5 seconds
+        setTimeout(() => {
+          setShowSuccessMessage(false);
+        }, 5000);
+      } else {
+        console.error('Submission failed:', result.message);
+        // Handle error display to the user
+      }
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      // Handle network or other errors
+    }
   };
 
   const documentCategories = [
@@ -277,6 +304,14 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ uploadedDocuments, setU
 
   return (
     <>
+      {/* Success Message */}
+      {showSuccessMessage && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2 z-50 animate-fade-in">
+          <CheckCircle className="h-5 w-5" />
+          <span>Email sent successfully!</span>
+        </div>
+      )}
+      
       <div className="p-6 space-y-6 bg-gray-50 dark:bg-gray-900 min-h-full transition-colors">
       {/* Category Selection */}
       <div className="grid grid-cols-4 gap-4">

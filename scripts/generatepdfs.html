@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBA 7(a) Remaining Mock Documents</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .form-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .form-number {
+            font-size: 14px;
+            color: #666;
+        }
+        .section {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        .section-title {
+            background-color: #f0f0f0;
+            padding: 8px;
+            font-weight: bold;
+            border-left: 4px solid #0066cc;
+            margin: 15px 0 10px 0;
+        }
+        .form-row {
+            display: flex;
+            margin: 8px 0;
+            align-items: center;
+        }
+        .form-label {
+            font-weight: bold;
+            min-width: 200px;
+            padding-right: 10px;
+        }
+        .form-value {
+            border-bottom: 1px solid #333;
+            padding: 2px 5px;
+            min-width: 200px;
+            flex-grow: 1;
+        }
+        .checkbox {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #333;
+            margin-right: 5px;
+            display: inline-block;
+            text-align: center;
+            line-height: 10px;
+            font-size: 10px;
+        }
+        .checked {
+            background-color: #333;
+            color: white;
+        }
+        .signature-line {
+            border-bottom: 1px solid #333;
+            width: 300px;
+            height: 20px;
+            margin: 10px 0;
+            display: inline-block;
+        }
+        .date-line {
+            border-bottom: 1px solid #333;
+            width: 100px;
+            height: 20px;
+            margin: 10px 5px;
+            display: inline-block;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+        .financial-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        .financial-table th,
+        .financial-table td {
+            border: 1px solid #333;
+            padding: 5px;
+            text-align: left;
+        }
+        .financial-table th {
+            background-color: #f0f0f0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .financial-table .amount {
+            text-align: right;
+        }
+        .download-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .download-btn {
+            display: block;
+            margin: 5px 0;
+            padding: 10px 15px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            width: 140px;
+        }
+        .download-btn:hover {
+            background: #0052a3;
+        }
+        .stamp {
+            border: 2px solid #cc0000;
+            padding: 10px;
+            margin: 20px 0;
+            text-align: center;
+            color: #cc0000;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .tax-form {
+            background-color: #fff8e1;
+            border: 1px solid #f57f17;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        @media print {
+            .download-buttons { display: none; }
+            body { background: white; }
+            .container { box-shadow: none; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="download-buttons">
+        <button class="download-btn" onclick="downloadPDF()">Download PDF</button>
+        <button class="download-btn" onclick="downloadHTML()">Download HTML</button>
+        <button class="download-btn" onclick="printForm()">Print Forms</button>
+    </div>
+
+    <div class="container" id="content">
+        <!-- Document 9: Articles of Incorporation -->
+        <div class="form-header">
+            <div class="form-title">ARTICLES OF INCORPORATION</div>
+            <div class="form-number">State of Washington - Department of Financial Institutions</div>
+            <div style="font-size: 12px; margin-top: 5px;">UBI Number: 604-123-456</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ARTICLE I - NAME</div>
+            <p>The name of the corporation is: <strong>TECHSOLUTIONS NORTHWEST LLC</strong></p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ARTICLE II - DURATION</div>
+            <p>The period of duration of the corporation is perpetual.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ARTICLE III - PURPOSE</div>
+            <p>The purpose for which the corporation is organized is to engage in technology consulting, software development, IT services, and any other lawful business activity permitted under Washington State law.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ARTICLE IV - REGISTERED OFFICE</div>
+            <div class="form-row">
+                <span class="form-label">Registered Office:</span>
+                <span class="form-value">2150 Innovation Drive, Seattle, WA 98109</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Registered Agent:</span>
+                <span class="form-value">Robert James Mitchell</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ARTICLE V - INCORPORATOR</div>
+            <div class="form-row">
+                <span class="form-label">Name:</span>
+                <span class="form-value">Robert James Mitchell</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Address:</span>
+                <span class="form-value">1425 Oak Street, Suite 200, Seattle, WA 98101</span>
+            </div>
+        </div>
+
+        <div class="section" style="margin-top: 40px;">
+            <p>IN WITNESS WHEREOF, I have hereunto set my hand this 15th day of January, 2019.</p>
+            <div style="margin-top: 30px;">
+                <div class="signature-line"></div>
+                <div style="margin-top: 5px;">Robert James Mitchell, Incorporator</div>
+            </div>
+            <div class="stamp" style="margin-top: 40px;">
+                FILED<br>
+                JAN 15 2019<br>
+                WASHINGTON STATE
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- Document 10: Corporate Bylaws -->
+        <div class="form-header">
+            <div class="form-title">CORPORATE BYLAWS</div>
+            <div class="form-number">TechSolutions Northwest LLC</div>
+            <div style="font-size: 12px; margin-top: 5px;">Adopted: January 15, 2019 | Amended: March 1, 2023</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ARTICLE I - OFFICES</div>
+            <p><strong>Section 1.1 Principal Office:</strong> The principal office of the corporation shall be located at 2150 Innovation Drive, Seattle, Washington 98109.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ARTICLE II - MEMBERS</div>
+            <p><strong>Section 2.1 Management:</strong> The business and affairs of the LLC shall be managed by its members in proportion to their ownership interests.</p>
+            <p><strong>Section 2.2 Voting:</strong> Each member shall have voting rights proportional to their membership interest percentage.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ARTICLE III - MEMBERSHIP INTERESTS</div>
+            <table class="financial-table">
+                <tr>
+                    <th>Member Name</th>
+                    <th>Ownership %</th>
+                    <th>Capital Contribution</th>
+                    <th>Date Admitted</th>
+                </tr>
+                <tr>
+                    <td>Robert James Mitchell</td>
+                    <td class="amount">65%</td>
+                    <td class="amount">$195,000</td>
+                    <td>01/15/2019</td>
+                </tr>
+                <tr>
+                    <td>Sarah Elizabeth Wong</td>
+                    <td class="amount">25%</td>
+                    <td class="amount">$75,000</td>
+                    <td>06/01/2020</td>
+                </tr>
+                <tr>
+                    <td>Michael David Thompson</td>
+                    <td class="amount">10%</td>
+                    <td class="amount">$30,000</td>
+                    <td>01/15/2022</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ARTICLE IV - MEETINGS</div>
+            <p><strong>Section 4.1 Annual Meetings:</strong> An annual meeting of members shall be held in January of each year.</p>
+            <p><strong>Section 4.2 Special Meetings:</strong> Special meetings may be called by members holding at least 25% of the membership interests.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">CERTIFICATION</div>
+            <p>These bylaws were duly adopted by the members of TechSolutions Northwest LLC.</p>
+            <div style="margin-top: 30px;">
+                <div class="signature-line"></div>
+                <div style="margin-top: 5px;">Robert James Mitchell, Managing Member</div>
+                <div style="margin-top: 10px;">Date: March 1, 2023</div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- Document 11: Real Estate Documentation -->
+        <div class="form-header">
+            <div class="form-title">REAL ESTATE DOCUMENTATION</div>
+            <div class="form-number">Personal Residence - Collateral Property</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">PROPERTY INFORMATION</div>
+            <div class="form-row">
+                <span class="form-label">Property Address:</span>
+                <span class="form-value">1425 Oak Street, Seattle, WA 98101</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Parcel Number:</span>
+                <span class="form-value">0325049018</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Property Type:</span>
+                <span class="form-value">Single Family Residence</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Square Footage:</span>
+                <span class="form-value">2,450 sq ft</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Year Built:</span>
+                <span class="form-value">1998</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">OWNERSHIP INFORMATION</div>
+            <div class="form-row">
+                <span class="form-label">Owner:</span>
+                <span class="form-value">Robert James Mitchell and Jennifer Ann Mitchell</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Date Purchased:</span>
+                <span class="form-value">March 15, 2015</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Purchase Price:</span>
+                <span class="form-value">$425,000</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">CURRENT VALUATION</div>
+            <div class="form-row">
+                <span class="form-label">Current Market Value:</span>
+                <span class="form-value">$485,000</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Appraiser:</span>
+                <span class="form-value">Northwest Property Appraisers LLC</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Appraisal Date:</span>
+                <span class="form-value">November 30, 2024</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Outstanding Mortgage:</span>
+                <span class="form-value">$285,750</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Equity Available:</span>
+                <span class="form-value">$199,250</span>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- Document 12: Business Tax Returns -->
+        <div class="form-header">
+            <div class="form-title">BUSINESS TAX RETURN SUMMARY</div>
+            <div class="form-number">Form 1065 - U.S. Return of Partnership Income</div>
+            <div style="font-size: 12px; margin-top: 5px;">Tax Year: 2023</div>
+        </div>
+
+        <div class="tax-form">
+            <div class="section-title">TAX RETURN INFORMATION</div>
+            <div class="form-row">
+                <span class="form-label">Business Name:</span>
+                <span class="form-value">TechSolutions Northwest LLC</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Employer ID Number:</span>
+                <span class="form-value">XX-XXXXXXX</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Business Code:</span>
+                <span class="form-value">541511</span>
+            </div>
+            <div class="form-row">
+                <span class="form-label">Principal Business Activity:</span>
+                <span class="form-value">Custom Computer Programming Services</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">INCOME STATEMENT (2023)</div>
+            <table class="financial-table">
+                <tr>
+                    <th>Line Item</th>
+                    <th>Amount</th>
+                </tr>
+                <tr>
+                    <td>Gross Receipts or Sales</td>
+                    <td class="amount">$1,895,000</td>
+                </tr>
+                <tr>
+                    <td>Cost of Goods Sold</td>
+                    <td class="amount">$947,500</td>
+                </tr>
+                <tr>
+                    <td>Gross Profit</td>
+                    <td class="amount">$947,500</td>
+                </tr>
+                <tr>
+                    <td>Total Deductions</td>
+                    <td class="amount">$753,000</td>
+                </tr>
+                <tr>
+                    <td>Ordinary Business Income</td>
+                    <td class="amount">$194,500</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">BALANCE SHEET (December 31, 2023)</div>
+            <table class="financial-table">
+                <tr>
+                    <th>Assets</th>
+                    <th>Amount</th>
+                </tr>
+                <tr>
+                    <td>Cash</td>
+                    <td class="amount">$62,300</td>
+                </tr>
+                <tr>
+                    <td>Accounts Receivable</td>
+                    <td class="amount">$125,400</td>
+                </tr>
+                <tr>
+                    <td>Inventory</td>
+                    <td class="amount">$285,600</td>
+                </tr>
+                <tr>
+                    <td>Equipment (net)</td>
+                    <td class="amount">$135,500</td>
+                </tr>
+                <tr>
+                    <td>Other Assets</td>
+                    <td class="amount">$41,700</td>
+                </tr>
+                <tr style="font-weight: bold;">
+                    <td>Total Assets</td>
+                    <td class="amount">$650,500</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="stamp" style="margin-top: 30px;">
+            RECEIVED<br>
+            APR 15 2024<br>
+            INTERNAL REVENUE SERVICE
+        </div>
+
+        <div style="margin-top: 50px; text-align: center; border-top: 2px solid #333; padding-top: 20px;">
+            <h2 style="color: #0066cc;">SBA 7(a) LOAN DOCUMENT SAMPLE</h2>
+            <p style="font-size: 16px; font-weight: bold;">Mock Documents for Testing</p>
+            <p style="font-style: italic; color: #666;">
+                This sample contains mock SBA loan documents for testing purposes.<br>
+                All information is fictional and for demonstration only.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            // Hide download buttons before capturing
+            const buttons = document.querySelector('.download-buttons');
+            buttons.style.display = 'none';
+            
+            // Get the content to convert
+            const content = document.getElementById('content');
+            
+            // Use html2canvas to capture the content
+            html2canvas(content, {
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                scrollX: 0,
+                scrollY: 0,
+                width: content.scrollWidth,
+                height: content.scrollHeight
+            }).then(function(canvas) {
+                // Create jsPDF instance
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                // Calculate dimensions
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 295; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                
+                let position = 0;
+                
+                // Add first page
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Add additional pages if needed
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // Save the PDF
+                pdf.save('SBA_7a_Documents.pdf');
+                
+                // Show buttons again
+                buttons.style.display = 'block';
+            }).catch(function(error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF. Please try the HTML download option instead.');
+                buttons.style.display = 'block';
+            });
+        }
+
+        function downloadHTML() {
+            // Get the complete HTML content
+            const htmlContent = document.documentElement.outerHTML;
+            
+            // Create a blob with the HTML content
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            
+            // Create download link
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'SBA_7a_Documents.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function printForm() {
+            window.print();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('checkbox') && !e.target.classList.contains('checked')) {
+                e.target.classList.add('checked');
+                e.target.textContent = '✓';
+            }
+        });
+    </script>
+</body>
+</html>
