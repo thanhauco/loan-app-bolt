@@ -10,7 +10,7 @@
 # Environment variables for production
 [context.production.environment]
   NODE_ENV = "production"
-  ALLOWED_ORIGINS = "https://reliable-starship-38d7a1.netlify.app/"
+  ALLOWED_ORIGINS = "https://zp1v56uxy8rdx5ypatb0ockcb9tr6a-oci3--5173--96435430.local-credentialless.webcontainer-api.io/"
   # Add your SendGrid API key and SENDER_EMAIL in Netlify dashboard
   # SENDGRID_API_KEY = "your_sendgrid_api_key"
   # SENDER_EMAIL = "your_verified_sender@example.com"
